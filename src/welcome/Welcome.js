@@ -30,9 +30,9 @@ export default class Welcome extends React.Component<ScreenProps<>> {
                     <Button label="Login Anonymously" onPress={loginAnonymously} full />
                     <Button label="Sign Up" onPress={this.signUp} full />
                 </AnimatedView>
-                <TouchableOpacity style={styles.framer} onPress={framer}>
+                {/* <TouchableOpacity style={styles.framer} onPress={framer}>
                     <Text style={styles.framerText}>Designed by Framer</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </Container>
         );
     }
