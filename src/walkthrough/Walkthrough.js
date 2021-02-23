@@ -51,8 +51,8 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
         const next = () => (isLast ? this.home() : context.scrollBy(1));
         return (
             <SafeAreaView style={styles.footer}>
-                <Button label="Back" onPress={back} disabled={isFirst} />
-                <Button label={isLast ? "Start" : "Next"} onPress={next} primary transparent />
+                <Button label="Back" onPress={back} primary white disabled={isFirst} />
+                <Button label={isLast ? "Start" : "Next"} onPress={next} primary white />
             </SafeAreaView>
         );
     }
@@ -85,22 +85,22 @@ let share: Share;
 
 const slides = [
     {
-        title: "Connect",
-        description: "Bring your friends closer by building a network of the people you love.",
+        title: "Review",
+        description: "Access your pet's medical information and lab results to monitor their health.",
         icon: <Connect ref={ref => (ref ? connect = ref : undefined)} />,
         show: () => connect.show(),
         hide: () => connect.hide()
     },
     {
         title: "Chat",
-        description: "Send messages and stay up to date with friends whenever you need to.",
+        description: "Connect with a veterinarian to ask urgent questions about your pet on-demand.",
         icon: <Chat ref={ref => (ref ? chat = ref : undefined)} />,
         show: () => chat.show(),
         hide: () => chat.hide()
     },
     {
         title: "Share",
-        description: "Send your best selfies and show friends what you’re up to.",
+        description: "Share pictures of your adorable pet on your personalized profile page.",
         icon: <Share ref={ref => (ref ? share = ref : undefined)} />,
         show: () => share.show(),
         hide: () => share.hide()
