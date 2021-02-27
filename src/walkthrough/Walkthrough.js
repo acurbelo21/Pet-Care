@@ -8,6 +8,7 @@ import Slide from "./Slide";
 import Connect from "./Connect";
 import Chat from "./Chat";
 import Share from "./Share";
+import Select from "./Select";
 
 import {Button, Theme} from "../components";
 import type {ScreenProps} from "../components/Types";
@@ -52,7 +53,9 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
         return (
             <SafeAreaView style={styles.footer}>
                 <Button label="Back" onPress={back} primary white disabled={isFirst} />
-                <Button label={isLast ? "Start" : "Next"} onPress={next} primary white />
+                {!isLast && <Button label={"Next"} onPress={next} primary white />}
+                {/* Uncomment next line to add button to navigate to Home screen then comment out above line: */}
+                {/* <Button label={isLast ? "Start" : "Next"} onPress={next} primary white /> */}
             </SafeAreaView>
         );
     }
@@ -82,6 +85,7 @@ const onIndexChanged = (index: number) => {
 let connect: Connect;
 let chat: Chat;
 let share: Share;
+let select: Select;
 
 const slides = [
     {
@@ -104,6 +108,13 @@ const slides = [
         icon: <Share ref={ref => (ref ? share = ref : undefined)} />,
         show: () => share.show(),
         hide: () => share.hide()
+    },
+    {
+        title: "Please Select Your First Pet",
+        description: "",
+        icon: <Select ref={ref => (ref ? select = ref : undefined)} />,
+        show: () => select.show(),
+        hide: () => select.hide()
     }
 ];
 
