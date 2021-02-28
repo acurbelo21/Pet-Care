@@ -24,15 +24,36 @@ export class SelectPetButton extends React.Component {
     addPetSpeciesToFirestore(species) {
         const { uid } = Firebase.auth.currentUser;
 
-        Firebase.firestore.collection("pets").doc(uid).update({
-            species
-        })
-            .then(() => {
-                console.log("TO DA MOOON 🙌💎🙌 - Pet species added: ", species);
-            })
-            .catch((error) => {
-                console.error("Error writing document: ", error);
-            });
+        Firebase.firestore
+            .collection("pets")
+            .doc(uid)
+            .get()
+            .then(documentSnapshot => {
+                console.log('User exists: ', documentSnapshot.exists);
+            
+                if (documentSnapshot.exists) {
+                    Firebase.firestore.collection("pets").doc(uid).update({
+                        species
+                    })
+                        .then(() => {
+                            console.log("TO DA MOOON 🙌💎🙌 - Pet species added: ", species);
+                        })
+                        .catch((error) => {
+                            console.error("Error writing document: ", error);
+                        });
+                }
+                else {
+                    Firebase.firestore.collection("pets").doc(uid).set({
+                        species
+                    })
+                        .then(() => {
+                            console.log("TO DA MOOON 🙌💎🙌 - Pet species added: ", species);
+                        })
+                        .catch((error) => {
+                            console.error("Error writing document: ", error);
+                        });
+                }
+              });
     }
 
     render() {
