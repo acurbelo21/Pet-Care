@@ -1,7 +1,8 @@
 // @flow
 import React from "react";
-import { Text, TextInput, View, Button } from "react-native";
+import { Text, TextInput, View, StyleSheet } from "react-native";
 
+import { Theme, Button } from "../components";
 import Firebase from "../components/Firebase";
 
 export class GetStartedButton extends React.Component {
@@ -26,8 +27,9 @@ export class GetStartedButton extends React.Component {
     render() {
         return (
             <Button
-                title="Get Started"
+                label="Get Started"
                 name={this.props.name}
+                disabled={this.props.name == "" ? true : false }
                 onPress={(event) => this.props.onPress(event, this.props.name, this.addPetNameToFirestore)}
                 full
                 primary
@@ -39,7 +41,7 @@ export class GetStartedButton extends React.Component {
 export default class TextInputComponent extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {text: ""};
+        this.state = {petName: ""};
     }
 
     inputPetName = (event, name, onPressStartCallback) => {
@@ -49,24 +51,48 @@ export default class TextInputComponent extends React.Component {
 
     render() {
         return (
-            <View style={{padding: 10}}>
+            <View style={styles.container}>
                 <TextInput
-                    style={{height: 40, fontSize: 20}}
+                    style={styles.input}
                     placeholder="Type your pet's name here!"
+                    autoCapitalize="words"
                     // onChangeText={text => setText(text)}
-                    onChangeText={(text) => this.setState({text})}
-                    defaultValue={this.state.text}
+                    onChangeText={(text) => this.setState({petName: text})}
+                    defaultValue={this.state.petName}
                 />
                 {/* The following component appears when there is text in the input field! */}
-                <Text style={{padding: 5, fontSize: 42, alignContent: "center"}}>
-                    {this.state.text &&
-                        <GetStartedButton
-                            name={this.state.text}
-                            onPress={this.inputPetName}
-                        />
-                    }
-                </Text>
+                <GetStartedButton
+                    name={this.state.petName}
+                    onPress={this.inputPetName}
+                />
             </View>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 10
+    },
+    input: {
+        height: 40,
+        fontSize: 20,
+        color: Theme.palette.sidebar,
+        justifyContent: "center",
+        textAlign: "center"
+    },
+    petName: {
+        padding: 5,
+        fontSize: 42,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column"
+    },
+    getStarted: {
+        marginTop: 20,
+        flex: 1,
+        textAlignVertical: "top",
+        justifyContent: "center",
+        alignItems: "center"
+    }
+});

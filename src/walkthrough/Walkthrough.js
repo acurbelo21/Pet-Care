@@ -110,8 +110,8 @@ const slides = [
         hide: () => share.hide()
     },
     {
-        title: "Please Select Your First Pet",
-        description: "",
+        title: "Add Your Pet",
+        description: "Don't worry! You will be able to edit and add more of your pets later on.",
         icon: <Select ref={ref => (ref ? select = ref : undefined)} />,
         show: () => select.show(),
         hide: () => select.hide()

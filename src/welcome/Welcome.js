@@ -27,7 +27,7 @@ export default class Welcome extends React.Component<ScreenProps<>> {
                 </AnimatedView>
                 <AnimatedView style={styles.container} delay={600} duration={300}>
                     <Button label="Login" onPress={this.login} full primary />
-                    <Button label="Login Anonymously" onPress={loginAnonymously} full />
+                    {/* <Button label="Login Anonymously" onPress={loginAnonymously} full /> */}
                     <Button label="Sign Up" onPress={this.signUp} full />
                 </AnimatedView>
                 {/* <TouchableOpacity style={styles.framer} onPress={framer}>

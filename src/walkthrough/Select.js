@@ -1,8 +1,9 @@
 // @flow
 import * as React from "react";
-import {StyleSheet, View, Text} from "react-native";
+import {StyleSheet, View} from "react-native";
+import { FontAwesome5 } from '@expo/vector-icons';
 
-import {Button} from "../components";
+import {Text, Theme, Button} from "../components";
 import Firebase from "../components/Firebase";
 import TextInputComponent from "./TextInputComponent";
 
@@ -12,6 +13,10 @@ type VisibleState = {
 
 type PetNameTextInputIsVisibleState = {
     petNameTextInputIsVisible: boolean
+};
+
+type SpeciesSelected = {
+    speciesSelected: string
 };
 
 export class SelectPetButton extends React.Component {
@@ -43,10 +48,11 @@ export class SelectPetButton extends React.Component {
 }
 
 // eslint-disable-next-line react/no-multi-comp
-export default class Select extends React.Component<VisibleState, PetNameTextInputIsVisibleState> {
+export default class Select extends React.Component<VisibleState, PetNameTextInputIsVisibleState, SpeciesSelected> {
     state = {
         visible: false,
-        petNameTextInputIsVisible: false
+        petNameTextInputIsVisible: false,
+        speciesSelected: ""
     };
 
     hide() {
@@ -66,15 +72,40 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
         this.setState({ petNameTextInputIsVisible: true });
     }
 
-    selectPet = (event, species, onPressSpeciesButtonCallback) => {
+    selectDog = (event, species, onPressSpeciesButtonCallback) => {
         this.showPetNameTextInput();
+        this.setState({ speciesSelected: pets[0].image });
+
+        // After the user presses a species button, call this function!
+        onPressSpeciesButtonCallback(species);
+    }
+
+    selectCat = (event, species, onPressSpeciesButtonCallback) => {
+        this.showPetNameTextInput();
+        this.setState({ speciesSelected: pets[1].image });
+
+        // After the user presses a species button, call this function!
+        onPressSpeciesButtonCallback(species);
+    }
+
+    selectBird = (event, species, onPressSpeciesButtonCallback) => {
+        this.showPetNameTextInput();
+        this.setState({ speciesSelected: pets[2].image });
 
         // After the user presses a species button, call this function!
         onPressSpeciesButtonCallback(species);
     }
 
     render(): React.Node {
-        const selectPetBreedMessage = <Text> Please select the breed of your pet. </Text>;
+        const selectPetBreedMessage = <Text style={styles.message}>Please select the breed of your first pet. </Text>;
+        // var selectedPet = pets.map((pet) => {
+        //     return (
+        //         <View key={pet.label}>
+        //             <FontAwesome5 name={pet.image} size={Theme.typography.header2.fontSize} color={Theme.palette.white} />
+        //         </View>
+        //     )
+        // })
+        var selectedPet = <FontAwesome5 name={this.state.speciesSelected} size={Theme.typography.header2.fontSize} color={Theme.palette.white} />
 
         if (!this.state.visible) {
             return <View />;
@@ -82,18 +113,24 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
 
         return (
             <>
+                <View style={styles.image}>
+                    {this.state.petNameTextInputIsVisible ? selectedPet : <Text /> }
+                </View>
                 <View style={styles.container}>
                     <SelectPetButton
-                        label="Dog"
-                        onPress={this.selectPet}
+                        label={pets[0].label}
+                        onPress={this.selectDog}
+                        style={styles.button}
                     />
                     <SelectPetButton
-                        label="Cat"
-                        onPress={this.selectPet}
+                        label={pets[1].label}
+                        onPress={this.selectCat}
+                        style={styles.button}
                     />
                     <SelectPetButton
-                        label="Bird"
-                        onPress={this.selectPet}
+                        label={pets[2].label}
+                        onPress={this.selectBird}
+                        style={styles.button}
                     />
                 </View>
                 <View>
@@ -104,8 +141,36 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
     }
 }
 
+const pets = [
+    {
+        label: "Dog",
+        image: "dog"
+    },
+    {
+        label: "Cat",
+        image: "cat"
+    },
+    {
+        label: "Bird",
+        image: "dove"
+    }
+];
+
 const styles = StyleSheet.create({
     container: {
-        width: 283
+        width: 283,
+        justifyContent: "space-evenly",
+        flexDirection: "row",
+        marginVertical: Theme.spacing.base
+    },
+    image: {
+        padding: 10
+    },
+    message: {
+        color: Theme.palette.white,
+        fontSize: 18,
+        fontFamily: Theme.typography.semibold,
+        textAlign: "center",
+        marginBottom: Theme.spacing.base
     }
 });
