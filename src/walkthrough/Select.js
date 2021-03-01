@@ -24,6 +24,30 @@ export class SelectPetButton extends React.Component {
     addPetSpeciesToFirestore(species) {
         const { uid } = Firebase.auth.currentUser;
 
+        // Firebase.firestore
+        //     .collection("pets")
+        //     .where("species", "==", "Dog")
+        //     .get()
+        //     .then(docs => {
+        //         let petnames = []
+        //         docs.forEach(doc => {
+        //             petnames.push(doc.data())
+        //             console.log("Name of dog: ", doc.data().name, "\n");
+        //         })
+        //     })
+
+        //     Firebase.firestore
+        //         .collection("pets")
+        //         .where("owner-uid", "==", uid)
+        //         .get()
+        //         .then(docs => {
+        //             let currentuserspetnames = []
+        //             docs.forEach(doc => {
+        //                 currentuserspetnames.push(doc.data())
+        //                 console.log("Name of ", uid, "'s pet: ", doc.data().name, "\n");
+        //             })
+        //         })
+
         Firebase.firestore
             .collection("pets")
             .doc(uid)
@@ -36,7 +60,7 @@ export class SelectPetButton extends React.Component {
                         species
                     })
                         .then(() => {
-                            console.log("TO DA MOOON 🙌💎🙌 - Pet species added: ", species);
+                            console.log("TO DA MOOON 🙌💎🙌 - Pet species added: ", species, "\n");
                         })
                         .catch((error) => {
                             console.error("Error writing document: ", error);
@@ -47,7 +71,7 @@ export class SelectPetButton extends React.Component {
                         species
                     })
                         .then(() => {
-                            console.log("TO DA MOOON 🙌💎🙌 - Pet species added: ", species);
+                            console.log("TO DA MOOON 🙌💎🙌 - Pet species added: ", species, "\n");
                         })
                         .catch((error) => {
                             console.error("Error writing document: ", error);
