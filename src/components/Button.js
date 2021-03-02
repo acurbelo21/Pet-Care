@@ -49,7 +49,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                                 // eslint-disable-next-line
                                 {
                                     // eslint-disable-next-line
-                                    color: disabled ? "transparent" : (primary ? (transparent ? Theme.palette.primary : "white") : Theme.typography.color),
+                                    color: disabled ? "transparent" : (primary ? (transparent ? Theme.palette.primary : Theme.palette.black) : Theme.typography.color),
                                     fontSize: primary ? 16 : Theme.typography.regular.fontSize,
                                     fontFamily: Theme.typography.semibold
                                 }
@@ -68,9 +68,12 @@ const styles = StyleSheet.create({
     base: {
     },
     primary: {
-        shadowColor: "rgba(0, 170, 255, 0.29)",
+        shadowColor: "rgba(85, 85, 85, 0.29)",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 1,
-        shadowRadius: 7
+        shadowRadius: 7,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: Theme.palette.white
     }
 });
