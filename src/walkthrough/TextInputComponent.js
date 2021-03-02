@@ -31,6 +31,7 @@ export class GetStartedButton extends React.Component {
                 name={this.props.name}
                 disabled={this.props.name == "" ? true : false }
                 onPress={(event) => this.props.onPress(event, this.props.name, this.addPetNameToFirestore)}
+                style={{borderColor: Theme.palette.secondary}}
                 full
                 primary
             />
@@ -55,7 +56,9 @@ export default class TextInputComponent extends React.Component {
                 <TextInput
                     style={styles.input}
                     placeholder="Type your pet's name here!"
+                    placeholderTextColor = "#777777"
                     autoCapitalize="words"
+                    autoFocus="true"
                     // onChangeText={text => setText(text)}
                     onChangeText={(text) => this.setState({petName: text})}
                     defaultValue={this.state.petName}
@@ -75,21 +78,18 @@ const styles = StyleSheet.create({
         padding: 10
     },
     input: {
-        height: 40,
-        fontSize: 20,
+        fontSize: Theme.typography.header3.fontSize,
         color: Theme.palette.sidebar,
         justifyContent: "center",
         textAlign: "center"
     },
     petName: {
         padding: 5,
-        fontSize: 42,
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column"
     },
     getStarted: {
-        marginTop: 20,
         flex: 1,
         textAlignVertical: "top",
         justifyContent: "center",

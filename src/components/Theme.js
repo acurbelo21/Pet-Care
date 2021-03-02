@@ -51,15 +51,15 @@ const theme: Theme = {
         secondary: "#9dffb0",
         success: "#5cb85c",
         danger: "#d93900",
-        warning: "#f0ad4e",
+        warning: "#FFF563",
         sidebar: "#484848",
         lightGray: "#BFBFBF",
         borderColor: "#F5F5F5",
-        white: "white",
-        black: "black"
+        white: "#FFFFFA",
+        black: "#555555"
     },
     typography: {
-        color: "#666666",
+        color: "#555555",
         bold: "SFProText-Bold",
         semibold: "SFProText-Semibold",
         normal: "SFProText-Medium",

@@ -7,17 +7,10 @@ import {Text, Theme, Button} from "../components";
 import Firebase from "../components/Firebase";
 import TextInputComponent from "./TextInputComponent";
 
-type VisibleState = {
-    visible: boolean
-};
-
-type PetNameTextInputIsVisibleState = {
-    petNameTextInputIsVisible: boolean
-};
-
-type SpeciesSelected = {
-    speciesSelected: string
-};
+type VisibleState = { visible: boolean };
+type PetNameTextInputIsVisibleState = { petNameTextInputIsVisible: boolean };
+type SpeciesSelected = { speciesSelected: string };
+type Pet = { label: string, image: string };
 
 export class SelectPetButton extends React.Component {
     // Call after species button is pressed
@@ -100,6 +93,15 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
         speciesSelected: ""
     };
 
+    static pets: Pet[] = [
+        { label: "Dog", image: "dog" },
+        { label: "Cat", image: "cat" },
+        { label: "Bird", image: "dove" },
+        { label: "Horse", image: "horse" },
+        { label: "Fish", image: "fish" },
+        { label: "Exotic", image: "spider" }
+    ];
+
     hide() {
         this.setState({ visible: false });
     }
@@ -119,7 +121,7 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
 
     selectDog = (event, species, onPressSpeciesButtonCallback) => {
         this.showPetNameTextInput();
-        this.setState({ speciesSelected: pets[0].image });
+        this.setState({ speciesSelected: Select.pets[0].image });
 
         // After the user presses a species button, call this function!
         onPressSpeciesButtonCallback(species);
@@ -127,7 +129,7 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
 
     selectCat = (event, species, onPressSpeciesButtonCallback) => {
         this.showPetNameTextInput();
-        this.setState({ speciesSelected: pets[1].image });
+        this.setState({ speciesSelected: Select.pets[1].image });
 
         // After the user presses a species button, call this function!
         onPressSpeciesButtonCallback(species);
@@ -135,7 +137,31 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
 
     selectBird = (event, species, onPressSpeciesButtonCallback) => {
         this.showPetNameTextInput();
-        this.setState({ speciesSelected: pets[2].image });
+        this.setState({ speciesSelected: Select.pets[2].image });
+
+        // After the user presses a species button, call this function!
+        onPressSpeciesButtonCallback(species);
+    }
+
+    selectHorse = (event, species, onPressSpeciesButtonCallback) => {
+        this.showPetNameTextInput();
+        this.setState({ speciesSelected: Select.pets[3].image });
+
+        // After the user presses a species button, call this function!
+        onPressSpeciesButtonCallback(species);
+    }
+
+    selectFish = (event, species, onPressSpeciesButtonCallback) => {
+        this.showPetNameTextInput();
+        this.setState({ speciesSelected: Select.pets[4].image });
+
+        // After the user presses a species button, call this function!
+        onPressSpeciesButtonCallback(species);
+    }
+
+    selectExotic = (event, species, onPressSpeciesButtonCallback) => {
+        this.showPetNameTextInput();
+        this.setState({ speciesSelected: Select.pets[5].image });
 
         // After the user presses a species button, call this function!
         onPressSpeciesButtonCallback(species);
@@ -150,7 +176,7 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
         //         </View>
         //     )
         // })
-        var selectedPet = <FontAwesome5 name={this.state.speciesSelected} size={Theme.typography.header2.fontSize} color={Theme.palette.white} />
+        var selectedPet = <FontAwesome5 name={this.state.speciesSelected} size={Theme.typography.header1.fontSize} color={Theme.palette.white} />
 
         if (!this.state.visible) {
             return <View />;
@@ -163,43 +189,39 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
                 </View>
                 <View style={styles.container}>
                     <SelectPetButton
-                        label={pets[0].label}
+                        label={Select.pets[0].label}
                         onPress={this.selectDog}
-                        style={styles.button}
                     />
                     <SelectPetButton
-                        label={pets[1].label}
+                        label={Select.pets[1].label}
                         onPress={this.selectCat}
-                        style={styles.button}
                     />
                     <SelectPetButton
-                        label={pets[2].label}
+                        label={Select.pets[2].label}
                         onPress={this.selectBird}
-                        style={styles.button}
                     />
                 </View>
-                <View>
+                <View style={styles.container}>
+                    <SelectPetButton
+                        label={Select.pets[3].label}
+                        onPress={this.selectHorse}
+                    />
+                    <SelectPetButton
+                        label={Select.pets[4].label}
+                        onPress={this.selectFish}
+                    />
+                    <SelectPetButton
+                        label={Select.pets[5].label}
+                        onPress={this.selectExotic}
+                    />
+                </View>
+                <View style={{marginTop: Theme.spacing.large}}>
                     {this.state.petNameTextInputIsVisible ? <TextInputComponent /> : selectPetBreedMessage}
                 </View>
             </>
         );
     }
 }
-
-const pets = [
-    {
-        label: "Dog",
-        image: "dog"
-    },
-    {
-        label: "Cat",
-        image: "cat"
-    },
-    {
-        label: "Bird",
-        image: "dove"
-    }
-];
 
 const styles = StyleSheet.create({
     container: {
@@ -212,8 +234,8 @@ const styles = StyleSheet.create({
         padding: 10
     },
     message: {
-        color: Theme.palette.white,
-        fontSize: 18,
+        color: Theme.palette.black,
+        fontSize: 20,
         fontFamily: Theme.typography.semibold,
         textAlign: "center",
         marginBottom: Theme.spacing.base
