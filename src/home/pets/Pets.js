@@ -39,10 +39,13 @@ export default class Pets extends Component {
         .then(docs => {
             var i = 0;
             docs.forEach(doc => {
-                currentUsersPets.push(doc.data())
+                currentUsersPets.push(doc.data());
+                currentUsersPets[i++].uid = doc.id;
             })
+
+            var j = 0;
             currentUsersPets.forEach(pet => {
-                pet.id = i++;
+                pet.id = j++;
             })
             console.log(currentUsersPets)
             this.setState({items:currentUsersPets, loading:false})
