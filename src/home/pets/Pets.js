@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
 import {AppRegistry, StyleSheet, View, FlatList, Text, SafeAreaView, ActivityIndicator} from 'react-native';
-import ContactItem from './ContactItem';
+import PetItem from './PetItem';
 import faker from 'faker';//assuming you have this.
 import _ from 'lodash';
 import Pagination,{Icon,Dot} from 'react-native-pagination';//{Icon,Dot} also available
 import Firebase from "../../components/Firebase";
-import { FontAwesome5 } from '@expo/vector-icons';
-
 
 //lets use faker to create mock data
-let MockPersonList = new _.times(35,(i)=>{
-  return {
-    id:i,
-    index:i,
-    name:faker.name.findName(),
-    pic:faker.internet.avatar(),
-    species:_.sample(["Cat","Dog","Bird","Horse","Fish","Exotic"]),
-    breed:faker.internet.email(),
-  }
-})
+// let MockPersonList = new _.times(35,(i)=>{
+//   return {
+//     id:i,
+//     index:i,
+//     name:faker.name.findName(),
+//     pic:faker.internet.avatar(),
+//     species:_.sample(["Cat","Dog","Bird","Horse","Fish","Exotic"]),
+//     breed:faker.internet.email(),
+//   }
+// })
 
 export default class Pets extends Component {
 
@@ -53,7 +51,7 @@ export default class Pets extends Component {
     }
     //create each list item
   _renderItem = ({item}) => {
-    return (<ContactItem index={item.id}
+    return (<PetItem index={item.id}
         onPressItem={this.onPressItem}
         name={item.name}
         pic={item.pic}
@@ -106,8 +104,8 @@ export default class Pets extends Component {
             renderItem={this._renderItem}//render each item
             onViewableItemsChanged={this.onViewableItemsChanged}//need this
           />
-
           <Pagination
+            // remove this to get rid of dots next to list
             // dotThemeLight //<--use with backgroundColor:"grey"
             listRef={this.refs}//to allow React Native Pagination to scroll to item when clicked  (so add "ref={r=>this.refs=r}" to your list)
             paginationVisibleItems={this.state.viewableItems}//needs to track what the user sees
@@ -127,74 +125,3 @@ const s = StyleSheet.create({
 });
 
 AppRegistry.registerComponent('ReactNativePaginationExample', () => App);
-
-// // @flow
-// import * as React from "react";
-// import {StyleSheet, Dimensions, View} from "react-native";
-// import Constants from "expo-constants";
-// import {LinearGradient} from "expo-linear-gradient";
-
-// import {Text, Theme} from "../../components";
-
-// type SlideProps = {
-//     title: string,
-//     description: string,
-//     icon: React.Element<*>
-// };
-
-// export default class Pets extends React.PureComponent<SlideProps> {
-
-//     render(): React.Node {
-//         const {title, description, icon} = this.props;
-
-//         const handlePress = () => console.log("Text pressed");
-
-//         return (
-//             <View>
-//                 <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient}>
-//                     <View style={styles.slide}>
-//                         w
-//                         <View style={styles.iconContainer}>{icon}</View>
-//                     </View>
-//                 </LinearGradient>
-//                 <View style={styles.description}>
-//                     <Text>{description}</Text>
-//                 </View>
-//             </View>
-//         );
-//     }
-// }
-
-// const {height} = Dimensions.get("window");
-// const styles = StyleSheet.create({
-//     slide: {
-//         paddingHorizontal: Theme.spacing.base * 2,
-//         paddingBottom: Theme.spacing.base * 2,
-//         paddingTop: (Theme.spacing.base * 2) + Constants.statusBarHeight,
-//         flexGrow: 1
-//     },
-//     title: {
-//         color: Theme.palette.white
-//     },
-//     description: {
-//         position: "absolute",
-//         top: height * 0.62,
-//         left: 0,
-//         right: 0,
-//         height: height - (height * 0.62) - 45,
-//         paddingHorizontal: Theme.spacing.base * 2,
-//         justifyContent: "center"
-//     },
-//     gradient: {
-//         position: "absolute",
-//         top: 0,
-//         left: 0,
-//         right: 0,
-//         height: height * 0.62
-//     },
-//     iconContainer: {
-//         flexGrow: 1,
-//         justifyContent: "center",
-//         alignItems: "center"
-//     }
-// });

@@ -1,31 +1,12 @@
 PropTypes;
 import React, { Component } from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
-const { width, height } = Dimensions.get('window');
+import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { FontAwesome5 } from '@expo/vector-icons';
+const { width, height } = Dimensions.get('window');
+
 export default class ListItem extends Component {
-  // Generates a Hex Color for a string
-  stringToHex(str) {
-    if (!str) str = 'none';
-    let hash = 0;
-    for (var i = 0; i < str.length; i++)
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    let color = '#';
-    for (var i = 0; i < 3; i++) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.substr(-2);
-    }
-    return color;
-  }
 
   colorOfPetCategory(str) {
     switch(str) {
@@ -54,23 +35,37 @@ export default class ListItem extends Component {
   }
 
   render() {
-    const {
-      name,
-      pic,
-      color,
-      seen,
-      selected,
-      key,
-      id,
-      species,
-      onPressItem,
-      breed
-    } = this.props;
+    const { name, pic, color, seen, selected, key, id, species, onPressItem, breed } = this.props;
     // Console.log(" this.props: ",this.props);
     let speciesColor = '#33333';
     if (color) speciesColor = color;
     if (!color && species) speciesColor = this.colorOfPetCategory(this.props.species);
-    // if (!color && species) speciesColor = this.stringToHex(this.props.species);
+    var petIcon;
+
+    switch (species) {
+        case "Cat":
+            petIcon = "cat";
+            break;
+        case "Dog":
+            petIcon = "dog";
+            break;
+        case "Bird":
+            petIcon = "dove";
+            break;
+        case "Horse":
+            petIcon = "horse";
+            break;
+        case "Fish":
+            petIcon = "fish";
+            break;
+        case "Exotic":
+            petIcon = "spider";
+            break;
+        default:
+            petIcon = "question";
+            break;
+    }
+
     return (
       <TouchableOpacity
         style={[
@@ -121,7 +116,20 @@ export default class ListItem extends Component {
                 {species}
               </Text>
             </View>
-            {pic && (
+            {pic == "null" && (
+            <View 
+            resizeMode="contain"
+            style={{
+                height: 50,
+                width: 50,
+                margin: 8,
+                borderRadius: 25,
+                backgroundColor: '#f8f8f8'
+              }}>
+              <FontAwesome5 name={petIcon} size="40%" color={speciesColor}/>
+             </View>
+            )}
+            {pic != "null" && (
               <Image
                 source={require('../../../assets/OMEGAPOGGERS.png')}
                 resizeMode="contain"
