@@ -17,7 +17,7 @@ import type { ScreenProps } from "./src/components/Types";
 import { Welcome } from "./src/welcome";
 import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
-import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore } from "./src/home";
+import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, DiagnosticTool } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -163,11 +163,19 @@ const ShareNavigator = createStackNavigator(
     StackNavigatorOptions
 );
 
+const ToolNavigator = createStackNavigator(
+    {
+        DiagnosticTool: { screen: DiagnosticTool },
+    },
+    StackNavigatorOptions
+);
+
 const HomeTabs = createBottomTabNavigator(
     {
         Explore: { screen: ExploreNavigator },
         Share: { screen: ShareNavigator },
         Profile: { screen: ProfileNavigator },
+        DiagnosticTool: { screen: ToolNavigator},
     },
     {
         animationEnabled: true,
