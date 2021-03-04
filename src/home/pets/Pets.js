@@ -40,7 +40,7 @@ export default class Pets extends Component {
             var i = 0;
             docs.forEach(doc => {
                 currentUsersPets.push(doc.data());
-                currentUsersPets[i++].uid = doc.id;
+                currentUsersPets[i++].pet_uid = doc.id;
             })
 
             var j = 0;
@@ -50,16 +50,17 @@ export default class Pets extends Component {
             console.log(currentUsersPets)
             this.setState({items:currentUsersPets, loading:false})
         })
-        console.log("Heya")
     }
     //create each list item
   _renderItem = ({item}) => {
+    const { navigation } = this.props;
     return (<PetItem index={item.id}
-        onPressItem={this.onPressItem}
+        pet_uid={item.pet_uid}
         name={item.name}
         pic={item.pic}
         breed={item.breed}
         species={item.species}
+        {...{navigation}}
       />)
     };
     //pressed an item

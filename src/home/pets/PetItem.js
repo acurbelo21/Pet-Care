@@ -1,12 +1,20 @@
 PropTypes;
+import autobind from "autobind-decorator";
 import React, { Component } from 'react';
 import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { FontAwesome5 } from '@expo/vector-icons';
 const { width, height } = Dimensions.get('window');
+import { NavigationEvents } from "react-navigation";
 
 export default class ListItem extends Component {
+
+  @autobind
+  goToPetDetailView() {
+      const pet_uid = this.props.pet_uid
+      this.props.navigation.navigate("PetDetailView",  { pet_uid } );
+  }
 
   colorOfPetCategory(str) {
     switch(str) {
@@ -35,8 +43,7 @@ export default class ListItem extends Component {
   }
 
   render() {
-    const { name, pic, color, seen, selected, key, id, species, onPressItem, breed } = this.props;
-    // Console.log(" this.props: ",this.props);
+    const { name, pic, color, seen, selected, key, id, species, breed, pet_uid } = this.props;
     let speciesColor = '#33333';
     if (color) speciesColor = color;
     if (!color && species) speciesColor = this.colorOfPetCategory(this.props.species);
@@ -75,7 +82,7 @@ export default class ListItem extends Component {
             alignItems: 'center'
           }
         ]}
-        onPress={item => onPressItem(item)}
+        onPress={this.goToPetDetailView}
       >
         <View
           style={{
@@ -186,7 +193,6 @@ export default class ListItem extends Component {
   }
 }
 ListItem.propTypes = {
-  onPressItem: PropTypes.func,
   // Selected:PropTypes.bool,
   seen: PropTypes.bool,
   name: PropTypes.string,
