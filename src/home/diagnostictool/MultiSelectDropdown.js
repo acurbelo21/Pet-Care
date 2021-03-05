@@ -146,8 +146,8 @@ export default class MultiSelectDropdown extends React.Component {
 
           searchInputPlaceholderText="Search symptoms..."
           searchInputStyle={{color: Theme.palette.black, fontFamily: "SFProText-Semibold"}}
-          styleInputGroup={{backgroundColor: "rgba(157, 255, 176, .5)", color: Theme.palette.black, height: height/15, borderRadius: 10, paddingRight: 15}}
-          styleDropdownMenuSubsection={{color: Theme.palette.black, height: height/15, borderRadius: 10, width: "100%", paddingLeft: 25}}
+          styleInputGroup={{backgroundColor: "rgba(157, 255, 176, .5)", height: height/15, borderRadius: 10, paddingRight: 15}}
+          styleDropdownMenuSubsection={{height: height/15, borderRadius: 10, width: "100%", paddingLeft: 25}}
 
           tagTextColor={Theme.palette.black}
           tagRemoveIconColor={Theme.palette.black}
