@@ -12,7 +12,7 @@ function HomeScreen(props) {
                 centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
                 rightComponent={{ icon: 'favicon.png', color: '#fff' }}
             />*/}
-            <Text style={styles.centerText}>Home!</Text>
+            <Text style={styles.centerText}>Home! This will be a sort of "My Pets" screen</Text>
         </View>
 
 
