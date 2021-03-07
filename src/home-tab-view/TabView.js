@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { Header } from 'react-native/Libraries/NewAppScreen';
 
 function HomeScreen(props) {
@@ -40,7 +41,29 @@ const Tab = createBottomTabNavigator();
 function TabView() {
     return (
         <NavigationContainer>
-            <Tab.Navigator>
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                      let iconName;
+          
+                      if (route.name === 'Home') {
+                        iconName = 'home';
+                      } else if (route.name === 'Chat') {
+                        iconName = 'comments';
+                      }
+                      else if (route.name === 'Analysis') {
+                          iconName = 'chart-bar';
+                      }
+          
+                      // You can return any component that you like here!
+                      return <FontAwesome5 name={iconName} size={size} color={color} />;
+                    },
+                  })}
+                  tabBarOptions={{
+                    activeTintColor: '#c48d3f',
+                    inactiveTintColor: 'gray',
+                  }}
+            >
                 <Tab.Screen name="Home" component={HomeScreen} />
                 <Tab.Screen name="Chat" component={ChatScreen} />
                 <Tab.Screen name="Analysis" component={AnalysisScreen} />
