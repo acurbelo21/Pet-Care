@@ -3,20 +3,12 @@ import { StyleSheet, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Header } from 'react-native/Libraries/NewAppScreen';
 
-function HomeScreen(props) {
+function HomeScreen() {
     return (
         <View style={styles.homeBackground}>
-            {/*<Header
-                leftComponent={{ icon: 'favicon.png', color: '#fff' }}
-                centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
-                rightComponent={{ icon: 'favicon.png', color: '#fff' }}
-            />*/}
             <Text style={styles.centerText}>Home! This will be a sort of "My Pets" screen</Text>
         </View>
-
-
     );
 }
 
@@ -96,4 +88,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default TabView;  
+export default TabView;
