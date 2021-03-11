@@ -3,6 +3,8 @@ import { StyleSheet, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
+import PetDetailView from './pets/PetDetailView';
+import DiagnosticTool from './walkthrough/DiagnosticTool';
 
 function HomeScreen() {
     return (
@@ -56,9 +58,9 @@ function TabView() {
                     inactiveTintColor: 'gray',
                   }}
             >
-                <Tab.Screen name="Home" component={HomeScreen} />
+                <Tab.Screen name="Home" component={PetDetailView} />
                 <Tab.Screen name="Chat" component={ChatScreen} />
-                <Tab.Screen name="Analysis" component={AnalysisScreen} />
+                <Tab.Screen name="Analysis" component={DiagnosticTool} />
             </Tab.Navigator>
         </NavigationContainer>
     )
