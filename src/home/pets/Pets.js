@@ -82,7 +82,7 @@ export default class Pets extends Component {
         <SafeAreaView style={[s.container]}>
             <Text style={{
                 fontWeight: "600",
-                fontSize: "20",
+                fontSize: 20,
                 padding: 20,
             }}>My Pets</Text>
         <View style={{
@@ -98,7 +98,7 @@ export default class Pets extends Component {
       <SafeAreaView style={[s.container]}>
           <Text style={{
               fontWeight: "600",
-              fontSize: "20",
+              fontSize: 20,
               padding: 20,
           }}>My Pets</Text>
           <FlatList

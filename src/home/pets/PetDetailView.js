@@ -33,11 +33,11 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                 <NavHeader title={this.state.petDetails.name} back {...{ navigation }} />
                 <Text
                 style={{
-                    fontSize: "40",
+                    fontSize: 40,
                 }}>{this.state.petDetails.species}</Text>
                 <Text
                 style={{
-                    fontSize: "40",
+                    fontSize: 40,
                 }}>{this.state.petDetails.breed}</Text>
             </SafeAreaView>
         );

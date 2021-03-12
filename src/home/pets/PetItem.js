@@ -138,7 +138,7 @@ export default class ListItem extends Component {
             )}
             {pic != "null" && (
               <Image
-                source={require('../../../assets/OMEGAPOGGERS.png')}
+                source={{uri: pic}}
                 resizeMode="contain"
                 style={{
                   height: 50,
