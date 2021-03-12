@@ -14,6 +14,7 @@ export default class MultiSelectDropdown extends React.Component {
         items: [],
         selectedItems: []
       };
+      this.selectPet = this.selectPet.bind(this);
   }
 
   static dogSymptoms: Symptom[] = [
@@ -106,8 +107,20 @@ export default class MultiSelectDropdown extends React.Component {
     { name: "Blindness" }
   ];
 
-  onItemsChange = (items) => {
-    this.setState({ items: items });
+  selectPet = (species) => {
+    switch(species) {
+      case "Dog":
+        this.setState({ items: MultiSelectDropdown.dogSymptoms });
+        break;
+      case "Cat":
+        this.setState({ items: MultiSelectDropdown.catSymptoms });
+        break;
+      case "Bird":
+        this.setState({ items: MultiSelectDropdown.birdSymptoms });
+        break;
+      default:
+        this.setState({ items: species });
+    }
   }
   
   onSelectedItemsChange = (selectedItems) => {
@@ -119,11 +132,10 @@ export default class MultiSelectDropdown extends React.Component {
   };
 
   render() {
-    const { selectedItems } = this.state;
+    const { items, selectedItems } = this.state;
     return (
-      <>
         <MultiSelect
-          items={MultiSelectDropdown.dogSymptoms} // List of items to display in the multi-select component
+          items={items} // List of items to display in the multi-select component
           uniqueKey="name" // Unique identifier that is part of each item"s properties
           onSelectedItemsChange={this.onSelectedItemsChange} // Triggered when Submit button is clicked 
           onChangeInput={(text) => console.warn(text)} // Called every time TextInput is changed with the value
@@ -160,9 +172,8 @@ export default class MultiSelectDropdown extends React.Component {
           // hideSubmitButton
           // hideTags
           hideDropdown
-          ref={(component) => { this.multiSelect = component }}
+          ref={(component) => { this._multiSelect = component }}
         />
-      </>
     );
   }
 }

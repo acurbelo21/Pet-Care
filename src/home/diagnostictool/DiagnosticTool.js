@@ -10,11 +10,19 @@ import MultiSelectDropdown from "./MultiSelectDropdown";
 type DropdownIsVisibleState = { dropdownIsVisible: boolean };
 
 export class SelectPetButton extends React.Component {
+  selectPet(dropdown, species) {
+    if (dropdown == undefined) {
+      dropdown.selectPet("Dog");
+    } else {
+      dropdown.selectPet(species);
+    }
+  }
+
   render() {
     return (
       <Button
         label={this.props.label}
-        onPress={(event) => this.props.onPress(event, this.props.label)}
+        onPress={(event) => this.props.onPress(event, this.props.label, this.selectPet)}
         full
         primary
       />
@@ -23,8 +31,9 @@ export class SelectPetButton extends React.Component {
 }
 
 export default class DiagnosticTool extends React.Component<DropdownIsVisibleState> {
-  state = {
-    dropdownIsVisible: false
+  constructor(props) {
+    super(props);
+    this.state = {dropdownIsVisible: false};
   }
 
   hideDropdown() {
@@ -36,11 +45,17 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
   }
 
   selectSpecies = (event, species, onPressSpeciesButtonCallback) => {
-    this.showDropdown();
+    // this.showDropdown();
+    if (this._multiselectdropdown === undefined) {
+      this.hideDropdown();
+      onPressSpeciesButtonCallback(this._multiselectdropdown, "Dog");
+    } else {
+      onPressSpeciesButtonCallback(this._multiselectdropdown, species);
+    }
   }
 
   render(): React.Node {
-    const selectPetSpeciesMessage = <Text style={styles.message}>Please select the pet species you want to diagnose. </Text>;
+    // const selectPetSpeciesMessage = <Text style={styles.message}>Please select the pet species you want to diagnose. </Text>;
     const { navigation } = this.props;
     
     return (
@@ -49,21 +64,21 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
         <View style={styles.buttonContainer}>
           <View style={styles.iconContainer}>
-            <FontAwesome5 name="dog" size={Theme.typography.header1.fontSize} color={Theme.palette.white} style={styles.image} />
+            <FontAwesome5 name="dog" size={Theme.typography.header1.fontSize} style={styles.image} />
             <SelectPetButton
               label="Dog"
               onPress={this.selectSpecies}
             />
           </View>
           <View style={styles.iconContainer}>
-            <FontAwesome5 name="cat" size={Theme.typography.header1.fontSize} color={Theme.palette.white} style={styles.image} />
+            <FontAwesome5 name="cat" size={Theme.typography.header1.fontSize} style={styles.image} />
             <SelectPetButton
               label="Cat"
               onPress={this.selectSpecies}
             />
             </View>
           <View style={styles.iconContainer}>
-            <FontAwesome5 name="dove" size={Theme.typography.header1.fontSize} color={Theme.palette.white} style={styles.image} />
+            <FontAwesome5 name="dove" size={Theme.typography.header1.fontSize} style={styles.image} />
             <SelectPetButton
               label="Bird"
               onPress={this.selectSpecies}
@@ -71,12 +86,8 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
           </View>
         </View>
         <View style={styles.multiSelectContainer}>
-          {this.state.dropdownIsVisible ? <MultiSelectDropdown /> : selectPetSpeciesMessage}
+          <MultiSelectDropdown ref={ref => (this._multiselectdropdown = ref)} />
         </View>
-
-        {/* <View style={styles.multiSelectContainer}>
-          <MultiSelectDropdown />
-        </View> */}
       </View>
     );
   }
@@ -108,6 +119,7 @@ const styles = StyleSheet.create({
   },
   image: {
     padding: 10,
+    color: Theme.palette.white
   },
   iconContainer: {
     justifyContent: "center",
