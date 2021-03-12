@@ -41,7 +41,7 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
         if (Platform.OS === "android") {
             StatusBar.setBackgroundColor("white");
         }
-        navigation.navigate("Home");
+        navigation.navigate("Picker");
     }
 
     @autobind
