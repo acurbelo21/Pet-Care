@@ -5,7 +5,7 @@ import faker from 'faker'; // makes fake data
 import _ from 'lodash';
 import Pagination,{Icon,Dot} from 'react-native-pagination';//{Icon,Dot} also available
 import Firebase from "../../components/Firebase";
-import {Text, NavHeader, Theme, Button} from "../../components";
+import {Text, NavHeaderWithButton, Theme, Button} from "../../components";
 import { LinearGradient } from "expo-linear-gradient";
 
 //lets use faker to create mock data
@@ -98,7 +98,7 @@ export default class Pets extends Component {
     }
     return (
       <View style={[styles.container]}>
-      <NavHeader title="My Pets"/>
+      <NavHeaderWithButton title="My Pets"/>
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
           <FlatList
             data={this.state.items}
