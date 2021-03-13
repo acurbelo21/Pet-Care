@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import {AppRegistry, StyleSheet, View, FlatList, Text, SafeAreaView, ActivityIndicator} from 'react-native';
+import {AppRegistry, StyleSheet, View, FlatList, SafeAreaView, ActivityIndicator} from 'react-native';
 import PetItem from './PetItem';
-import faker from 'faker';//assuming you have this.
+import faker from 'faker'; // makes fake data
 import _ from 'lodash';
 import Pagination,{Icon,Dot} from 'react-native-pagination';//{Icon,Dot} also available
 import Firebase from "../../components/Firebase";
+import {Text, NavHeader, Theme, Button} from "../../components";
+import { LinearGradient } from "expo-linear-gradient";
 
 //lets use faker to create mock data
 // let MockPersonList = new _.times(35,(i)=>{
@@ -79,7 +81,7 @@ export default class Pets extends Component {
     if(this.state.loading)
     {
         return(
-        <SafeAreaView style={[s.container]}>
+        <SafeAreaView style={[styles.container]}>
             <Text style={{
                 fontWeight: "600",
                 fontSize: 20,
@@ -95,12 +97,9 @@ export default class Pets extends Component {
         )
     }
     return (
-      <SafeAreaView style={[s.container]}>
-          <Text style={{
-              fontWeight: "600",
-              fontSize: 20,
-              padding: 20,
-          }}>My Pets</Text>
+      <View style={[styles.container]}>
+      <NavHeader title="My Pets"/>
+        <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
           <FlatList
             data={this.state.items}
             ref={r=>this.refs=r}//create refrence point to enable scrolling
@@ -116,16 +115,48 @@ export default class Pets extends Component {
             paginationItems={this.state.items}//pass the same list as data
             paginationItemPadSize={3} //num of items to pad above and below your visable items
           />
-        </SafeAreaView>
+        </View>
       )
   }
 };
 
-const s = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
+    backgroundColor: "white",
     flex: 1,
-    // backgroundColor:"grey",//<-- use with "dotThemeLight"
   },
+  gradient: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
+  message: {
+    color: Theme.palette.black,
+    fontSize: 20,
+    fontFamily: Theme.typography.semibold,
+    textAlign: "center",
+    marginBottom: Theme.spacing.base
+  },
+  buttonContainer: {
+    justifyContent: "space-evenly",
+    flexDirection: "row",
+    marginVertical: Theme.spacing.base
+  },
+  image: {
+    padding: 10,
+    color: Theme.palette.white
+  },
+  iconContainer: {
+    justifyContent: "center",
+    flexDirection: "column",
+    marginHorizontal: Theme.spacing.base
+  },
+  multiSelectContainer: {
+    padding: 10,
+    alignSelf: "stretch",
+  }
 });
 
 AppRegistry.registerComponent('ReactNativePaginationExample', () => App);

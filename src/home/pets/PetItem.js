@@ -131,7 +131,6 @@ export default class ListItem extends Component {
                 width: 50,
                 margin: 8,
                 borderRadius: 25,
-                backgroundColor: '#f8f8f8'
               }}>
               <FontAwesome5 name={petIcon} size="40%" color={speciesColor}/>
              </View>
@@ -144,8 +143,7 @@ export default class ListItem extends Component {
                   height: 50,
                   width: 50,
                   margin: 8,
-                  borderRadius: 25,
-                  backgroundColor: '#f8f8f8'
+                  borderRadius: 15,
                 }}
               />
             )}

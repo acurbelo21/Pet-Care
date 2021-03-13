@@ -1,8 +1,9 @@
 import React from 'react';
-import { Dimensions, FlatList, Image, StyleSheet, Text, SafeAreaView, View } from 'react-native';
+import { Dimensions, FlatList, Image, StyleSheet, SafeAreaView, View } from 'react-native';
 import Firebase from "../../components/Firebase";
-import { NavHeader } from "../../components";
 import type { ScreenParams } from "../../components/Types";
+import {Text, NavHeader, Theme, Button} from "../../components";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default class PetDetailView extends React.Component<ScreenParams<{ pet_uid: String }>, SettingsState> {
     constructor(props){
@@ -29,17 +30,62 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
         const { navigation } = this.props;
         console.log(this.state.petDetails)
         return (
-            <SafeAreaView>
+            <View>
                 <NavHeader title={this.state.petDetails.name} back {...{ navigation }} />
-                <Text
-                style={{
-                    fontSize: 40,
-                }}>{this.state.petDetails.species}</Text>
-                <Text
-                style={{
-                    fontSize: 40,
-                }}>{this.state.petDetails.breed}</Text>
+            <SafeAreaView>
+                
+                <View>
+                    <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
+                    <Text
+                    style={{
+                        fontSize: 20,
+                    }}>{this.state.petDetails.species}</Text>
+                    <Text
+                    style={{
+                        fontSize: 20,
+                    }}>{this.state.petDetails.breed}</Text>
+                </View>
             </SafeAreaView>
+            </View>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+      backgroundColor: "white",
+      flex: 1,
+    },
+    gradient: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    },
+    message: {
+      color: Theme.palette.black,
+      fontSize: 20,
+      fontFamily: Theme.typography.semibold,
+      textAlign: "center",
+      marginBottom: Theme.spacing.base
+    },
+    buttonContainer: {
+      justifyContent: "space-evenly",
+      flexDirection: "row",
+      marginVertical: Theme.spacing.base
+    },
+    image: {
+      padding: 10,
+      color: Theme.palette.white
+    },
+    iconContainer: {
+      justifyContent: "center",
+      flexDirection: "column",
+      marginHorizontal: Theme.spacing.base
+    },
+    multiSelectContainer: {
+      padding: 10,
+      alignSelf: "stretch",
+    }
+  });
