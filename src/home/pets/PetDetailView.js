@@ -3,6 +3,7 @@ import { Dimensions, FlatList, Image, StyleSheet, SafeAreaView, View } from 'rea
 import Firebase from "../../components/Firebase";
 import type { ScreenParams } from "../../components/Types";
 import {Text, NavHeader, Theme, Button} from "../../components";
+import { FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from "expo-linear-gradient";
 
 export default class PetDetailView extends React.Component<ScreenParams<{ pet_uid: String }>, SettingsState> {
@@ -28,24 +29,78 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
 
     render() {
         const { navigation } = this.props;
+        var petIcon;
+        var speciesColor;
+
+        switch (this.state.petDetails.species) {
+            case "Cat":
+              petIcon = "cat";
+              speciesColor = "#ffb347";
+              break;
+            case "Dog":
+              petIcon = "dog";
+              speciesColor = "#0080ff";
+              break;
+            case "Bird":
+              petIcon = "dove";
+              speciesColor = "#c93335";
+              break;
+            case "Horse":
+              petIcon = "horse";
+              speciesColor = "#77dd77";
+              break;
+            case "Fish":
+              petIcon = "fish";
+              speciesColor = "#71b6f7";
+              break;
+            case "Exotic":
+              petIcon = "spider";
+              speciesColor = "#9379c2";
+              break;
+            default:
+              petIcon = "question";
+              speciesColor = "black";
+              break;
+          }
+
         console.log(this.state.petDetails)
         return (
             <View>
                 <NavHeader title={this.state.petDetails.name} back {...{ navigation }} />
-            <SafeAreaView>
-                
-                <View>
-                    <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
-                    <Text
-                    style={{
-                        fontSize: 20,
-                    }}>{this.state.petDetails.species}</Text>
-                    <Text
-                    style={{
-                        fontSize: 20,
-                    }}>{this.state.petDetails.breed}</Text>
-                </View>
-            </SafeAreaView>
+                <SafeAreaView>
+                        <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
+                        {this.state.petDetails.pic == "null" && (
+                            <View style={styles.content}>
+                                <View/>
+                                <FontAwesome5 name={petIcon} size="100%" color={speciesColor} />
+                                <View/>
+                            </View>
+                        )}
+                        {this.state.petDetails.pic  != "null" && (
+                            <Image
+                                source={{ uri: this.state.petDetails.pic }}
+                                resizeMode="contain"
+                                style={{
+                                height: 50,
+                                width: 50,
+                                margin: 8,
+                                borderRadius: 15,
+                                }}
+                            />
+                        )}
+                        <Text
+                        style={{
+                            fontSize: 20,
+                        }}>{this.state.petDetails.name}</Text>
+                        <Text
+                        style={{
+                            fontSize: 20,
+                        }}>{this.state.petDetails.species}</Text>
+                        <Text
+                        style={{
+                            fontSize: 20,
+                        }}>{this.state.petDetails.breed}</Text>
+                </SafeAreaView>
             </View>
         );
     }
@@ -55,6 +110,14 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
       flex: 1,
+    },
+    content: {
+        height: 150,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingTop: 20,
+        backgroundColor: "white",
     },
     gradient: {
       position: "absolute",

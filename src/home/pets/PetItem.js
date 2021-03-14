@@ -12,65 +12,44 @@ export default class ListItem extends Component {
 
   @autobind
   goToPetDetailView() {
-      const pet_uid = this.props.pet_uid
-      this.props.navigation.navigate("PetDetailView",  { pet_uid } );
-  }
-
-  colorOfPetCategory(str) {
-    switch(str) {
-        case "Cat":
-            return "#ffb347";
-            break;
-        case "Dog":
-            return "#0080ff";
-            break;
-        case "Bird":
-            return "#c93335";
-            break;
-        case "Horse":
-            return "#77dd77";
-            break;
-        case "Fish":
-            return "#71b6f7";
-            break;
-        case "Exotic":
-            return "#9379c2";
-            break;
-        default:
-            return "black";
-            break;
-    }
+    const pet_uid = this.props.pet_uid
+    this.props.navigation.navigate("PetDetailView", { pet_uid });
   }
 
   render() {
     const { name, pic, color, seen, selected, key, id, species, breed, pet_uid } = this.props;
-    let speciesColor = '#33333';
-    if (color) speciesColor = color;
-    if (!color && species) speciesColor = this.colorOfPetCategory(this.props.species);
+    var speciesColor;
     var petIcon;
 
     switch (species) {
-        case "Cat":
-            petIcon = "cat";
-            break;
-        case "Dog":
-            petIcon = "dog";
-            break;
-        case "Bird":
-            petIcon = "dove";
-            break;
-        case "Horse":
-            petIcon = "horse";
-            break;
-        case "Fish":
-            petIcon = "fish";
-            break;
-        case "Exotic":
-            petIcon = "spider";
-            break;
-        default:
-            petIcon = "question";
-            break;
+      case "Cat":
+        petIcon = "cat";
+        speciesColor = "#ffb347";
+        break;
+      case "Dog":
+        petIcon = "dog";
+        speciesColor = "#0080ff";
+        break;
+      case "Bird":
+        petIcon = "dove";
+        speciesColor = "#c93335";
+        break;
+      case "Horse":
+        petIcon = "horse";
+        speciesColor = "#77dd77";
+        break;
+      case "Fish":
+        petIcon = "fish";
+        speciesColor = "#71b6f7";
+        break;
+      case "Exotic":
+        petIcon = "spider";
+        speciesColor = "#9379c2";
+        break;
+      default:
+        petIcon = "question";
+        speciesColor = "black";
+        break;
     }
 
     return (
@@ -92,7 +71,7 @@ export default class ListItem extends Component {
             width,
             flexDirection: 'row',
             borderBottomWidth: 1,
-            borderColor: '#e3e3e3'
+            borderColor: 'white'
           }}
         >
           <View
@@ -124,20 +103,20 @@ export default class ListItem extends Component {
               </Text>
             </View>
             {pic == "null" && (
-            <View 
-            resizeMode="contain"
-            style={{
-                height: 50,
-                width: 50,
-                margin: 8,
-                borderRadius: 25,
-              }}>
-              <FontAwesome5 name={petIcon} size="40%" color={speciesColor}/>
-             </View>
+              <View
+                resizeMode="contain"
+                style={{
+                  height: 50,
+                  width: 50,
+                  margin: 8,
+                  borderRadius: 25,
+                }}>
+                <FontAwesome5 name={petIcon} size="40%" color={speciesColor} />
+              </View>
             )}
             {pic != "null" && (
               <Image
-                source={{uri: pic}}
+                source={{ uri: pic }}
                 resizeMode="contain"
                 style={{
                   height: 50,
