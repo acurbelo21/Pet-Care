@@ -24,9 +24,8 @@ import autobind from 'autobind-decorator';
 export default class Pets extends Component {
 
   @autobind
-  AddPet() {
-      this.props.navigation.navigate("AddPets");
-      console.log("pressed");
+  buttonFn() {
+    console.log("pressed");
   }
 
   constructor(props){
@@ -85,6 +84,9 @@ export default class Pets extends Component {
   onViewableItemsChanged = ({ viewableItems, changed }) =>this.setState({viewableItems})
 
   render() {
+    const { buttonFn } = this;
+    const { navigation } = this.props;
+
     if(this.state.loading)
     {
         return(
@@ -105,7 +107,7 @@ export default class Pets extends Component {
     }
     return (
       <View style={[styles.container]}>
-      <NavHeaderWithButton title="My Pets" buttonFn={this.AddPet}/>
+      <NavHeaderWithButton title="My Pets" {...{ navigation, buttonFn }} />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
           <FlatList
             data={this.state.items}

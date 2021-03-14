@@ -13,7 +13,7 @@ type NavHeaderProps = NavigationProps<*> & {
     title: string,
     back?: boolean,
     backFn?: () => void,
-    buttonFn: () => void,
+    buttonFn?: () => void,
 };
 
 export default class NavHeaderWithButton extends React.Component<NavHeaderProps> {
@@ -29,30 +29,24 @@ export default class NavHeaderWithButton extends React.Component<NavHeaderProps>
 
     @autobind
     onPressButton() {
-        const { buttonFn, navigation } = this.props;
+        const { buttonFn, navigation} = this.props;
         buttonFn();
+        navigation.navigate("AddPets");
         console.log("yes");
     }
 
     render(): React.Node {
         const { onPressBack } = this;
         const { onPressButton } = this;
-        const { title, back } = this.props;
+        const { title, back} = this.props;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.content}>
                     <View style={styles.side}>
-                        {back && (
-                            <TouchableOpacity {...{ onPressBack }}>
-                                <View style={styles.back}>
-                                    <Icon name="chevron-left" size={25} />
-                                </View>
-                            </TouchableOpacity>
-                        )}
                     </View>
                     <Text type="header3">{title}</Text>
                     <View style={styles.side}>
-                        <TouchableOpacity {...{ onPressButton }}>
+                        <TouchableOpacity onPress={onPressButton}>
                             <Icon name="plus" size={25} />
                         </TouchableOpacity>
                     </View>

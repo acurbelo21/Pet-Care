@@ -1,11 +1,20 @@
 import React from 'react';
+import { StyleSheet, FlatList, KeyboardAvoidingView, TextInput, View, Platform, TouchableOpacity } from "react-native";
+import { Text, NavHeader, Theme, Firebase } from "../../components";
+import type { ScreenParams } from "../../components/Types";
 
-function AddPets(props) {
-    return (
-        <div>
-            <Text>yo</Text>
-        </div>
-    );
+export default class AddPets extends React.Component<SettingsState> {
+   
+    async componentDidMount(): Promise<void> {
+        const { navigation } = this.props;
+    }
+
+    render() {
+        const { navigation } = this.props;
+        return (
+            <div>
+                <Text>yo</Text>
+            </div>
+        );
+    }
 }
-
-export default AddPets;
