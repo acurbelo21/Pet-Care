@@ -13,12 +13,12 @@ type NavHeaderProps = NavigationProps<*> & {
     title: string,
     back?: boolean,
     backFn?: () => void,
-    button?: () => void,
+    buttonFn: () => void,
 };
 
 export default class NavHeaderWithButton extends React.Component<NavHeaderProps> {
     @autobind
-    onPress() {
+    onPressBack() {
         const { backFn, navigation } = this.props;
         if (backFn) {
             backFn();
@@ -27,15 +27,23 @@ export default class NavHeaderWithButton extends React.Component<NavHeaderProps>
         }
     }
 
+    @autobind
+    onPressButton() {
+        const { buttonFn, navigation } = this.props;
+        buttonFn();
+        console.log("yes");
+    }
+
     render(): React.Node {
-        const { onPress } = this;
+        const { onPressBack } = this;
+        const { onPressButton } = this;
         const { title, back } = this.props;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.content}>
                     <View style={styles.side}>
                         {back && (
-                            <TouchableOpacity {...{ onPress }}>
+                            <TouchableOpacity {...{ onPressBack }}>
                                 <View style={styles.back}>
                                     <Icon name="chevron-left" size={25} />
                                 </View>
@@ -43,11 +51,11 @@ export default class NavHeaderWithButton extends React.Component<NavHeaderProps>
                         )}
                     </View>
                     <Text type="header3">{title}</Text>
-                    <Button 
-                    onPress={() => alert('This is a button!')}
-                    title="Info"
-                    />
-                    <View style={styles.side} />
+                    <View style={styles.side}>
+                        <TouchableOpacity {...{ onPressButton }}>
+                            <Icon name="plus" size={25} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </SafeAreaView>
         );
@@ -73,7 +81,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     side: {
-        width: 30,
+        width: 40,
     },
     back: {
         marginLeft: Theme.spacing.tiny,

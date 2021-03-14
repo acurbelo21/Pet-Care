@@ -7,6 +7,7 @@ import Pagination,{Icon,Dot} from 'react-native-pagination';//{Icon,Dot} also av
 import Firebase from "../../components/Firebase";
 import {Text, NavHeaderWithButton, Theme, Button} from "../../components";
 import { LinearGradient } from "expo-linear-gradient";
+import autobind from 'autobind-decorator';
 
 //lets use faker to create mock data
 // let MockPersonList = new _.times(35,(i)=>{
@@ -21,6 +22,12 @@ import { LinearGradient } from "expo-linear-gradient";
 // })
 
 export default class Pets extends Component {
+
+  @autobind
+  AddPet() {
+      this.props.navigation.navigate("AddPets");
+      console.log("pressed");
+  }
 
   constructor(props){
      super(props);
@@ -98,7 +105,7 @@ export default class Pets extends Component {
     }
     return (
       <View style={[styles.container]}>
-      <NavHeaderWithButton title="My Pets"/>
+      <NavHeaderWithButton title="My Pets" buttonFn={this.AddPet}/>
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
           <FlatList
             data={this.state.items}
