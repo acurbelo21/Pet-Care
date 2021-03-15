@@ -1,9 +1,7 @@
 export {default as Pets} from "./Pets";
 export {default as PetDetailView} from "./PetDetailView";
-import React from 'react'
-import PropTypes from 'prop-types'
-
-import contactData from '../../mocks/contact.json'
+export { LabResults } from "./lab";
+export { TrainingScreen } from "./training";
 
 // import Profile from './PetDetailView'
 

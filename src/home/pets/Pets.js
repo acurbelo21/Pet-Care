@@ -82,11 +82,6 @@ export default class Pets extends Component {
     {
         return(
         <SafeAreaView style={[styles.container]}>
-            <Text style={{
-                fontWeight: "600",
-                fontSize: 20,
-                padding: 20,
-            }}>My Pets</Text>
         <View style={{
             paddingTop: "40%",
             justifyContent:"center",

@@ -16,112 +16,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import PropTypes from 'prop-types'
-import {Text, NavHeader, Theme, Button} from "../../components";
+import {Text, Theme} from "../../components";
 
 import Email from './Email'
 import Separator from './Separator'
 import Tel from './Tel'
 import { reduce } from "lodash";
-
-const styles = StyleSheet.create({
-  topContainer: {
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
-    borderColor: Theme.palette.borderColor,
-    borderBottomWidth: Platform.OS === "ios" ? 0 : 1,
-    zIndex: 10000,
-    backgroundColor: "white",
-  },
-  side: {
-      width: 30,
-  },
-  cardContainer: {
-    backgroundColor: '#FFF',
-    borderWidth: 0,
-    flex: 1,
-    margin: 0,
-    padding: 0,
-  },
-  container: {
-    flex: 1,
-  },
-  emailContainer: {
-    backgroundColor: '#FFF',
-    flex: 1,
-    paddingTop: 30,
-  },
-  headerBackgroundImage: {
-    paddingBottom: 20,
-    paddingTop: 45,
-  },
-  headerContainer: {},
-  headerColumn: {
-    backgroundColor: 'transparent',
-    ...Platform.select({
-      ios: {
-        alignItems: 'center',
-        elevation: 1,
-        marginTop: -1,
-      },
-      android: {
-        alignItems: 'center',
-      },
-    }),
-  },
-  labButton:{
-    backgroundColor: '#9dffb0',
-    alignSelf: 'center',
-  },
-  labContainer: {
-    paddingTop: 20, 
-    paddingBottom: 40,
-    width: '100%',
-    height: '20%',
-  },
-  placeIcon: {
-    color: 'white',
-    fontSize: 26,
-  },
-  scroll: {
-    backgroundColor: '#FFF',
-  },
-  telContainer: {
-    backgroundColor: '#FFF',
-    flex: 1,
-    paddingTop: 30,
-  },
-  userAddressRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  userCityRow: {
-    backgroundColor: 'transparent',
-  },
-  userCityText: {
-    color: '#A5A5A5',
-    fontSize: 15,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  userImage: {
-    borderColor: '#FFF',
-    borderRadius: 85,
-    borderWidth: 3,
-    height: 170,
-    marginBottom: 15,
-    width: 170,
-  },
-  userNameText: {
-    color: '#FFF',
-    fontSize: 22,
-    fontWeight: 'bold',
-    paddingBottom: 8,
-    textAlign: 'center',
-  },
-})
 
 export default class PetDetailView extends React.Component<ScreenParams<{ pet_uid: String }>, SettingsState> {
   constructor(props)
@@ -145,7 +45,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
       avatar: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg",
       avatarBackground: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg", 
       name: "Gina Mahdi",
-      address: {"city": "Miami", "country": "Florida"}
+      petBiology: {"species": "Miami", "breed": "Florida"}
     };
   }
 
@@ -161,6 +61,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
         this.setState({
           petDetails: doc.data(), 
           name: doc.data().name,
+          petBiology: {"species" : doc.data().species, "breed" : doc.data().breed}
         });
 
         switch (this.state.petDetails.species) {
@@ -216,6 +117,18 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     navigation.goBack();
   }
 
+  @autobind
+  goToLabResults() {
+    const { navigation } = this.props;
+    navigation.navigate("LabResults");
+  }
+
+  @autobind
+  goToTrainingScreen() {
+    const { navigation } = this.props;
+    navigation.navigate("TrainingScreen");
+  }
+
   onPressPlace = () => {
     console.log('place')
   }
@@ -239,7 +152,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
       avatar,
       avatarBackground,
       name,
-      address: { city, country },
+      petBiology: { species, breed },
     } = this.state
 
     return (
@@ -265,15 +178,16 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
             <View style={styles.userAddressRow}>
               <View>
                 <Icon
-                  name="place"
+                  name="paw"
                   underlayColor="transparent"
+                  type="font-awesome-5"
                   iconStyle={styles.placeIcon}
                   onPress={this.onPressPlace}
                 />
               </View>
               <View style={styles.userCityRow}>
                 <Text style={styles.userCityText}>
-                  {city}, {country}
+                  {species}, {breed}
                 </Text>
               </View>
             </View>
@@ -328,19 +242,19 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     if(this.state.loading)
     {
         return(
-        <SafeAreaView style={[styles.container]}>
-        <View style={{
-            paddingTop: "40%",
-            justifyContent:"center",
-        }}>
-            <ActivityIndicator size="large" />
-        </View>
-        </SafeAreaView>
+        <ScrollView style={[styles.container]}>
+          <View style={{
+              paddingTop: "40%",
+              justifyContent:"center",
+          }}>
+              <ActivityIndicator size="large" />
+          </View>
+        </ScrollView>
         )
     }
     else {
     return (
-      <ScrollView style={styles.scroll}>
+      <ScrollView contentContainerStyle={styles.scroll} persistentScrollbar={false} >
         <View style={styles.container}>
           <Card containerStyle={styles.cardContainer}>
             {this.renderHeader()}
@@ -349,13 +263,130 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
             {this.renderEmail()}
           </Card>
           <View style={styles.labContainer}>
-            <Button label={"View " + this.state.petDetails.name + "'s Lab Results!"}
-              style={styles.labButton}/>
+            <TouchableOpacity
+              style={styles.labButton}
+              onPress={this.goToLabResults}
+            >
+                <Text>
+                  View {this.state.petDetails.name}'s Lab Results
+                </Text>
+            </TouchableOpacity>
           </View>
+          <View style={styles.container}>
+            <TouchableOpacity
+              style={styles.labButton}
+              onPress={this.goToTrainingScreen}
+            >
+                <Text>
+                  View training videos on {this.state.petDetails.breed}s
+                </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{height:150}}/>
         </View>
       </ScrollView>
     )
     }
   }
 }
+
+const styles = StyleSheet.create({
+  topContainer: {
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    borderColor: Theme.palette.borderColor,
+    borderBottomWidth: Platform.OS === "ios" ? 0 : 1,
+    zIndex: 10000,
+    backgroundColor: "white",
+  },
+  side: {
+      width: 30,
+  },
+  cardContainer: {
+    backgroundColor: '#FFF',
+    borderWidth: 0,
+    flex: 1,
+    margin: 0,
+    padding: 0,
+  },
+  container: {
+    flex: 1,
+  },
+  emailContainer: {
+    backgroundColor: '#FFF',
+    flex: 1,
+    paddingTop: 30,
+  },
+  headerBackgroundImage: {
+    paddingBottom: 20,
+    paddingTop: 45,
+  },
+  headerContainer: {},
+  headerColumn: {
+    backgroundColor: 'transparent',
+    ...Platform.select({
+      ios: {
+        alignItems: 'center',
+        elevation: 1,
+        marginTop: -1,
+      },
+      android: {
+        alignItems: 'center',
+      },
+    }),
+  },
+  labButton:{
+    backgroundColor: '#9dffb0',
+    alignSelf: 'center',
+    padding: 10,
+  },
+  labContainer: {
+    width: '100%',
+    height: '10%',
+    justifyContent: 'center',
+  },
+  placeIcon: {
+    color: 'white',
+    fontSize: 26,
+    paddingRight: 5,
+  },
+  scroll: {
+    backgroundColor: '#FFF',
+  },
+  telContainer: {
+    backgroundColor: '#FFF',
+    flex: 1,
+    paddingTop: 30,
+  },
+  userAddressRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  userCityRow: {
+    backgroundColor: 'transparent',
+  },
+  userCityText: {
+    color: '#A5A5A5',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  userImage: {
+    borderColor: '#FFF',
+    borderRadius: 85,
+    borderWidth: 3,
+    height: 170,
+    marginBottom: 15,
+    width: 170,
+  },
+  userNameText: {
+    color: '#FFF',
+    fontSize: 22,
+    fontWeight: 'bold',
+    paddingBottom: 8,
+    textAlign: 'center',
+  },
+})
 
