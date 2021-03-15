@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import {StyleSheet, TouchableWithoutFeedback, SafeAreaView, View} from "react-native";
-import { Feather as Icon } from "@expo/vector-icons";
+import { FontAwesome5 as Icon } from "@expo/vector-icons";
 
 import {Theme} from "../components";
 
@@ -15,7 +15,8 @@ export class HomeTab extends React.Component<NavigationProps<*>> {
         { label: "Explore", icon: "home" },
         { label: "Share", icon: "camera" },
         { label: "Profile", icon: "user" },
-        { label: "DiagnosticTool", icon: "clipboard" }
+        { label: "DiagnosticTool", icon: "clipboard" },
+        { label: "Pets", icon: "paw"}
     ];
 
     render(): React.Node {
