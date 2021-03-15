@@ -25,7 +25,8 @@ export default class Pets extends Component {
 
   @autobind
   buttonFn() {
-    console.log("pressed");
+    this.props.navigation.navigate("AddPets");
+    // console.log("pressed");
   }
 
   constructor(props){

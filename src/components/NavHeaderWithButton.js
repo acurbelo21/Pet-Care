@@ -18,27 +18,15 @@ type NavHeaderProps = NavigationProps<*> & {
 
 export default class NavHeaderWithButton extends React.Component<NavHeaderProps> {
     @autobind
-    onPressBack() {
-        const { backFn, navigation } = this.props;
-        if (backFn) {
-            backFn();
-        } else {
-            navigation.goBack();
-        }
-    }
-
-    @autobind
     onPressButton() {
-        const { buttonFn, navigation} = this.props;
+        const { buttonFn } = this.props;
         buttonFn();
-        navigation.navigate("AddPets");
-        console.log("yes");
+        // console.log("yes");
     }
 
     render(): React.Node {
-        const { onPressBack } = this;
         const { onPressButton } = this;
-        const { title, back} = this.props;
+        const { title } = this.props;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.content}>
