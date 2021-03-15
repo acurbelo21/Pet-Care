@@ -20,7 +20,7 @@ export default class LabResults extends Component {
             <View>
                 <NavHeader title="Lab Results" back {...{navigation}}/>
                 <SafeAreaView>
-                    <Text>LabResults</Text>
+                    <Text>Lab Results</Text>
                 </SafeAreaView>
             </View>
         )
