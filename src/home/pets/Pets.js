@@ -5,8 +5,9 @@ import faker from 'faker'; // makes fake data
 import _ from 'lodash';
 import Pagination,{Icon,Dot} from 'react-native-pagination';//{Icon,Dot} also available
 import Firebase from "../../components/Firebase";
-import {Text, NavHeader, Theme, Button} from "../../components";
+import {Text, NavHeaderWithButton, Theme, Button} from "../../components";
 import { LinearGradient } from "expo-linear-gradient";
+import autobind from 'autobind-decorator';
 
 //lets use faker to create mock data
 // let MockPersonList = new _.times(35,(i)=>{
@@ -21,6 +22,12 @@ import { LinearGradient } from "expo-linear-gradient";
 // })
 
 export default class Pets extends Component {
+
+  @autobind
+  buttonFn() {
+    this.props.navigation.navigate("AddPets");
+    // console.log("pressed");
+  }
 
   constructor(props){
      super(props);
@@ -78,6 +85,9 @@ export default class Pets extends Component {
   onViewableItemsChanged = ({ viewableItems, changed }) =>this.setState({viewableItems})
 
   render() {
+    const { buttonFn } = this;
+    const { navigation } = this.props;
+
     if(this.state.loading)
     {
         return(
@@ -93,7 +103,7 @@ export default class Pets extends Component {
     }
     return (
       <View style={[styles.container]}>
-      <NavHeader title="My Pets"/>
+      <NavHeaderWithButton title="My Pets" {...{ navigation, buttonFn }} />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
           <FlatList
             data={this.state.items}
