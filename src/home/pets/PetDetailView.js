@@ -76,9 +76,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   labContainer: {
+    paddingTop: 20, 
+    paddingBottom: 40,
     width: '100%',
-    height: '12%',
-    justifyContent: 'center',
+    height: '20%',
   },
   placeIcon: {
     color: 'white',
