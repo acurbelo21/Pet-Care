@@ -17,7 +17,7 @@ import type { ScreenProps } from "./src/components/Types";
 import { Welcome } from "./src/welcome";
 import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
-import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, Pets, PetDetailView, AddPets } from "./src/home";
+import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, Pets, PetDetailView, LabResults, TrainingScreen, AddPets} from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -168,6 +168,8 @@ const PetsNavigator = createStackNavigator(
         Pets: { screen: Pets },
         PetDetailView: { screen: PetDetailView },
         AddPets: {screen: AddPets}
+        LabResults: { screen: LabResults },
+        TrainingScreen: { screen: TrainingScreen }
     },
     StackNavigatorOptions
 );
