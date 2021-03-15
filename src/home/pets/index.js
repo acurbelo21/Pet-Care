@@ -1,5 +1,6 @@
 export {default as Pets} from "./Pets";
 export {default as PetDetailView} from "./PetDetailView";
+export {default as AddPets} from "./AddPets";
 export { LabResults } from "./lab";
 export { TrainingScreen } from "./training";
 
