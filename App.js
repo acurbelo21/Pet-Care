@@ -167,7 +167,7 @@ const PetsNavigator = createStackNavigator(
     {
         Pets: { screen: Pets },
         PetDetailView: { screen: PetDetailView },
-        AddPets: {screen: AddPets}
+        AddPets: {screen: AddPets},
         LabResults: { screen: LabResults },
         TrainingScreen: { screen: TrainingScreen }
     },
