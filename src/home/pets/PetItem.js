@@ -7,12 +7,14 @@ import PropTypes from 'prop-types';
 import { FontAwesome5 } from '@expo/vector-icons';
 const { width, height } = Dimensions.get('window');
 import { NavigationEvents } from "react-navigation";
+import contactData from '../../mocks/contact.json'
 
 export default class ListItem extends Component {
 
   @autobind
   goToPetDetailView() {
     const pet_uid = this.props.pet_uid
+    // this.props.navigation.navigate("PetDetailView", { pet_uid });
     this.props.navigation.navigate("PetDetailView", { pet_uid });
   }
 
