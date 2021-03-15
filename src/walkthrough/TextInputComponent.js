@@ -58,8 +58,7 @@ export default class TextInputComponent extends React.Component {
                     placeholder="Type your pet's name here!"
                     placeholderTextColor = "#777777"
                     autoCapitalize="words"
-                    autoFocus="true"
-                    // onChangeText={text => setText(text)}
+                    autoFocus={true}
                     onChangeText={(text) => this.setState({petName: text})}
                     defaultValue={this.state.petName}
                 />

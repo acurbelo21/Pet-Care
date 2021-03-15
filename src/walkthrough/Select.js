@@ -215,7 +215,9 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
                         onPress={this.selectExotic}
                     />
                 </View>
-                <View style={{marginTop: Theme.spacing.large}}>
+                {/* <View style={{marginTop: Theme.spacing.large}}> */}
+                {/* Removed marginTop ^ because TextInput and button was being covered by white bottom slide container */}
+                <View>
                     {this.state.petNameTextInputIsVisible ? <TextInputComponent /> : selectPetBreedMessage}
                 </View>
             </>

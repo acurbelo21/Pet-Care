@@ -17,7 +17,7 @@ import type { ScreenProps } from "./src/components/Types";
 import { Welcome } from "./src/welcome";
 import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
-import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, Pets, PetDetailView, LabResults, TrainingScreen, AddPets} from "./src/home";
+import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, Pets, PetDetailView, LabResults, TrainingScreen, AddPets, DiagnosticTool} from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -163,6 +163,13 @@ const ShareNavigator = createStackNavigator(
     StackNavigatorOptions
 );
 
+const ToolNavigator = createStackNavigator(
+    {
+        DiagnosticTool: { screen: DiagnosticTool },
+    },
+    StackNavigatorOptions
+);
+
 const PetsNavigator = createStackNavigator(
     {
         Pets: { screen: Pets },
@@ -179,7 +186,8 @@ const HomeTabs = createBottomTabNavigator(
         Explore: { screen: ExploreNavigator },
         Share: { screen: ShareNavigator },
         Profile: { screen: ProfileNavigator },
-        Pets: { screen: PetsNavigator} 
+        DiagnosticTool: { screen: ToolNavigator},
+        Pets: { screen: PetsNavigator}
     },
     {
         animationEnabled: true,
