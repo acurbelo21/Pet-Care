@@ -2,7 +2,7 @@ import autobind from "autobind-decorator";
 import Firebase from "../../components/Firebase";
 import React, { Component } from 'react'
 import type { ScreenParams } from "../../components/Types";
-import { Card, Icon } from 'react-native-elements'
+import { Card, Icon, Overlay } from 'react-native-elements'
 import {
   ActivityIndicator,
   FlatList,
@@ -45,8 +45,19 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
       avatar: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg",
       avatarBackground: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg", 
       name: "Gina Mahdi",
-      petBiology: {"species": "Miami", "breed": "Florida"}
+      petBiology: {"species": "Miami", "breed": "Florida"},
+      setOverlay: false,
     };
+  }
+
+  @autobind
+  overlaySwitch(visible) {
+    this.setState({"setOverlay":visible});
+  }
+
+  @autobind
+  toggleOverlay() {
+    this.overlaySwitch(!this.state.setOverlay);
   }
 
   async componentDidMount(): Promise<void> {
@@ -182,9 +193,12 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                   underlayColor="transparent"
                   type="font-awesome-5"
                   iconStyle={styles.placeIcon}
-                  onPress={this.onPressPlace}
+                  onPress={this.toggleOverlay}
                 />
               </View>
+              <Overlay isVisible={this.state.setOverlay} onBackdropPress={this.toggleOverlay}>
+               <Text>Hello from Overlay!</Text>
+             </Overlay>
               <View style={styles.userCityRow}>
                 <Text style={styles.userCityText}>
                   {species}, {breed}
