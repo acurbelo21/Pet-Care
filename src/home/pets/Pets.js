@@ -69,6 +69,8 @@ export default class Pets extends Component {
         pic={item.pic}
         breed={item.breed}
         species={item.species}
+        age={item.age}
+        gender={item.gender}
         {...{navigation}}
       />)
     };
