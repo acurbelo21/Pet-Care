@@ -14,6 +14,7 @@ type NavHeaderProps = NavigationProps<*> & {
     back?: boolean,
     backFn?: () => void,
     buttonFn?: () => void,
+    buttonIcon?: string
 };
 
 export default class NavHeaderWithButton extends React.Component<NavHeaderProps> {
@@ -21,12 +22,12 @@ export default class NavHeaderWithButton extends React.Component<NavHeaderProps>
     onPressButton() {
         const { buttonFn } = this.props;
         buttonFn();
-        // console.log("yes");
     }
 
     render(): React.Node {
         const { onPressButton } = this;
         const { title } = this.props;
+        const { buttonIcon } = this.props;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.content}>
@@ -35,7 +36,7 @@ export default class NavHeaderWithButton extends React.Component<NavHeaderProps>
                     <Text type="header3">{title}</Text>
                     <View style={styles.side}>
                         <TouchableOpacity onPress={onPressButton}>
-                            <Icon name="plus" size={25} />
+                            <Icon name={buttonIcon} size={25} />
                         </TouchableOpacity>
                     </View>
                 </View>

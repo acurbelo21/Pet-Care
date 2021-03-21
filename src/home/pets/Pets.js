@@ -103,7 +103,7 @@ export default class Pets extends Component {
     }
     return (
       <View style={[styles.container]}>
-      <NavHeaderWithButton title="My Pets" {...{ navigation, buttonFn }} />
+      <NavHeaderWithButton title="My Pets" buttonFn={this.buttonFn} buttonIcon="plus" />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
           <FlatList
             data={this.state.items}

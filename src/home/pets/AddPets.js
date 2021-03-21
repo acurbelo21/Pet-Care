@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View } from "react-native";
-import { Text, NavHeader, Theme, Button, TextField } from "../../components";
+import { StyleSheet, View, TextInput } from "react-native";
+import { Text, NavHeader, Theme, Button, TextField, NavHeaderWithButton } from "../../components";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Firebase from "../../components/Firebase";
 import TextInputComponent from "../../walkthrough/TextInputComponent";
@@ -20,20 +20,14 @@ export default class AddPets extends React.Component<SettingsState> {
             breed: null,
             age: 0,
             sex: null,
-            isVisibleA: false,
-            isVisibleB: false,
         };
-    
-        //this.controller;
     }
 
-    changeVisibility(state) {
-        this.setState({
-            ...state,
-            isVisibleA: false,
-            isVisibleB: false,
-        });
-        console.log(this.state.isVisibleA)
+    AddPetToFirebase(){
+        console.log(this.state.pet);
+        console.log(this.state.breed);
+        console.log(this.state.age);
+        console.log(this.state.sex);
     }
 
     render() {
@@ -41,7 +35,7 @@ export default class AddPets extends React.Component<SettingsState> {
 
         return (
             <>  
-                <NavHeader title="Add Pet" back {...{ navigation }} />
+                <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.AddPetToFirebase} buttonIcon="check"/>
 
                 <DropDownPicker
                     items={[
@@ -99,17 +93,18 @@ export default class AddPets extends React.Component<SettingsState> {
 
                 <Text>Breed:</Text>
 
-                <TextField
+                <TextInput
                     style={styles.input}
                     onChangeText={item => this.setState({
                         age: item.value
                     })}
                     returnKeyType = 'done'
                 />
+                
 
                 <Text>Age:</Text>
 
-                <TextField
+                <TextInput
                     style={styles.input}
                     onChangeText={item => this.setState({
                         age: item.value
@@ -118,10 +113,10 @@ export default class AddPets extends React.Component<SettingsState> {
                     returnKeyType = 'done'
                 />
 
-                <Button
-                    title="Press me"
-                    onPress={console.log(this.state.pet)}
-                />
+                <Button style={styles.buttonContainer}>
+                    onPress={() => console.log("hey")}
+                    title="yo"
+                </Button>
             </>
         );
     }
@@ -145,15 +140,22 @@ const styles = StyleSheet.create({
         marginBottom: Theme.spacing.base
     },
     input: {
-        height: 40,
-        margin: 12,
+        height: 30,
+        margin: 6,
         borderWidth: 1,
-        paddingTop: 40,
+        paddingTop: 0,
+        textAlign: 'left'
     },
+    buttonContainer: {
+        position: 'absolute',
+        bottom: -360, // I play around with this number until it appears lol
+        zIndex: 1, // This helps when it's being hidden behind something else sometimes, and I fiddle with the zIndex of the conflicting container
+        alignSelf: "center"
+    }
 });
 
 /*
 Plans for this screen
 similar to the first select screen with some different text and no description at the bottom
 
-*/
+*/  
