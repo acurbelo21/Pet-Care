@@ -23,7 +23,15 @@ export default class AddPets extends React.Component<SettingsState> {
         };
     }
 
-    AddPetToFirebase(){
+    handleAge = (text) => {
+        this.setState({age: text})
+    }
+
+    handleBreed = (text) => {
+        this.setState({breed: text})
+    }
+
+    AddPetToFireStore = (event) =>{
         console.log(this.state.pet);
         console.log(this.state.breed);
         console.log(this.state.age);
@@ -35,7 +43,7 @@ export default class AddPets extends React.Component<SettingsState> {
 
         return (
             <>  
-                <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.AddPetToFirebase} buttonIcon="check"/>
+                <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.AddPetToFireStore} buttonIcon="check" />
 
                 <DropDownPicker
                     items={[
@@ -95,28 +103,18 @@ export default class AddPets extends React.Component<SettingsState> {
 
                 <TextInput
                     style={styles.input}
-                    onChangeText={item => this.setState({
-                        age: item.value
-                    })}
+                    onChangeText={this.handleBreed}
                     returnKeyType = 'done'
                 />
                 
-
                 <Text>Age:</Text>
 
                 <TextInput
                     style={styles.input}
-                    onChangeText={item => this.setState({
-                        age: item.value
-                    })}
+                    onChangeText={this.handleAge}
                     keyboardType="numeric"
                     returnKeyType = 'done'
-                />
-
-                <Button style={styles.buttonContainer}>
-                    onPress={() => console.log("hey")}
-                    title="yo"
-                </Button>
+                /> 
             </>
         );
     }
@@ -147,15 +145,9 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     buttonContainer: {
-        position: 'absolute',
-        bottom: -360, // I play around with this number until it appears lol
-        zIndex: 1, // This helps when it's being hidden behind something else sometimes, and I fiddle with the zIndex of the conflicting container
-        alignSelf: "center"
+        height: 30,
+        margin: 6,
+        paddingTop: 0,
+        textAlign: 'left'
     }
 });
-
-/*
-Plans for this screen
-similar to the first select screen with some different text and no description at the bottom
-
-*/  
