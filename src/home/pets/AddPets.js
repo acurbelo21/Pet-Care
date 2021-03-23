@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TextInput } from "react-native";
+import { StyleSheet, View, TextInput, ScrollView } from "react-native";
 import { Text, NavHeader, Theme, Button, TextField, NavHeaderWithButton } from "../../components";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Firebase from "../../components/Firebase";
@@ -16,8 +16,9 @@ export default class AddPets extends React.Component<SettingsState> {
     constructor(props) {
         super(props);
         this.state = {
-            pet: null,
+            species: null,
             breed: null,
+            name: null,
             age: 0,
             sex: null,
         };
@@ -31,30 +32,63 @@ export default class AddPets extends React.Component<SettingsState> {
         this.setState({breed: text})
     }
 
-    AddPetToFireStore = (event) =>{
-        console.log(this.state.pet);
-        console.log(this.state.breed);
-        console.log(this.state.age);
-        console.log(this.state.sex);
+    handleName = (text) => {
+        this.setState({name: text})
+    }
+
+    addPetToFireStore = (event) =>{
+        var pet_uid = this.guidGenerator();
+        const { uid } = Firebase.auth.currentUser;
+        var owner_uid = uid;
+        var pic = "null";
+        const {species, breed, name, age, sex} = this.state;
+
+        var docRef = Firebase.firestore.collection("pets").doc(pet_uid);
+
+        docRef.get().then((doc) => {
+            if (doc.exists) {
+                this.addPetToFireStore();
+            } else {
+                Firebase.firestore.collection("pets").doc(pet_uid).set({
+                    species, breed, name, age, sex, pic, owner_uid
+                })
+                .catch((error) => {
+                    console.error("Error writing document: ", error);
+                });
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+
+        this.props.navigation.goBack();
+    }
+
+    guidGenerator = (event) => {
+        var S4 = function() {
+           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
     }
 
     render() {
         const { navigation } = this.props;
 
         return (
-            <>  
-                <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.AddPetToFireStore} buttonIcon="check" />
+            <ScrollView>  
+                <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.addPetToFireStore} buttonIcon="check" />
+
+                {/* Need to make these required fields */}
 
                 <DropDownPicker
                     items={[
-                        {label: 'Dog', value: 'dog', icon: () => <FontAwesome5 name="dog" size={18} color="#900" />},
-                        {label: 'Cat', value: 'cat', icon: () => <FontAwesome5 name="cat" size={18} color="#900" />},
-                        {label: 'Bird', value: 'bird', icon: () => <FontAwesome5 name="dove" size={18} color="#900" />},
-                        {label: 'Horse', value: 'horse', icon: () => <FontAwesome5 name="horse" size={18} color="#900" />},
-                        {label: 'Fish', value: 'fish', icon: () => <FontAwesome5 name="fish" size={18} color="#900" />},
-                        {label: 'Exotic', value: 'exotic', icon: () => <FontAwesome5 name="spider" size={18} color="#900" />},
+                        {label: 'Dog', value: 'Dog', icon: () => <FontAwesome5 name="dog" size={18} color="#900" />},
+                        {label: 'Cat', value: 'Cat', icon: () => <FontAwesome5 name="cat" size={18} color="#900" />},
+                        {label: 'Bird', value: 'Bird', icon: () => <FontAwesome5 name="dove" size={18} color="#900" />},
+                        {label: 'Horse', value: 'Horse', icon: () => <FontAwesome5 name="horse" size={18} color="#900" />},
+                        {label: 'Fish', value: 'Fish', icon: () => <FontAwesome5 name="fish" size={18} color="#900" />},
+                        {label: 'Exotic', value: 'Exotic', icon: () => <FontAwesome5 name="spider" size={18} color="#900" />},
                     ]}
-                    defaultValue={this.state.pet}
+                    defaultValue={this.state.species}
                     containerStyle={{height: 40, marginBottom: 160}}
                     style={{backgroundColor: '#fafafa'}}
                     itemStyle={{
@@ -62,7 +96,7 @@ export default class AddPets extends React.Component<SettingsState> {
                     }}
                     dropDownStyle={{backgroundColor: '#fafafa'}}
                     onChangeItem={item => this.setState({
-                        pet: item.value
+                        species: item.value
                     })}
                     placeholder="Select a species"
                     isVisible={this.state.isVisibleA}
@@ -99,6 +133,14 @@ export default class AddPets extends React.Component<SettingsState> {
                     })}
                 />
 
+                <Text>Name:</Text>
+
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.handleName}
+                    returnKeyType = 'done'
+                /> 
+
                 <Text>Breed:</Text>
 
                 <TextInput
@@ -115,7 +157,7 @@ export default class AddPets extends React.Component<SettingsState> {
                     keyboardType="numeric"
                     returnKeyType = 'done'
                 /> 
-            </>
+            </ScrollView>
         );
     }
 }

@@ -43,7 +43,7 @@ export default class Pets extends Component {
 
         Firebase.firestore
         .collection("pets")
-        .where("owner-uid", "==", uid)
+        .where("owner_uid", "==", uid)
         .get()
         .then(docs => {
             var i = 0;
