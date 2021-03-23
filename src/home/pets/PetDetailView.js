@@ -2,7 +2,7 @@ import autobind from "autobind-decorator";
 import Firebase from "../../components/Firebase";
 import React, { Component } from 'react'
 import type { ScreenParams } from "../../components/Types";
-import { Card, Icon, Overlay } from 'react-native-elements'
+import { Card, Icon, Overlay, Badge } from 'react-native-elements'
 import {
   ActivityIndicator,
   FlatList,

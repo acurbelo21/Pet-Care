@@ -39,7 +39,7 @@ export default class ListItem extends Component {
         break;
       case "Horse":
         petIcon = "horse";
-        speciesColor = "#197419";
+        speciesColor = "#0dbf0d";
         break;
       case "Fish":
         petIcon = "fish";
@@ -80,7 +80,7 @@ export default class ListItem extends Component {
           <View
             style={{
               alignSelf: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <View
