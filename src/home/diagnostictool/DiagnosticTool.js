@@ -4,8 +4,9 @@ import { StyleSheet, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from '@expo/vector-icons';
 
-import {Text, NavHeader, Theme, Button} from "../../components";
+import {Theme, Button, NavHeaderWithButton} from "../../components";
 import MultiSelectDropdown from "./MultiSelectDropdown";
+import autobind from 'autobind-decorator';
 
 type DropdownIsVisibleState = { dropdownIsVisible: boolean };
 
@@ -54,13 +55,21 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
     }
   }
 
+
+  @autobind
+  buttonFn() {
+    this.props.navigation.navigate("DiagnosticToolResults");
+    // console.log("pressed");
+  }
+
   render(): React.Node {
     // const selectPetSpeciesMessage = <Text style={styles.message}>Please select the pet species you want to diagnose. </Text>;
     const { navigation } = this.props;
+    const { buttonFn } = this;
     
     return (
       <View style={styles.container}>
-        <NavHeader title="Diagnostic Tool" {...{ navigation }} />
+        <NavHeaderWithButton title="Diagnostic Tool" {...{ navigation, buttonFn }} />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
         <View style={styles.buttonContainer}>
           <View style={styles.iconContainer}>

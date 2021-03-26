@@ -147,6 +147,7 @@ export default class MultiSelectDropdown extends React.Component {
     let generalDiagnosis = {};
     let diagnoses = []; // Can most likely refactor these arrays to directly push to unique array in state
     let filteredDiagnoses = [];
+    const { uid } = Firebase.auth.currentUser;
 
     this.state.selectedItems.forEach( (symptom) => {
       Firebase.firestore
@@ -172,12 +173,28 @@ export default class MultiSelectDropdown extends React.Component {
               // console.log("Final filtered list of diagnoses: ", this.state.uniqueFilteredDiagnoses);
             }
           }
+      })
+      .then(() => {
+        // Add unique filtered diagnoses for user to Firestore to display in Results screen List View
+        Firebase.firestore
+            .collection("users")
+            .doc(uid)
+            .get()
+            .then(() => {
+                Firebase.firestore.collection("users").doc(uid).update({
+                    diagnosedDiseases: this.state.uniqueFilteredDiagnoses
+                })
+                  .catch((error) => {
+                      console.error("Error writing document: ", error);
+                  });
+              });
       });
     });
   }
 
   render() {
     const { items, selectedItems } = this.state;
+
     return (
       <>
         <View style={styles.multiSelectOptionsContainer}>
