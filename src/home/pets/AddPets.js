@@ -68,13 +68,13 @@ export default class AddPets extends React.Component<SettingsState> {
             }
         }
 
-        var docRef = Firebase.firestore.collection("pets").doc(pet_uid);
+        var docRef = Firebase.firestore.collection("users").doc(uid).collection("pets").doc(pet_uid);
 
         docRef.get().then((doc) => {
             if (doc.exists) {
                 this.addPetToFireStore();
             } else {
-                Firebase.firestore.collection("pets").doc(pet_uid).set({
+                Firebase.firestore.collection("users").doc(uid).collection("pets").doc(pet_uid).set({
                     species, breed, name, age, sex, pic, owner_uid
                 })
                 .catch((error) => {

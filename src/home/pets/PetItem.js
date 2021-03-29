@@ -146,7 +146,7 @@ export default class ListItem extends Component {
               <Text
                 style={{
                   fontWeight: '600',
-                  fontSize: 40,
+                  fontSize: 36,
                   color: speciesColor
                 }}
               >
