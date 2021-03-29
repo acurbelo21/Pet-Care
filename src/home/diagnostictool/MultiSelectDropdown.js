@@ -258,13 +258,13 @@ export default class MultiSelectDropdown extends React.Component {
         {this.state.selectedItems.length > 3 && 
           <Button
             style={styles.diagnoseButtonContainer}
-            label="Diagnose Disease"
+            label="Diagnose My Pet!"
             onPress={(e) => this.searchForSymptomsInFirestore(e, this.state.selectedItems)}
             full
             primary
           />
         }
-        <Text style={styles.diagnosisResultsHeader}>Diagnosed diseases:</Text>
+        {/* <Text style={styles.diagnosisResultsHeader}>Diagnosed diseases:</Text>
         {this.state.uniqueFilteredDiagnoses.length < 1 && <Text style={styles.noDiagnosisResultsFoundText}>No diseases found.</Text>}
         <FlatList
           style={styles.diagnosisResultsContainer}
@@ -272,7 +272,7 @@ export default class MultiSelectDropdown extends React.Component {
           renderItem={({ item }) => (
             <Text style={styles.diagnosisResultsText}>{ item }</Text>
           )}
-        />
+        /> */}
       </>
     );
   }
@@ -285,15 +285,15 @@ const styles = StyleSheet.create({
     zIndex: 2
   },
   diagnoseButtonContainer: {
-    position: 'absolute',
-    bottom: -200,
+    // position: 'absolute',
+    // bottom: -200,
     zIndex: 0,
     padding: 5,
-    alignSelf: "center"
+    alignSelf: "center",
     // Really not sure why flex isn't working, went with temporary styling for now ^
     // flexDirection: 'column',
-    // flexGrow: 1,
-    // justifyContent: 'space-between',
+    flexGrow: 1,
+    justifyContent: 'space-between',
   },
   // Stylesheets for Diagnosis Result placeholder text - can delete after adding new screen dedicated to results:
   diagnosisResultsContainer: {
