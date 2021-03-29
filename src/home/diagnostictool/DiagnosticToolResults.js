@@ -99,6 +99,9 @@ export default class DiagnosticToolResults extends Component {
             paginationVisibleItems={this.state.viewableItems}//needs to track what the user sees
             paginationItems={this.state.items}//pass the same list as data
             paginationItemPadSize={3} //num of items to pad above and below your visable items
+            dotTextHide
+            dotIconHide
+            dotEmptyHide
           />
         </View>
       )

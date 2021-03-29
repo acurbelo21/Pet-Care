@@ -402,9 +402,10 @@ renderPrevention = () => {
     }
     else {
     return (
+      <>
+      <NavHeader title="Diagnosed Disease Details" back {...{ navigation }} />
       <ScrollView contentContainerStyle={styles.scroll} persistentScrollbar={false} >
         <View style={styles.container}>
-        <NavHeader title="Diagnosed Disease Details" back {...{ navigation }} />
           <Card containerStyle={styles.cardContainer}>
             {/* {this.renderHeader()} */}
             {this.renderDescription()}
@@ -444,6 +445,7 @@ renderPrevention = () => {
           <View style={{height:150}}/> */}
         </View>
       </ScrollView>
+      </>
     )
     }
   }

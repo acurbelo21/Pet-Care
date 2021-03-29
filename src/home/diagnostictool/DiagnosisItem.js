@@ -5,6 +5,7 @@ import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View }
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Theme } from "../../components";
 const { width, height } = Dimensions.get('window');
 import { NavigationEvents } from "react-navigation";
 import contactData from '../../mocks/contact.json'
@@ -51,8 +52,8 @@ export default class ListItem extends Component {
         speciesColor = "#9379c2";
         break;
       default:
-        petIcon = "clipboard";
-        speciesColor = "black";
+        petIcon = "clipboard-check";
+        speciesColor = Theme.palette.black;
         break;
     }
 
@@ -125,7 +126,7 @@ export default class ListItem extends Component {
               <Text
                 style={{
                   fontWeight: '600',
-                  fontSize: 40,
+                  fontSize: 36,
                   color: speciesColor
                 }}
               >
