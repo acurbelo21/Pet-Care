@@ -25,7 +25,7 @@ export default class Pets extends Component {
 
   @autobind
   buttonFn() {
-    this.props.navigation.navigate("AddPets");
+    this.props.navigation.navigate("AddPets", { onSelect: this.onSelect, getData: () => this.retrieveFireStorePets() });
     // console.log("pressed");
   }
 
@@ -37,8 +37,16 @@ export default class Pets extends Component {
       };
     }
 
-    componentDidMount(){
-        const { uid } = Firebase.auth.currentUser;
+    componentWillMount(){
+        this.retrieveFireStorePets();
+    }
+
+    componentWillUnmount() {
+      this.willFocusSubscription.remove();
+    }
+
+  retrieveFireStorePets() {
+    const { uid } = Firebase.auth.currentUser;
         let currentUsersPets = []
 
         Firebase.firestore
@@ -56,10 +64,10 @@ export default class Pets extends Component {
             currentUsersPets.forEach(pet => {
                 pet.id = j++;
             })
-            console.log(currentUsersPets)
             this.setState({items:currentUsersPets, loading:false})
         })
-    }
+  }
+
     //create each list item
   _renderItem = ({item}) => {
     const { navigation } = this.props;
@@ -105,7 +113,7 @@ export default class Pets extends Component {
     }
     return (
       <View style={[styles.container]}>
-      <NavHeaderWithButton title="My Pets" {...{ navigation, buttonFn }} />
+      <NavHeaderWithButton title="My Pets" buttonFn={this.buttonFn} buttonIcon="plus" />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
           <FlatList
             data={this.state.items}

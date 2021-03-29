@@ -15,6 +15,7 @@ export class HomeTab extends React.Component<NavigationProps<*>> {
         { label: "Explore", icon: "home" },
         { label: "Share", icon: "camera" },
         { label: "Profile", icon: "user" },
+        { label: "DiagnosticTool", icon: "clipboard" },
         { label: "Pets", icon: "paw"}
     ];
 

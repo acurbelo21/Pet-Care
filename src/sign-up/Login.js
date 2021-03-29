@@ -69,7 +69,7 @@ export default class Login extends React.Component<NavigationProps<*>, LoginStat
         return (
             <SignUpContainer
                 title="Login"
-                subtitle="Get Started"
+                subtitle="Welcome Back"
                 nextLabel="Login"
                 next={this.login}
                 first

@@ -8,6 +8,8 @@ import Slide from "./Slide";
 import Connect from "./Connect";
 import Chat from "./Chat";
 import Share from "./Share";
+import Select from "./Select";
+import DiagnosticTool from "./DiagnosticTool";
 
 import {Button, Theme} from "../components";
 import type {ScreenProps} from "../components/Types";
@@ -52,6 +54,8 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
         return (
             <SafeAreaView style={styles.footer}>
                 <Button label="Back" onPress={back} primary white disabled={isFirst} />
+                {/* {!isLast && <Button label={"Next"} onPress={next} primary white />} */}
+                {/* Uncomment next line to add button to navigate to Home screen then comment out above line: */}
                 <Button label={isLast ? "Start" : "Next"} onPress={next} primary white />
             </SafeAreaView>
         );
@@ -82,6 +86,8 @@ const onIndexChanged = (index: number) => {
 let connect: Connect;
 let chat: Chat;
 let share: Share;
+let select: Select;
+let diagnosticTool: DiagnosticTool;
 
 const slides = [
     {
@@ -104,6 +110,25 @@ const slides = [
         icon: <Share ref={ref => (ref ? share = ref : undefined)} />,
         show: () => share.show(),
         hide: () => share.hide()
+    },
+    /* NOTE:
+        So this diagnostic tool uses the sectioned version of the same multi-select dropdown and also
+        presents modally but I'm not 100% sure if I like the subheadings... Might also make it harder
+        to diagnose which diseases based on selected symptoms but *shrugs* let me know what you think 
+    */
+    // {
+    //     title: "Diagnostic Tool",
+    //     description: "",
+    //     icon: <DiagnosticTool ref={ref => (ref ? diagnosticTool = ref : undefined)} />,
+    //     show: () => diagnosticTool.show(),
+    //     hide: () => diagnosticTool.hide()
+    // },
+    {
+        title: "Add Your Pet",
+        description: "Don't worry! You will be able to edit and add more of your pets later on.",
+        icon: <Select ref={ref => (ref ? select = ref : undefined)} />,
+        show: () => select.show(),
+        hide: () => select.hide()
     }
 ];
 

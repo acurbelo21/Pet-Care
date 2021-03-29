@@ -25,7 +25,7 @@ export default class Slide extends React.PureComponent<SlideProps> {
                     </View>
                 </LinearGradient>
                 <View style={styles.description}>
-                    <Text>{description}</Text>
+                    <Text style={{color: Theme.palette.black}}>{description}</Text>
                 </View>
             </View>
         );
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         flexGrow: 1
     },
     title: {
-        color: Theme.palette.white
+        color: Theme.palette.black
     },
     description: {
         position: "absolute",
@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
         right: 0,
         height: height - (height * 0.62) - 45,
         paddingHorizontal: Theme.spacing.base * 2,
-        justifyContent: "center"
+        justifyContent: "center",
+        color: Theme.palette.white
     },
     gradient: {
         position: "absolute",
