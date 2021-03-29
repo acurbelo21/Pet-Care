@@ -21,20 +21,26 @@ export default class DiagnosticToolResults extends Component {
         const { uid } = Firebase.auth.currentUser;
         let diagnosedDiseases;
 
-        Firebase.firestore
-        .collection("users")
-        .doc(uid)
-        .get()
-        .then(docRef => {
-            console.log("POGGY WOGGIES~!!!! ", docRef.data()[Object.keys(docRef.data())[0]]);
-            diagnosedDiseases = docRef.data()[Object.keys(docRef.data())[0]];
-            diagnosedDiseases = diagnosedDiseases.map((str, index) => ({ name: str, id: index + 1}));
-            console.log("DIAGNOSED DISEASES WOWZERS --- ", diagnosedDiseases);
+        setTimeout(() => {
+            Firebase.firestore
+            .collection("users")
+            .doc(uid)
+            .get()
+            .then(docRef => {
+                console.log("Diagnosed Diseases from Firestore query: ", docRef.data()[Object.keys(docRef.data())[0]]);
+                diagnosedDiseases = docRef.data()[Object.keys(docRef.data())[0]];
+                diagnosedDiseases = diagnosedDiseases.map((str, index) => ({ name: str, id: index + 1}));
+                // console.log("Diagnosed diseases in array of objects for pagination: ", diagnosedDiseases);
 
-            this.setState({items: diagnosedDiseases, loading:false})
-        })
-        .catch((error) => { console.log('Error retrieving doc: ', error) })
+                this.setState({items: diagnosedDiseases})
+            })
+            .then(() => {
+                this.setState({ loading: false });
+            })
+            .catch((error) => { console.log('Error retrieving doc: ', error) })
+        }, 1000);
     }
+
     //create each list item
   _renderItem = ({item}) => {
     const { navigation } = this.props;

@@ -18,7 +18,8 @@ import { Welcome } from "./src/welcome";
 import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
 import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, Pets,
-         PetDetailView, LabResults, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults } from "./src/home";
+         PetDetailView, LabResults, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults,
+         DiagnosisDetailView } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -167,7 +168,8 @@ const ShareNavigator = createStackNavigator(
 const ToolNavigator = createStackNavigator(
     {
         DiagnosticTool: { screen: DiagnosticTool },
-        DiagnosticToolResults: { screen: DiagnosticToolResults }
+        DiagnosticToolResults: { screen: DiagnosticToolResults },
+        DiagnosisDetailView: { screen: DiagnosisDetailView }
     },
     StackNavigatorOptions
 );

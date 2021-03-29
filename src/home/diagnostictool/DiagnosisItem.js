@@ -11,16 +11,17 @@ import contactData from '../../mocks/contact.json'
 
 export default class ListItem extends Component {
 
-// CHANGE THIS TO goToDiagnosisDetailView() -- navigation.navigate("DiagnosisDetailView"), replace pet_uid with ?
+// CHANGE THIS TO goToDiagnosisDetailView() -- navigation.navigate("DiagnosisDetailView"), replace pet_uid with just id
+// Use diagnosis_id (id) for switch cases of descriptions in DiagnosisDetailView
   @autobind
-  goToPetDetailView() {
-    const pet_uid = this.props.pet_uid
+  goToDiagnosisDetailView() {
+    const diagnosis_id = this.props.id
     // this.props.navigation.navigate("PetDetailView", { pet_uid });
-    this.props.navigation.navigate("PetDetailView", { pet_uid });
+    this.props.navigation.navigate("DiagnosisDetailView", { diagnosis_id });
   }
 
   render() {
-    const { name, pic, color, seen, selected, key, id, species, breed, pet_uid } = this.props;
+    const { name, pic, color, seen, selected, key, id, species, breed, diagnosis_id } = this.props;
     var speciesColor;
     var petIcon;
 
@@ -50,7 +51,7 @@ export default class ListItem extends Component {
         speciesColor = "#9379c2";
         break;
       default:
-        petIcon = "question";
+        petIcon = "clipboard";
         speciesColor = "black";
         break;
     }
@@ -64,7 +65,7 @@ export default class ListItem extends Component {
             alignItems: 'center'
           }
         ]}
-        onPress={this.goToPetDetailView}
+        onPress={this.goToDiagnosisDetailView}
       >
         <View
           style={{

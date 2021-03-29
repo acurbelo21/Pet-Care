@@ -69,7 +69,7 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
     
     return (
       <View style={styles.container}>
-        <NavHeaderWithButton title="Diagnostic Tool" {...{ navigation, buttonFn }} />
+        {/* <NavHeaderWithButton title="Diagnostic Tool" {...{ navigation, buttonFn }} /> */}
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
         <View style={styles.buttonContainer}>
           <View style={styles.iconContainer}>
@@ -95,7 +95,7 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
           </View>
         </View>
         <View style={styles.multiSelectContainer}>
-          <MultiSelectDropdown ref={ref => (this._multiselectdropdown = ref)} />
+          <MultiSelectDropdown navigation={this.props.navigation} ref={ref => (this._multiselectdropdown = ref)} />
         </View>
       </View>
     );

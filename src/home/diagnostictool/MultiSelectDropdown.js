@@ -2,9 +2,10 @@
 import * as React from "react";
 import { Dimensions, StyleSheet, View, FlatList } from "react-native";
 
-import { Text, Theme, Button } from "../../components";
+import { Text, Theme, Button, NavHeaderWithButton } from "../../components";
 import Firebase from "../../components/Firebase";
 import MultiSelect from "react-native-multiple-select";
+import autobind from 'autobind-decorator';
 
 type Symptom = { name: string };
 
@@ -188,15 +189,30 @@ export default class MultiSelectDropdown extends React.Component {
                       console.error("Error writing document: ", error);
                   });
               });
+      })
+      .then(() => {
+        this.props.navigation.navigate("DiagnosticToolResults");
       });
     });
   }
 
+  @autobind
+  buttonFn() {
+    // this.props.navigation.navigate("DiagnosticToolResults");
+    this.props.navigation.navigate("DiagnosticToolResults", { onSelect: this.onSelect, getData: () => this.searchForSymptomsInFirestore() });
+    // console.log("pressed");
+  }
+
   render() {
     const { items, selectedItems } = this.state;
+    const { navigation } = this.props;
+    const { buttonFn } = this;
 
     return (
       <>
+        {/* <NavHeaderWithButton title="Diagnostic Tool" {...{ navigation, buttonFn }} /> */}
+        {/* <NavHeaderWithButton title="Diagnostic Tool" buttonFn={this.searchForSymptomsInFirestore} /> */}
+        {/* <NavHeaderWithButton title="Diagnostic Tool" buttonFn={this.buttonFn} /> */}
         <View style={styles.multiSelectOptionsContainer}>
           <MultiSelect
             items={items} // List of items to display in the multi-select component
