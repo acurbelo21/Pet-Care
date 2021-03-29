@@ -54,6 +54,7 @@
     "react-native-screens": "^2.15.2",
     "react-native-sectioned-multi-select": "^0.8.1",
     "react-native-svg": "12.1.0",
+    "react-native-swipe-view": "^3.0.1",
     "react-native-swiper": "^1.6.0",
     "react-native-web": "~0.13.12",
     "react-navigation": "^4.4.3",
