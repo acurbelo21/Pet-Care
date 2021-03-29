@@ -61,10 +61,13 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   }
 
   async componentDidMount(): Promise<void> {
+    const { uid } = Firebase.auth.currentUser;
     const { navigation } = this.props;
     const pet_uid  = navigation.state.params;
 
     Firebase.firestore
+    .collection("users")
+    .doc(uid)
     .collection("pets")
     .doc(pet_uid.pet_uid)
     .get()
