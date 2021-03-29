@@ -1,16 +1,30 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, ScrollView } from "react-native";
+import { StyleSheet, View, TextInput, ScrollView, Animated, Dimensions, Keyboard, UIManager } from "react-native";
 import { Text, NavHeader, Theme, Button, TextField, NavHeaderWithButton } from "../../components";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Firebase from "../../components/Firebase";
 import TextInputComponent from "../../walkthrough/TextInputComponent";
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
+import { LinearGradient } from "expo-linear-gradient";
+
+const { State: TextInputState } = TextInput;
 
 export default class AddPets extends React.Component<SettingsState> {
    
     async componentDidMount(): Promise<void> {
         const { navigation } = this.props;
+    }
+
+    componentWillMount() {
+        this.keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this.handleKeyboardDidShow);
+        this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this.handleKeyboardDidHide);
+    }
+    
+      componentWillUnmount() {
+        this.keyboardDidShowSub.remove();
+        this.keyboardDidHideSub.remove();
+        this.props.navigation.state.params.getData();
     }
 
     constructor(props) {
@@ -19,8 +33,9 @@ export default class AddPets extends React.Component<SettingsState> {
             species: null,
             breed: null,
             name: null,
-            age: 0,
+            age: null,
             sex: null,
+            shift: new Animated.Value(0),
         };
     }
 
@@ -42,6 +57,16 @@ export default class AddPets extends React.Component<SettingsState> {
         var owner_uid = uid;
         var pic = "null";
         const {species, breed, name, age, sex} = this.state;
+        var checkForInputs = [species, breed, name, age, sex];
+
+        for (let i = 0; i < checkForInputs.length; i++)
+        {
+            if (checkForInputs[i] == null)
+            {
+                alert("Fill all fields");
+                return;
+            }
+        }
 
         var docRef = Firebase.firestore.collection("pets").doc(pet_uid);
 
@@ -70,14 +95,48 @@ export default class AddPets extends React.Component<SettingsState> {
         return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
     }
 
+    handleKeyboardDidShow = (event) => {
+        const { height: windowHeight } = Dimensions.get('window');
+        const keyboardHeight = event.endCoordinates.height;
+        const currentlyFocusedField = TextInputState.currentlyFocusedField();
+        UIManager.measure(currentlyFocusedField, (originX, originY, width, height, pageX, pageY) => {
+          const fieldHeight = height;
+          const fieldTop = pageY;
+          const gap = (windowHeight - keyboardHeight) - (fieldTop + fieldHeight);
+          if (gap >= 0) {
+            return;
+          }
+          Animated.timing(
+            this.state.shift,
+            {
+              toValue: gap,
+              duration: 300,
+              useNativeDriver: true,
+            }
+          ).start();
+        });
+    }
+    
+      handleKeyboardDidHide = () => {
+        Animated.timing(
+          this.state.shift,
+          {
+            toValue: 0,
+            duration: 1000,
+            useNativeDriver: true,
+          }
+        ).start();
+    }
+    
+
     render() {
         const { navigation } = this.props;
+        const { shift } = this.state;
 
         return (
-            <ScrollView>  
+            <Animated.View style={[{ transform: [{translateY: shift}] }]}>  
+                <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
                 <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.addPetToFireStore} buttonIcon="check" />
-
-                {/* Need to make these required fields */}
 
                 <DropDownPicker
                     items={[
@@ -157,7 +216,7 @@ export default class AddPets extends React.Component<SettingsState> {
                     keyboardType="numeric"
                     returnKeyType = 'done'
                 /> 
-            </ScrollView>
+            </Animated.View>
         );
     }
 }
@@ -191,5 +250,12 @@ const styles = StyleSheet.create({
         margin: 6,
         paddingTop: 0,
         textAlign: 'left'
-    }
+    },
+    gradient: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: -500
+      },
 });
