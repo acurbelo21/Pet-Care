@@ -24,7 +24,8 @@ import Separator from '../pets/Separator'
 import Tel from '../pets/Tel'
 import { reduce } from "lodash";
 
-export default class PetDetailView extends React.Component<ScreenParams<{ diagnosis_id: String }>, SettingsState> {
+// export default class PetDetailView extends React.Component<ScreenParams<{ diagnosis_id: String }>, SettingsState> {
+export default class PetDetailView extends React.Component<ScreenParams<{ diagnosisNameObject: String }>, SettingsState> {
   constructor(props)
   {
     super(props);
@@ -51,6 +52,33 @@ export default class PetDetailView extends React.Component<ScreenParams<{ diagno
     };
   }
 
+  async componentDidMount(): Promise<void> {
+    const { navigation } = this.props;
+    const diagnosisNameObject  = navigation.state.params;
+    let diagnosisName = diagnosisNameObject[Object.keys(diagnosisNameObject)[0]];
+
+    console.log("Diagnosis name: ", diagnosisName);
+    // console.log(diagnosis_name[Object.keys(diagnosis_name)[0]]);
+    // console.log(diagnosis_name[diagnosis_name]);
+
+    Firebase.firestore
+    .collection("diseaseDetails")
+    .doc(diagnosisName)
+    .get()
+    .then(doc => {
+        console.log("All fields of selected diagnosed disease: ", doc.data());
+        console.log("DIS DA DESCRIP: ", doc.data().description);
+        console.log("DIS DA STAGE TWO BIDNESS: ", doc.data().stageTwo)
+        // this.setState({
+        //     description: doc.data().description, 
+        //     symptoms: doc.data().symptoms,
+        //     stageOne: doc.data().stageOne,
+        //     stageTwo: doc.data().stageTwo,
+        //     treatments: doc.data().treatments,
+        //     prevention: doc.data().prevention,
+        // });
+    });
+  }
 //   async componentDidMount(): Promise<void> {
 //     const { navigation } = this.props;
 //     const diagnosis_id  = navigation.state.params;

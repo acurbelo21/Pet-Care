@@ -16,9 +16,11 @@ export default class ListItem extends Component {
 // Use diagnosis_id (id) for switch cases of descriptions in DiagnosisDetailView
   @autobind
   goToDiagnosisDetailView() {
-    const diagnosis_id = this.props.id
+    // const diagnosis_id = this.props.id
+    const diagnosisName = this.props.name;
     // this.props.navigation.navigate("PetDetailView", { pet_uid });
-    this.props.navigation.navigate("DiagnosisDetailView", { diagnosis_id });
+    // this.props.navigation.navigate("DiagnosisDetailView", { diagnosis_id });
+    this.props.navigation.navigate("DiagnosisDetailView", { diagnosisName });
   }
 
   render() {
@@ -126,7 +128,7 @@ export default class ListItem extends Component {
               <Text
                 style={{
                   fontWeight: '600',
-                  fontSize: 36,
+                  fontSize: 32,
                   color: speciesColor
                 }}
               >
