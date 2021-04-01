@@ -107,7 +107,6 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
         , function(error){
             console.log(error);
         });
-        this.props.navigation.state.params.getData();
         this.goBackToPets();
     }).catch((e) => {
         status = 'Something went wrong';
@@ -205,7 +204,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   }
 
   componentWillUnmount() {
-    this.props.navigation.state.params.getData();
+    // this.props.navigation.state.params.getData();
 }
 
   @autobind

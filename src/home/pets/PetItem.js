@@ -15,8 +15,9 @@ export default class ListItem extends Component {
   @autobind
   goToPetDetailView() {
     const pet_uid = this.props.pet_uid
+    const { getDataFunc } = this.props
     // this.props.navigation.navigate("PetDetailView", { pet_uid });
-    this.props.navigation.navigate("PetDetailView", { onSelect: this.onSelect, getData: () => this.props.getDataFunc, pet_uid });
+    this.props.navigation.navigate("PetDetailView", { onSelect: this.onSelect, getData: () => getDataFunc, pet_uid });
   }
 
   render() {
