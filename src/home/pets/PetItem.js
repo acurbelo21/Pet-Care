@@ -16,11 +16,11 @@ export default class ListItem extends Component {
   goToPetDetailView() {
     const pet_uid = this.props.pet_uid
     // this.props.navigation.navigate("PetDetailView", { pet_uid });
-    this.props.navigation.navigate("PetDetailView", { pet_uid });
+    this.props.navigation.navigate("PetDetailView", { onSelect: this.onSelect, getData: () => this.props.getDataFunc, pet_uid });
   }
 
   render() {
-    const { name, pic, color, seen, selected, key, id, species, breed, age, gender, pet_uid } = this.props;
+    const { name, pic, color, seen, selected, key, id, species, breed, age, gender, getDataFunc } = this.props;
     var speciesColor;
     var petIcon;
 

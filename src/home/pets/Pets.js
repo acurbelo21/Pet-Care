@@ -73,6 +73,7 @@ export default class Pets extends Component {
     //create each list item
   _renderItem = ({item}) => {
     const { navigation } = this.props;
+    const { retrieveFireStorePets } = this;
     return (<PetItem index={item.id}
         pet_uid={item.pet_uid}
         name={item.name}
@@ -81,6 +82,7 @@ export default class Pets extends Component {
         species={item.species}
         age={item.age}
         gender={item.gender}
+        getDataFunc = {retrieveFireStorePets}
         {...{navigation}}
       />)
     };

@@ -1,10 +1,15 @@
 import autobind from "autobind-decorator";
 import Firebase from "../../components/Firebase";
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import type { ScreenParams } from "../../components/Types";
 import { Card, Icon, Overlay, Badge } from 'react-native-elements'
+import * as ImagePicker from 'expo-image-picker';
+// import storage from '@react-native-firebase/storage';
+import * as Progress from 'react-native-progress';
 import {
   ActivityIndicator,
+  Alert,
+  Dimensions,
   FlatList,
   Image,
   ImageBackground,
@@ -23,10 +28,14 @@ import Separator from './Separator'
 import Tel from './Tel'
 import { reduce } from "lodash";
 
+var width = Dimensions.get('window').width; //full width
+var height = Dimensions.get('window').height; //full height
+
 export default class PetDetailView extends React.Component<ScreenParams<{ pet_uid: String }>, SettingsState> {
   constructor(props)
   {
     super(props);
+
     this.avatar = "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg";
     this.avatarBackground = "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg";
     this.name = "Gina Mahdi"
@@ -42,6 +51,9 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     this.state = {
       petDetails: "",
       loading: true,
+      imagePath: require("../../../assets/splash.png"),
+      isLoading: false,
+      status: '',
       avatar: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg",
       avatarBackground: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg", 
       name: "Gina Mahdi",
@@ -50,14 +62,72 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     };
   }
 
-  @autobind
-  overlaySwitch(visible) {
-    this.setState({"setOverlay":visible});
+  chooseFile = async () => {
+    this.setState({loading: true});
+    let result = await ImagePicker.launchImageLibraryAsync();
+
+    if (result.cancelled) {
+      this.setState({loading: false});
+      console.log('User cancelled image picker');
+      // console.log('User cancelled image picker', Firebase.storage);
+    } else if (result.error) {
+        console.log('ImagePicker Error: ', result.error);
+    } else if (result.customButton) {
+        console.log('User tapped custom button: ', result.customButton);
+    } else {
+        let path = result.uri;
+        let imageName = this.getFileName(result.fileName, path);
+        this.setState({ imagePath: path });
+        this.uploadImage(path, imageName);
+    }
+  }
+
+  uploadImage = async (path, imageName) => {
+    const response = await fetch(path);
+    const blob = await response.blob();
+
+    const { uid } = Firebase.auth.currentUser;
+    const pet_uid  = this.props.navigation.state.params;
+
+    var ref = Firebase.storage.ref().child("petPictures/" + imageName);
+    let task = ref.put(blob);
+
+    task.then(() => {
+        console.log('Image uploaded to the bucket!');
+        this.setState({ loading: false, status: 'Image uploaded successfully' });
+        ref.getDownloadURL().then(function(pic) {
+            console.log(pic);
+            Firebase.firestore
+              .collection("users")
+              .doc(uid)
+              .collection("pets")
+              .doc(pet_uid.pet_uid)
+              .update({pic})
+        }
+        , function(error){
+            console.log(error);
+        });
+        this.props.navigation.state.params.getData();
+        this.goBackToPets();
+    }).catch((e) => {
+        status = 'Something went wrong';
+        console.log('uploading image error => ', e);
+        this.setState({ loading: false, status: 'Something went wrong' });
+    });
+  }
+
+  getFileName(name, path) {
+      if (name != null) { return name; }
+
+      if (Platform.OS === "ios") {
+          path = "~" + path.substring(path.indexOf("/Documents"));
+      }
+      return path.split("/").pop();
   }
 
   @autobind
   toggleOverlay() {
-    this.overlaySwitch(!this.state.setOverlay);
+    this.setState({"setOverlay":!this.state.setOverlay});
   }
 
   async componentDidMount(): Promise<void> {
@@ -75,55 +145,68 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
         this.setState({
           petDetails: doc.data(), 
           name: doc.data().name,
-          petBiology: {"species" : doc.data().species, "breed" : doc.data().breed}
+          age: doc.data().age,
+          petBiology: {"species" : doc.data().species, "breed" : doc.data().breed},
+          avatar: doc.data().pic,
+          avatarBackground: doc.data().pic,
         });
 
-        switch (this.state.petDetails.species) {
-            case "Cat":
-              this.setState({
-                avatar: "https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg",
-                avatarBackground: "https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg"
-              })
-              break;
-            case "Dog":
-              this.setState({
-                avatar: "https://www.petmd.com/sites/default/files/Acute-Dog-Diarrhea-47066074.jpg",
-                avatarBackground: "https://www.petmd.com/sites/default/files/Acute-Dog-Diarrhea-47066074.jpg"
-              })
-              break;
-            case "Bird":
-              this.setState({
-                avatar: "https://static.scientificamerican.com/sciam/cache/file/7A715AD8-449D-4B5A-ABA2C5D92D9B5A21_source.png",
-                avatarBackground: "https://static.scientificamerican.com/sciam/cache/file/7A715AD8-449D-4B5A-ABA2C5D92D9B5A21_source.png"
-              })
-              break;
-            case "Horse":
-              this.setState({
-                avatar: "https://images.pexels.com/photos/2123375/pexels-photo-2123375.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                avatarBackground: "https://images.pexels.com/photos/2123375/pexels-photo-2123375.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              })
-              break;
-            case "Fish":
-              this.setState({
-                avatar: "https://images.immediate.co.uk/production/volatile/sites/4/2009/07/GettyImages-931270318-43ab672.jpg?quality=90&resize=940%2C400",
-                avatarBackground: "https://images.immediate.co.uk/production/volatile/sites/4/2009/07/GettyImages-931270318-43ab672.jpg?quality=90&resize=940%2C400"
-              })
-              break;
-            case "Exotic":
-              this.setState({
-                avatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Male_Green_Iguana_Belize.jpg/220px-Male_Green_Iguana_Belize.jpg",
-                avatarBackground: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Male_Green_Iguana_Belize.jpg/220px-Male_Green_Iguana_Belize.jpg"
-              })
-              break;
-            default:
-              this.setState({
-                avatar: "https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png"
-              })
-              break;
+        console.log(doc.data());
+
+        if(doc.data().pic == "null")
+        {
+          switch (this.state.petDetails.species) {
+              case "Cat":
+                this.setState({
+                  avatar: "https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg",
+                  avatarBackground: "https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg"
+                })
+                break;
+              case "Dog":
+                this.setState({
+                  avatar: "https://www.petmd.com/sites/default/files/Acute-Dog-Diarrhea-47066074.jpg",
+                  avatarBackground: "https://www.petmd.com/sites/default/files/Acute-Dog-Diarrhea-47066074.jpg"
+                })
+                break;
+              case "Bird":
+                this.setState({
+                  avatar: "https://static.scientificamerican.com/sciam/cache/file/7A715AD8-449D-4B5A-ABA2C5D92D9B5A21_source.png",
+                  avatarBackground: "https://static.scientificamerican.com/sciam/cache/file/7A715AD8-449D-4B5A-ABA2C5D92D9B5A21_source.png"
+                })
+                break;
+              case "Horse":
+                this.setState({
+                  avatar: "https://images.pexels.com/photos/2123375/pexels-photo-2123375.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                  avatarBackground: "https://images.pexels.com/photos/2123375/pexels-photo-2123375.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                })
+                break;
+              case "Fish":
+                this.setState({
+                  avatar: "https://images.immediate.co.uk/production/volatile/sites/4/2009/07/GettyImages-931270318-43ab672.jpg?quality=90&resize=940%2C400",
+                  avatarBackground: "https://images.immediate.co.uk/production/volatile/sites/4/2009/07/GettyImages-931270318-43ab672.jpg?quality=90&resize=940%2C400"
+                })
+                break;
+              case "Exotic":
+                this.setState({
+                  avatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Male_Green_Iguana_Belize.jpg/220px-Male_Green_Iguana_Belize.jpg",
+                  avatarBackground: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Male_Green_Iguana_Belize.jpg/220px-Male_Green_Iguana_Belize.jpg"
+                })
+                break;
+              default:
+                this.setState({
+                  avatar: "https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png",
+                  avatarBackground: "https://icatcare.org/app/uploads/2018/07/Thinking-of-getting-a-cat.png"
+                })
+                break;
+            }
           }
           this.setState({loading: false,})
     })
   }
+
+  componentWillUnmount() {
+    this.props.navigation.state.params.getData();
+}
 
   @autobind
   goBackToPets() {
@@ -184,10 +267,12 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
             </TouchableOpacity>
           </View>
           <View style={styles.headerColumn}>
-            <Image
-              style={styles.userImage}
-              source={{uri: avatar}}
-            />
+            <TouchableOpacity onPress={this.chooseFile}>
+              <Image
+                style={styles.userImage}
+                source={{uri: avatar}}
+              />
+            </TouchableOpacity>
             <Text style={styles.userNameText}>{name}</Text>
             <View style={styles.userAddressRow}>
               <View>
@@ -200,7 +285,11 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                 />
               </View>
               <Overlay isVisible={this.state.setOverlay} onBackdropPress={this.toggleOverlay}>
-               <Text>Hello from Overlay!</Text>
+              <Card containerStyle={styles.overlayContainer}>
+                  {this.renderTel()}
+                  {Separator()}
+                  {this.renderEmail()}
+                </Card>
              </Overlay>
               <View style={styles.userCityRow}>
                 <Text style={styles.userCityText}>
@@ -275,9 +364,16 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
         <View style={styles.container}>
           <Card containerStyle={styles.cardContainer}>
             {this.renderHeader()}
-            {this.renderTel()}
+            {/* {this.renderTel()}
             {Separator()}
-            {this.renderEmail()}
+            {this.renderEmail()} */}
+            <Text type="header3" style={styles.cardText}> Pet Information </Text>
+            <Text> Age: {this.state.age}</Text>
+            <Text> Years owned: </Text>
+            <Text> Where is the pet kept? </Text>
+            {Separator()}
+            <Text type="header3" style={styles.cardText}> Diseases </Text>
+
           </Card>
           <View style={styles.labContainer}>
             <TouchableOpacity
@@ -299,7 +395,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                 </Text>
             </TouchableOpacity>
           </View>
-          <View style={{height:150}}/>
+          <View style={{height:300}}/>
         </View>
       </ScrollView>
     )
@@ -328,12 +424,20 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
   },
+  cardText: {
+    flexDirection: "row",
+    alignSelf: "center",
+  },
+  overlayContainer: {
+    backgroundColor: '#FFF',
+    width: width - 100,
+    padding: 0,
+  },
   container: {
     flex: 1,
   },
   emailContainer: {
     backgroundColor: '#FFF',
-    flex: 1,
     paddingTop: 30,
   },
   headerBackgroundImage: {
@@ -374,7 +478,6 @@ const styles = StyleSheet.create({
   },
   telContainer: {
     backgroundColor: '#FFF',
-    flex: 1,
     paddingTop: 30,
   },
   userAddressRow: {
@@ -406,4 +509,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
-
