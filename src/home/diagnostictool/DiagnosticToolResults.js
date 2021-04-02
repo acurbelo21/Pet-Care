@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import {AppRegistry, StyleSheet, View, FlatList, SafeAreaView, ActivityIndicator} from 'react-native';
+import {AppRegistry, StyleSheet, View, FlatList, SafeAreaView, ActivityIndicator, Dimensions} from 'react-native';
 import DiagnosisItem from './DiagnosisItem';
 import _ from 'lodash';
 import Pagination from 'react-native-pagination';
 import Firebase from "../../components/Firebase";
-import { NavHeader, Theme } from "../../components";
+import { NavHeader, Text } from "../../components";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default class DiagnosticToolResults extends Component {
@@ -27,7 +27,7 @@ export default class DiagnosticToolResults extends Component {
             .doc(uid)
             .get()
             .then(docRef => {
-                console.log("Diagnosed Diseases from Firestore query: ", docRef.data()[Object.keys(docRef.data())[0]]);
+                // console.log("Diagnosed Diseases from Firestore query: ", docRef.data()[Object.keys(docRef.data())[0]]);
                 diagnosedDiseases = docRef.data()[Object.keys(docRef.data())[0]];
                 diagnosedDiseases = diagnosedDiseases.map((str, index) => ({ name: str, id: index + 1}));
                 // console.log("Diagnosed diseases in array of objects for pagination: ", diagnosedDiseases);
@@ -94,11 +94,13 @@ export default class DiagnosticToolResults extends Component {
             dotIconHide
             dotEmptyHide
           />
+          {(this.state.items).length < 1 && <Text style={styles.noItemsMessage}>No diseases found. Please contact your veterinarian.</Text>}
         </View>
       )
   }
 };
-// export default DiagnosticToolResults;
+
+const {height} = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -110,32 +112,15 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
+    zIndex: 0
   },
-  message: {
-    color: Theme.palette.black,
-    fontSize: 20,
-    fontFamily: Theme.typography.semibold,
+  noItemsMessage: {
+    zIndex: 1000,
+    bottom: height/2,
+    alignSelf: "center",
     textAlign: "center",
-    marginBottom: Theme.spacing.base
-  },
-  buttonContainer: {
-    justifyContent: "space-evenly",
-    flexDirection: "row",
-    marginVertical: Theme.spacing.base
-  },
-  image: {
-    padding: 10,
-    color: Theme.palette.white
-  },
-  iconContainer: {
-    justifyContent: "center",
-    flexDirection: "column",
-    marginHorizontal: Theme.spacing.base
-  },
-  multiSelectContainer: {
-    padding: 10,
-    alignSelf: "stretch",
+    fontSize: 21
   }
 });
 
