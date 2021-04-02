@@ -140,27 +140,11 @@ const StackNavigatorOptions = {
     },
 };
 
-const ExploreNavigator = createStackNavigator(
-    {
-        Explore: { screen: Explore },
-        Comments: { screen: Comments },
-    },
-    StackNavigatorOptions
-);
-
 const ProfileNavigator = createStackNavigator(
     {
         Profile: { screen: Profile },
         Settings: { screen: Settings },
         Comments: { screen: Comments },
-    },
-    StackNavigatorOptions
-);
-
-const ShareNavigator = createStackNavigator(
-    {
-        Share: { screen: Share },
-        SharePicture: { screen: SharePicture },
     },
     StackNavigatorOptions
 );
@@ -187,11 +171,9 @@ const PetsNavigator = createStackNavigator(
 
 const HomeTabs = createBottomTabNavigator(
     {
-        Explore: { screen: ExploreNavigator },
-        Share: { screen: ShareNavigator },
-        Profile: { screen: ProfileNavigator },
+        Pets: { screen: PetsNavigator},
         DiagnosticTool: { screen: ToolNavigator},
-        Pets: { screen: PetsNavigator}
+        Profile: { screen: ProfileNavigator }
     },
     {
         animationEnabled: true,
@@ -203,7 +185,6 @@ const HomeTabs = createBottomTabNavigator(
 
 const HomeNavigator = createSwitchNavigator(
     {
-        Walkthrough: { screen: Walkthrough },
         Home: { screen: HomeTabs },
     },
     StackNavigatorOptions
@@ -214,6 +195,7 @@ const SignUpNavigator = createStackNavigator(
         SignUp: { screen: SignUpName },
         SignUpEmail: { screen: SignUpEmail },
         SignUpPassword: { screen: SignUpPassword },
+        Walkthrough: { screen: Walkthrough },
     },
     StackNavigatorOptions
 );

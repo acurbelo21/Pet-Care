@@ -152,7 +152,7 @@ export default class ListItem extends Component {
               >
                 {name}
               </Text>
-              <FontAwesome5 name={gender=="female" ? "venus" : "mars"} size="30%" color={gender=="female" ? "#e75480" : "#009dff"} />
+              <FontAwesome5 name={gender=="female" ? "venus" : "mars"} size={30} color={gender=="female" ? "#e75480" : "#009dff"} />
             </View>
             {breed && (
               <Text
