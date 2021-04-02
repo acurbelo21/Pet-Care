@@ -196,23 +196,11 @@ export default class MultiSelectDropdown extends React.Component {
     });
   }
 
-  @autobind
-  buttonFn() {
-    // this.props.navigation.navigate("DiagnosticToolResults");
-    this.props.navigation.navigate("DiagnosticToolResults", { onSelect: this.onSelect, getData: () => this.searchForSymptomsInFirestore() });
-    // console.log("pressed");
-  }
-
   render() {
     const { items, selectedItems } = this.state;
-    const { navigation } = this.props;
-    const { buttonFn } = this;
 
     return (
       <>
-        {/* <NavHeaderWithButton title="Diagnostic Tool" {...{ navigation, buttonFn }} /> */}
-        {/* <NavHeaderWithButton title="Diagnostic Tool" buttonFn={this.searchForSymptomsInFirestore} /> */}
-        {/* <NavHeaderWithButton title="Diagnostic Tool" buttonFn={this.buttonFn} /> */}
         <View style={styles.multiSelectOptionsContainer}>
           <MultiSelect
             items={items} // List of items to display in the multi-select component
@@ -264,15 +252,6 @@ export default class MultiSelectDropdown extends React.Component {
             primary
           />
         }
-        {/* <Text style={styles.diagnosisResultsHeader}>Diagnosed diseases:</Text>
-        {this.state.uniqueFilteredDiagnoses.length < 1 && <Text style={styles.noDiagnosisResultsFoundText}>No diseases found.</Text>}
-        <FlatList
-          style={styles.diagnosisResultsContainer}
-          data={this.state.uniqueFilteredDiagnoses}
-          renderItem={({ item }) => (
-            <Text style={styles.diagnosisResultsText}>{ item }</Text>
-          )}
-        /> */}
       </>
     );
   }
@@ -285,43 +264,11 @@ const styles = StyleSheet.create({
     zIndex: 2
   },
   diagnoseButtonContainer: {
-    // position: 'absolute',
-    // bottom: -200,
+    position: 'absolute',
+    bottom: -200,
     zIndex: 0,
     padding: 5,
     alignSelf: "center",
-    // Really not sure why flex isn't working, went with temporary styling for now ^
-    // flexDirection: 'column',
-    flexGrow: 1,
-    justifyContent: 'space-between',
-  },
-  // Stylesheets for Diagnosis Result placeholder text - can delete after adding new screen dedicated to results:
-  diagnosisResultsContainer: {
-    position: 'absolute',
-    bottom: -140,
-    zIndex: 1,
-    alignSelf: "center"
-  },
-  diagnosisResultsHeader: {
-    fontSize: 25,
-    padding: 5,
-    position: 'absolute',
-    bottom: -100,
-    fontWeight: "bold",
-    fontFamily: "SFProText-Heavy",
-    alignSelf: "center"
-  },
-  diagnosisResultsText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    alignSelf: "center"
-  },
-  noDiagnosisResultsFoundText: {
-    position: 'absolute',
-    bottom: -140,
-    zIndex: 1,
-    alignSelf: "center",
-    fontSize: 15
   }
 });
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {AppRegistry, StyleSheet, View, FlatList, SafeAreaView, ActivityIndicator} from 'react-native';
 import DiagnosisItem from './DiagnosisItem';
 import _ from 'lodash';
-import Pagination,{Icon,Dot} from 'react-native-pagination';//{Icon,Dot} also available
+import Pagination from 'react-native-pagination';
 import Firebase from "../../components/Firebase";
 import { NavHeader, Theme } from "../../components";
 import { LinearGradient } from "expo-linear-gradient";
@@ -45,21 +45,12 @@ export default class DiagnosticToolResults extends Component {
   _renderItem = ({item}) => {
     const { navigation } = this.props;
     return (<DiagnosisItem index={item.id}
-        // pet_uid={item.pet_uid}
         name={item.name}
-        // pic={item.pic}
-        // breed={item.breed}
-        // species={item.species}
         {...{navigation}}
       />)
     };
-    //pressed an item
-//   onPressItem = (item) => console.log("onPressItem:item ",item);
-    // onPressItem = (item) => console.log(Firebase.auth.currentUser)
-    // onPressItem = (item) => console.log(MockPersonList)
-    onPressItem = (item) => this.printStuffToConsole()
 
-  //map to some od. We use the "id" attribute of each item in our list created in our MockPersonList
+  //map to some id. We use the "id" attribute of each item in our list created in our MockPersonList
   _keyExtractor = (item, index) => item.id.toString();
 
   // REQUIRED for ReactNativePagination to work correctly
@@ -83,7 +74,7 @@ export default class DiagnosticToolResults extends Component {
     }
     return (
       <View style={[styles.container]}>
-      <NavHeader title="Diagnostic Tool Results" back {...{ navigation }} />
+      <NavHeader title="Diagnosed Diseases" back {...{ navigation }} />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
           <FlatList
             data={this.state.items}

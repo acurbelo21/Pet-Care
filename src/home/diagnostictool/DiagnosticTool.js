@@ -6,7 +6,6 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 import {Theme, Button, NavHeader} from "../../components";
 import MultiSelectDropdown from "./MultiSelectDropdown";
-import autobind from 'autobind-decorator';
 
 type DropdownIsVisibleState = { dropdownIsVisible: boolean };
 
@@ -55,15 +54,7 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
     }
   }
 
-
-  @autobind
-  buttonFn() {
-    this.props.navigation.navigate("DiagnosticToolResults");
-    // console.log("pressed");
-  }
-
   render(): React.Node {
-    // const selectPetSpeciesMessage = <Text style={styles.message}>Please select the pet species you want to diagnose. </Text>;
     const { navigation } = this.props;
     
     return (

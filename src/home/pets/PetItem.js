@@ -113,7 +113,7 @@ export default class ListItem extends Component {
                   margin: 8,
                   borderRadius: 25,
                 }}>
-                <FontAwesome5 name={petIcon} size="40%" color={speciesColor} />
+                <FontAwesome5 name={petIcon} size={40} color={speciesColor} />
               </View>
             )}
             {pic != "null" && (
