@@ -114,7 +114,7 @@ export default class ListItem extends Component {
                   margin: 8,
                   borderRadius: 25,
                 }}>
-                <FontAwesome5 name={petIcon} size="40%" color={speciesColor} />
+                <FontAwesome5 name={petIcon} size={40} color={speciesColor} />
               </View>
             )}
             {pic != "null" && (
@@ -152,7 +152,7 @@ export default class ListItem extends Component {
               >
                 {name}
               </Text>
-              <FontAwesome5 name={gender=="female" ? "venus" : "mars"} size="30%" color={gender=="female" ? "#e75480" : "#009dff"} />
+              <FontAwesome5 name={gender=="female" ? "venus" : "mars"} size={30} color={gender=="female" ? "#e75480" : "#009dff"} />
             </View>
             {breed && (
               <Text
