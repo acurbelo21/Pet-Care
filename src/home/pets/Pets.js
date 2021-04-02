@@ -30,7 +30,6 @@ export default class Pets extends Component {
         .doc(uid)
         .collection("pets")
         .onSnapshot(docs => {
-          console.log("hewwo");
           this.retrieveFireStorePets()
         }
         );

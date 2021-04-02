@@ -91,7 +91,7 @@ export default class ListItem extends Component {
                 borderColor: speciesColor,
                 backgroundColor: speciesColor,
                 alignSelf: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
             >
               <Text
@@ -108,27 +108,31 @@ export default class ListItem extends Component {
             </View>
             {pic == "null" && (
               <View
-                resizeMode="contain"
                 style={{
                   height: 50,
                   width: 50,
                   margin: 8,
                   borderRadius: 25,
+                  paddingRight: 5,
                 }}>
                 <FontAwesome5 name={petIcon} size="40%" color={speciesColor} />
               </View>
             )}
             {pic != "null" && (
+              <View
+              style={{
+                paddingRight: 5,
+              }}>
               <Image
                 source={{ uri: pic }}
-                resizeMode="contain"
                 style={{
-                  height: 50,
-                  width: 50,
-                  margin: 8,
-                  borderRadius: 15,
+                  borderRadius: 85,
+                  height: 70,
+                  marginBottom: 15,
+                  width: 70,
                 }}
               />
+              </View>
             )}
           </View>
           <View
