@@ -8,6 +8,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const { width, height } = Dimensions.get('window');
 import { NavigationEvents } from "react-navigation";
 import contactData from '../../mocks/contact.json'
+import { Left } from "native-base";
 
 export default class ListItem extends Component {
 
@@ -15,11 +16,11 @@ export default class ListItem extends Component {
   goToPetDetailView() {
     const pet_uid = this.props.pet_uid
     // this.props.navigation.navigate("PetDetailView", { pet_uid });
-    this.props.navigation.navigate("PetDetailView", { pet_uid });
+    this.props.navigation.navigate("PetDetailView", { onSelect: this.onSelect, getData: () => this.props.getDataFunc, pet_uid });
   }
 
   render() {
-    const { name, pic, color, seen, selected, key, id, species, breed, pet_uid } = this.props;
+    const { name, pic, color, seen, selected, key, id, species, breed, age, gender, getDataFunc } = this.props;
     var speciesColor;
     var petIcon;
 
@@ -38,7 +39,7 @@ export default class ListItem extends Component {
         break;
       case "Horse":
         petIcon = "horse";
-        speciesColor = "#77dd77";
+        speciesColor = "#0dbf0d";
         break;
       case "Fish":
         petIcon = "fish";
@@ -79,7 +80,7 @@ export default class ListItem extends Component {
           <View
             style={{
               alignSelf: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <View
@@ -145,12 +146,13 @@ export default class ListItem extends Component {
               <Text
                 style={{
                   fontWeight: '600',
-                  fontSize: 40,
+                  fontSize: 36,
                   color: speciesColor
                 }}
               >
                 {name}
               </Text>
+              <FontAwesome5 name={gender=="female" ? "venus" : "mars"} size="30%" color={gender=="female" ? "#e75480" : "#009dff"} />
             </View>
             {breed && (
               <Text
@@ -163,6 +165,30 @@ export default class ListItem extends Component {
               >
                 {' '}
                 {breed}
+              </Text>
+            )}
+          </View>
+          <View>
+          {age && (
+              <Text
+                style={gender=="female" ? {
+                  height: 60,
+                  fontSize: 20,
+                  fontWeight: '300',
+                  color: "#e75480",
+                  paddingTop: 8,
+                  paddingLeft: 3,
+                }:
+                {
+                  height: 60,
+                  fontSize: 20,
+                  fontWeight: '300',
+                  color: "#009dff",
+                  paddingTop: 8,
+                  paddingLeft: 3,
+                }}
+              >
+                {age} years
               </Text>
             )}
           </View>

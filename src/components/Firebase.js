@@ -1,6 +1,7 @@
 // @flow
 import * as firebase from "firebase";
 import "firebase/firestore";
+import "firebase/storage";
 
 const config = {
     apiKey: "AIzaSyCE3r7Q2qAWXb1sS483sG-lWew6-EEx6pI",
