@@ -62,75 +62,12 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     };
   }
 
-  chooseFile = async () => {
-    this.setState({loading: true});
-    let result = await ImagePicker.launchImageLibraryAsync();
-
-    if (result.cancelled) {
-      this.setState({loading: false});
-      console.log('User cancelled image picker');
-      // console.log('User cancelled image picker', Firebase.storage);
-    } else if (result.error) {
-        console.log('ImagePicker Error: ', result.error);
-    } else if (result.customButton) {
-        console.log('User tapped custom button: ', result.customButton);
-    } else {
-        let path = result.uri;
-        let imageName = this.getFileName(result.fileName, path);
-        this.setState({ imagePath: path });
-        this.uploadImage(path, imageName);
-    }
-  }
-
-  uploadImage = async (path, imageName) => {
-    const response = await fetch(path);
-    const blob = await response.blob();
-
-    const { uid } = Firebase.auth.currentUser;
-    const pet_uid  = this.props.navigation.state.params;
-
-    var ref = Firebase.storage.ref().child("petPictures/" + imageName);
-    let task = ref.put(blob);
-
-    task.then(() => {
-        console.log('Image uploaded to the bucket!');
-        this.setState({ loading: false, status: 'Image uploaded successfully' });
-        ref.getDownloadURL().then(function(pic) {
-            console.log(pic);
-            Firebase.firestore
-              .collection("users")
-              .doc(uid)
-              .collection("pets")
-              .doc(pet_uid.pet_uid)
-              .update({pic})
-        }
-        , function(error){
-            console.log(error);
-        });
-        this.props.navigation.state.params.getData();
-        this.goBackToPets();
-    }).catch((e) => {
-        status = 'Something went wrong';
-        console.log('uploading image error => ', e);
-        this.setState({ loading: false, status: 'Something went wrong' });
-    });
-  }
-
-  getFileName(name, path) {
-      if (name != null) { return name; }
-
-      if (Platform.OS === "ios") {
-          path = "~" + path.substring(path.indexOf("/Documents"));
-      }
-      return path.split("/").pop();
+  async componentDidMount(): Promise<void> {
+    this.retrieveFireStorePetDetails();
   }
 
   @autobind
-  toggleOverlay() {
-    this.setState({"setOverlay":!this.state.setOverlay});
-  }
-
-  async componentDidMount(): Promise<void> {
+  retrieveFireStorePetDetails() {
     const { uid } = Firebase.auth.currentUser;
     const { navigation } = this.props;
     const pet_uid  = navigation.state.params;
@@ -204,8 +141,76 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     })
   }
 
+  chooseFile = async () => {
+    this.setState({loading: true});
+    let result = await ImagePicker.launchImageLibraryAsync();
+
+    if (result.cancelled) {
+      this.setState({loading: false});
+      console.log('User cancelled image picker');
+      // console.log('User cancelled image picker', Firebase.storage);
+    } else if (result.error) {
+        console.log('ImagePicker Error: ', result.error);
+    } else if (result.customButton) {
+        console.log('User tapped custom button: ', result.customButton);
+    } else {
+        let path = result.uri;
+        let imageName = this.getFileName(result.fileName, path);
+        this.setState({ imagePath: path });
+        this.uploadImage(path, imageName);
+    }
+  }
+
+  uploadImage = async (path, imageName) => {
+    const response = await fetch(path);
+    const blob = await response.blob();
+
+    const { uid } = Firebase.auth.currentUser;
+    const pet_uid  = this.props.navigation.state.params;
+
+    var ref = Firebase.storage.ref().child("petPictures/" + imageName);
+    let task = ref.put(blob);
+
+    task.then(() => {
+        console.log('Image uploaded to the bucket!');
+        this.setState({ loading: false, status: 'Image uploaded successfully' });
+        ref.getDownloadURL().then(function(pic) {
+            console.log(pic);
+            Firebase.firestore
+              .collection("users")
+              .doc(uid)
+              .collection("pets")
+              .doc(pet_uid.pet_uid)
+              .update({pic})
+        }
+        , function(error){
+            console.log(error);
+        });
+        // this.goBackToPets();
+        this.retrieveFireStorePetDetails();
+    }).catch((e) => {
+        status = 'Something went wrong';
+        console.log('uploading image error => ', e);
+        this.setState({ loading: false, status: 'Something went wrong' });
+    });
+  }
+
+  getFileName(name, path) {
+      if (name != null) { return name; }
+
+      if (Platform.OS === "ios") {
+          path = "~" + path.substring(path.indexOf("/Documents"));
+      }
+      return path.split("/").pop();
+  }
+
+  @autobind
+  toggleOverlay() {
+    this.setState({"setOverlay":!this.state.setOverlay});
+  }
+
   componentWillUnmount() {
-    this.props.navigation.state.params.getData();
+    // this.props.navigation.state.params.getData();
 }
 
   @autobind
