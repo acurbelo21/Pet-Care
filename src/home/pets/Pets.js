@@ -82,7 +82,6 @@ export default class Pets extends Component {
         species={item.species}
         age={item.age}
         gender={item.gender}
-        getDataFunc = {retrieveFireStorePets}
         {...{navigation}}
       />)
     };

@@ -31,7 +31,7 @@ import { reduce } from "lodash";
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default class PetDetailView extends React.Component<ScreenParams<{ pet_uid: String }>, SettingsState> {
+export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: String }>, SettingsState> {
   constructor(props)
   {
     super(props);
@@ -107,6 +107,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
         , function(error){
             console.log(error);
         });
+        this.props.navigation.state.params.getData();
         this.goBackToPets();
     }).catch((e) => {
         status = 'Something went wrong';
@@ -203,6 +204,10 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     })
   }
 
+  componentWillUnmount() {
+    this.props.navigation.state.params.getData();
+}
+
   @autobind
   goBackToPets() {
     const { navigation } = this.props;
@@ -254,21 +259,12 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
           blurRadius={10}
           source={{uri: avatarBackground}}
         >
-          <View style={styles.navContent}>
-            <View style={styles.side}>
-              <TouchableOpacity onPress={this.goBackToPets}>
-                  <View>
-                      <Icon name="chevron-left" size={50} color="white" />
-                  </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.side}>
-              <TouchableOpacity onPress={this.goBackToPets}>
-                  <View>
-                      <Icon type="font-awesome-5" name="edit" size={40} color="white" />
-                  </View>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.side}>
+            <TouchableOpacity onPress={this.goBackToPets}>
+                <View style={styles.back}>
+                    <Icon name="chevron-left" size={50} color="white" />
+                </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.headerColumn}>
             <TouchableOpacity onPress={this.chooseFile}>
@@ -375,6 +371,9 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
             <Text> Age: {this.state.age}</Text>
             <Text> Years owned: </Text>
             <Text> Where is the pet kept? </Text>
+            {Separator()}
+            <Text type="header3" style={styles.cardText}> Diseases </Text>
+
           </Card>
           <View style={styles.labContainer}>
             <TouchableOpacity
@@ -416,7 +415,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   side: {
-      width: 80,
+      width: 30,
   },
   cardContainer: {
     backgroundColor: '#FFF',
@@ -469,13 +468,6 @@ const styles = StyleSheet.create({
     height: '10%',
     justifyContent: 'center',
   },
-  navContent: {
-    marginTop: Platform.OS === "ios" ? 0 : 20,
-    height: 57,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-},
   placeIcon: {
     color: 'white',
     fontSize: 26,
