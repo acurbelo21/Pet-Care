@@ -11,6 +11,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import { LinearGradient } from "expo-linear-gradient";
 import {Text, Theme} from "../../components";
 
 export default class PetDetailView extends React.Component<ScreenParams<{ diagnosisNameObject: String }>, SettingsState> {
@@ -54,20 +55,20 @@ export default class PetDetailView extends React.Component<ScreenParams<{ diagno
 
   renderDetail = (stateParameter, heading) => {
     return(
-        // forEach 
-        <>
-            {stateParameter.length > 0 && <Text style={Theme.typography.header3}>{heading}</Text>}
-            {stateParameter.length > 0 && <Text />}
-            <FlatList
-            style={styles.diagnosisResultsContainer}
-            data={stateParameter}
-            renderItem={({ item }) => (
-                // <Text style={styles.diagnosisResultsText}>• { item }{"\n"}</Text>
-                <Text style={styles.diagnosisResultsText}>• { item }</Text>
-            )}
-            />
-            {stateParameter.length > 0 && <Text />}
-        </>
+      <>
+        {stateParameter.length > 0 && <View style={styles.separator} />}
+        {stateParameter.length > 0 && <Text style={Theme.typography.header3}>{heading}</Text>}
+        {stateParameter.length > 0 && <View style={styles.separator} />}
+        {stateParameter.length > 0 && <Text />}
+        <FlatList
+        style={styles.diagnosisResultsContainer}
+        data={stateParameter}
+        renderItem={({ item }) => (
+          <Text style={styles.diagnosisResultsText}>• { item }</Text>
+        )}
+        />
+        {stateParameter.length > 0 && <Text />}
+      </>
     )
 }
 
@@ -76,21 +77,22 @@ export default class PetDetailView extends React.Component<ScreenParams<{ diagno
 
     if(this.state.loading)
     {
-        return(
+      return(
         <ScrollView style={[styles.container]}>
           <View style={{
-              paddingTop: "40%",
-              justifyContent:"center",
+            paddingTop: "40%",
+            justifyContent:"center",
           }}>
-              <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" />
           </View>
         </ScrollView>
-        )
+      )
     }
     else {
     return (
       <>
       <NavHeader title={navigation.state.params[Object.keys(navigation.state.params)[0]]} back {...{ navigation }} />
+      <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
       <ScrollView contentContainerStyle={styles.scroll} persistentScrollbar={false} >
         <View style={styles.container}>
           <Card containerStyle={styles.cardContainer}>
@@ -110,28 +112,33 @@ export default class PetDetailView extends React.Component<ScreenParams<{ diagno
 }
 
 const styles = StyleSheet.create({
-  topContainer: {
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
-    borderColor: Theme.palette.borderColor,
-    borderBottomWidth: Platform.OS === "ios" ? 0 : 1,
-    zIndex: 10000,
-    backgroundColor: "white",
+  container: {
+    flex: 1,
   },
-  side: {
-      width: 30,
+  gradient: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
   },
   cardContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "transparent",
     borderWidth: 0,
     flex: 1,
     margin: 0,
-    padding: 0,
+    padding: Theme.spacing.base
   },
-  container: {
-    flex: 1,
-  }
+  diagnosisResultsText: {
+    marginHorizontal: Theme.spacing.tiny,
+    marginBottom: Theme.spacing.tiny
+  },
+  separator: {
+    borderColor: Theme.palette.black,
+    borderWidth: 0.8,
+    // borderStyle: "dashed",
+    flex: 8,
+    flexDirection: "row"
+  },
 })
 
