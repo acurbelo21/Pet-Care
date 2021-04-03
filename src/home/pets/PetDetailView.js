@@ -70,13 +70,13 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   retrieveFireStorePetDetails() {
     const { uid } = Firebase.auth.currentUser;
     const { navigation } = this.props;
-    const pet_uid  = navigation.state.params;
+    const params  = navigation.state.params;
 
     Firebase.firestore
     .collection("users")
     .doc(uid)
     .collection("pets")
-    .doc(pet_uid.pet_uid)
+    .doc(params.pet_uid)
     .get()
     .then(doc => {
         this.setState({
@@ -166,7 +166,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     const blob = await response.blob();
 
     const { uid } = Firebase.auth.currentUser;
-    const pet_uid  = this.props.navigation.state.params;
+    const params  = this.props.navigation.state.params;
 
     var ref = Firebase.storage.ref().child("petPictures/" + imageName);
     let task = ref.put(blob);
@@ -180,7 +180,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
               .collection("users")
               .doc(uid)
               .collection("pets")
-              .doc(pet_uid.pet_uid)
+              .doc(params.pet_uid)
               .update({pic})
         }
         , function(error){
@@ -220,6 +220,14 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   goToLabResults() {
     const { navigation } = this.props;
     navigation.navigate("LabResults");
+  }
+
+  @autobind
+  goToEditScreen() {
+    const { navigation } = this.props;
+    const params  = navigation.state.params;
+    const pet_uid = params.pet_uid;
+    navigation.navigate("EditScreen", { pet_uid });
   }
 
   @autobind
@@ -270,7 +278,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
               </TouchableOpacity>
             </View>
             <View style={styles.side}>
-              <TouchableOpacity onPress={this.goBackToPets}>
+              <TouchableOpacity onPress={this.goToEditScreen}>
                   <View>
                       <Icon type="font-awesome-5" name="edit" size={40} color="white" />
                   </View>

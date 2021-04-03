@@ -1,10 +1,10 @@
 import autobind from "autobind-decorator";
 import Firebase from "../../components/Firebase";
-import React, { Component, useState } from 'react'
+import React from 'react'
 import type { ScreenParams } from "../../components/Types";
 import { Card, Icon, Overlay, Badge } from 'react-native-elements'
+import { FontAwesome5 } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-// import storage from '@react-native-firebase/storage';
 import * as Progress from 'react-native-progress';
 import {
   ActivityIndicator,
@@ -18,14 +18,11 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native'
 import {Text, Theme} from "../../components";
-
-import Email from './Email'
-import Separator from './Separator'
-import Tel from './Tel'
 import { reduce } from "lodash";
 
 var width = Dimensions.get('window').width; //full width
@@ -38,21 +35,19 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
 
     this.avatar = "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg";
     this.avatarBackground = "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg";
-    this.name = "Gina Mahdi"
-    this.address = {"city": "Miami", "country": "Florida"};
-    this.tels = [
-      { "id": 1, "name": "Office", "number": "+66 (089)-928-2134" },
-      { "id": 2, "name": "Work", "number": "+41 (112)-435-9887" }
-    ];
-    this.emails = [
-      { "id": 1, "name": "Personal", "email": "petcare@gmail.com" },
-      { "id": 2, "name": "Work", "email": "customersupport@petcare.com" }
-    ];
     this.state = {
       petDetails: "",
       loading: true,
       imagePath: require("../../../assets/PetCare.png"),
       isLoading: false,
+      isDog: true,
+      isCat: true,
+      isBird: true,
+      isFish: true,
+      isHorse: true,
+      isExotic: true,
+      isMale: true,
+      isFemale: true,
       status: '',
       avatar: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg",
       avatarBackground: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg", 
@@ -62,75 +57,12 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     };
   }
 
-  chooseFile = async () => {
-    this.setState({loading: true});
-    let result = await ImagePicker.launchImageLibraryAsync();
-
-    if (result.cancelled) {
-      this.setState({loading: false});
-      console.log('User cancelled image picker');
-      // console.log('User cancelled image picker', Firebase.storage);
-    } else if (result.error) {
-        console.log('ImagePicker Error: ', result.error);
-    } else if (result.customButton) {
-        console.log('User tapped custom button: ', result.customButton);
-    } else {
-        let path = result.uri;
-        let imageName = this.getFileName(result.fileName, path);
-        this.setState({ imagePath: path });
-        this.uploadImage(path, imageName);
-    }
-  }
-
-  uploadImage = async (path, imageName) => {
-    const response = await fetch(path);
-    const blob = await response.blob();
-
-    const { uid } = Firebase.auth.currentUser;
-    const pet_uid  = this.props.navigation.state.params;
-
-    var ref = Firebase.storage.ref().child("petPictures/" + imageName);
-    let task = ref.put(blob);
-
-    task.then(() => {
-        console.log('Image uploaded to the bucket!');
-        this.setState({ loading: false, status: 'Image uploaded successfully' });
-        ref.getDownloadURL().then(function(pic) {
-            console.log(pic);
-            Firebase.firestore
-              .collection("users")
-              .doc(uid)
-              .collection("pets")
-              .doc(pet_uid.pet_uid)
-              .update({pic})
-        }
-        , function(error){
-            console.log(error);
-        });
-        this.props.navigation.state.params.getData();
-        this.goBackToPets();
-    }).catch((e) => {
-        status = 'Something went wrong';
-        console.log('uploading image error => ', e);
-        this.setState({ loading: false, status: 'Something went wrong' });
-    });
-  }
-
-  getFileName(name, path) {
-      if (name != null) { return name; }
-
-      if (Platform.OS === "ios") {
-          path = "~" + path.substring(path.indexOf("/Documents"));
-      }
-      return path.split("/").pop();
+  async componentDidMount(): Promise<void> {
+    this.retrieveFireStorePetDetails();
   }
 
   @autobind
-  toggleOverlay() {
-    this.setState({"setOverlay":!this.state.setOverlay});
-  }
-
-  async componentDidMount(): Promise<void> {
+  retrieveFireStorePetDetails() {
     const { uid } = Firebase.auth.currentUser;
     const { navigation } = this.props;
     const pet_uid  = navigation.state.params;
@@ -204,9 +136,69 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     })
   }
 
-  componentWillUnmount() {
-    this.props.navigation.state.params.getData();
-}
+  chooseFile = async () => {
+    this.setState({loading: true});
+    let result = await ImagePicker.launchImageLibraryAsync();
+
+    if (result.cancelled) {
+      this.setState({loading: false});
+      console.log('User cancelled image picker');
+      // console.log('User cancelled image picker', Firebase.storage);
+    } else if (result.error) {
+        console.log('ImagePicker Error: ', result.error);
+    } else if (result.customButton) {
+        console.log('User tapped custom button: ', result.customButton);
+    } else {
+        let path = result.uri;
+        let imageName = this.getFileName(result.fileName, path);
+        this.setState({ imagePath: path });
+        this.uploadImage(path, imageName);
+    }
+  }
+
+  uploadImage = async (path, imageName) => {
+    const response = await fetch(path);
+    const blob = await response.blob();
+
+    const { uid } = Firebase.auth.currentUser;
+    const pet_uid  = this.props.navigation.state.params;
+
+    var ref = Firebase.storage.ref().child("petPictures/" + imageName);
+    let task = ref.put(blob);
+
+    task.then(() => {
+        console.log('Image uploaded to the bucket!');
+        this.setState({ status: 'Image uploaded successfully' });
+        ref.getDownloadURL().then(function(pic) {
+            console.log(pic);
+            Firebase.firestore
+              .collection("users")
+              .doc(uid)
+              .collection("pets")
+              .doc(pet_uid.pet_uid)
+              .update({pic})
+        }
+        , function(error){
+            console.log(error);
+        });
+        this.retrieveFireStorePetDetails()
+          .then(this.setState({loading: false}));
+        // this.goBackToPets();
+    }).catch((e) => {
+        status = 'Something went wrong';
+        console.log('uploading image error => ', e);
+        this.setState({ loading: false, status: 'Something went wrong' });
+    });
+  }
+
+  getFileName(name, path) {
+      if (name != null) { return name; }
+
+      if (Platform.OS === "ios") {
+          path = "~" + path.substring(path.indexOf("/Documents"));
+      }
+      return path.split("/").pop();
+  }
 
   @autobind
   goBackToPets() {
@@ -215,33 +207,34 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
   }
 
   @autobind
-  goToLabResults() {
-    const { navigation } = this.props;
-    navigation.navigate("LabResults");
+  switchSelected(species) {
+    let turnOff = {
+      isDog: false,
+      isCat: false,
+      isBird: false,
+      isFish: false,
+      isHorse: false,
+      isExotic: false,
+    }
+
+    turnOff[species] = true;
+
+    this.setState(
+      turnOff
+    );
   }
 
-  @autobind
-  goToTrainingScreen() {
-    const { navigation } = this.props;
-    navigation.navigate("TrainingScreen");
-  }
+  switchSelectedSex(sex) {
+    let turnOff = {
+      isMale: false,
+      isFemale: false,
+    }
 
-  onPressPlace = () => {
-    console.log('place')
-  }
+    turnOff[sex] = true;
 
-  onPressTel = number => {
-    Linking.openURL(`tel://${number}`).catch(err => console.log('Error:', err))
-  }
-
-  onPressSms = () => {
-    console.log('sms')
-  }
-
-  onPressEmail = email => {
-    Linking.openURL(`mailto://${email}?subject=subject&body=body`).catch(err =>
-      console.log('Error:', err)
-    )
+    this.setState(
+      turnOff
+    );
   }
 
   renderHeader = () => {
@@ -259,12 +252,14 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
           blurRadius={10}
           source={{uri: avatarBackground}}
         >
-          <View style={styles.side}>
-            <TouchableOpacity onPress={this.goBackToPets}>
-                <View style={styles.back}>
-                    <Icon name="chevron-left" size={50} color="white" />
-                </View>
-            </TouchableOpacity>
+          <View style={styles.navContent}>
+            <View style={styles.side}>
+              <TouchableOpacity onPress={this.goBackToPets}>
+                  <View>
+                      <Icon name="chevron-left" size={50} color="white" />
+                  </View>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.headerColumn}>
             <TouchableOpacity onPress={this.chooseFile}>
@@ -273,76 +268,11 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
                 source={{uri: avatar}}
               />
             </TouchableOpacity>
-            <Text style={styles.userNameText}>{name}</Text>
-            <View style={styles.userAddressRow}>
-              <View>
-                <Icon
-                  name="paw"
-                  underlayColor="transparent"
-                  type="font-awesome-5"
-                  iconStyle={styles.placeIcon}
-                  onPress={this.toggleOverlay}
-                />
-              </View>
-              <Overlay isVisible={this.state.setOverlay} onBackdropPress={this.toggleOverlay}>
-              <Card containerStyle={styles.overlayContainer}>
-                  {this.renderTel()}
-                  {Separator()}
-                  {this.renderEmail()}
-                </Card>
-             </Overlay>
-              <View style={styles.userCityRow}>
-                <Text style={styles.userCityText}>
-                  {species}, {breed}
-                </Text>
-              </View>
-            </View>
-          </View>
+         </View>
         </ImageBackground>
       </View>
     )
   }
-
-  renderTel = () => (
-    <FlatList
-      contentContainerStyle={styles.telContainer}
-      data={this.tels}
-      renderItem={(list) => {
-        const { id, name, number } = list.item
-
-        return (
-          <Tel
-            key={`tel-${id}`}
-            index={list.index}
-            name={name}
-            number={number}
-            onPressSms={this.onPressSms}
-            onPressTel={this.onPressTel}
-          />
-        )
-      }}
-    />
-  )
-
-  renderEmail = () => (
-    <FlatList
-      contentContainerStyle={styles.emailContainer}
-      data={this.emails}
-      renderItem={(list) => {
-        const { email, id, name } = list.item
-
-        return (
-          <Email
-            key={`email-${id}`}
-            index={list.index}
-            name={name}
-            email={email}
-            onPressEmail={this.onPressEmail}
-          />
-        )
-      }}
-    />
-  )
 
   render():React.Node {
     if(this.state.loading)
@@ -364,37 +294,115 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
         <View style={styles.container}>
           <Card containerStyle={styles.cardContainer}>
             {this.renderHeader()}
-            {/* {this.renderTel()}
-            {Separator()}
-            {this.renderEmail()} */}
-            <Text type="header3" style={styles.cardText}> Pet Information </Text>
-            <Text> Age: {this.state.age}</Text>
-            <Text> Years owned: </Text>
-            <Text> Where is the pet kept? </Text>
-            {Separator()}
-            <Text type="header3" style={styles.cardText}> Diseases </Text>
+            <Text type="header3" style={styles.cardText}> Edit Information </Text>
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Name:</Text>
+
+              <TextInput
+                  style={styles.input}
+                  onChangeText={this.handleName}
+                  returnKeyType = 'done'
+                  defaultValue = {this.state.name}
+              /> 
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Species:</Text>
+
+              {this.state.isDog &&
+              <TouchableOpacity onPress={() => this.switchSelected("isDog")}>
+                <FontAwesome5 name="dog" size={30} color="#0080ff" />
+              </TouchableOpacity>
+             }
+
+             {this.state.isCat &&
+              <TouchableOpacity onPress={() => this.switchSelected("isCat")}>
+                <FontAwesome5 name="cat" size={30} color="#ffb347" /> 
+              </TouchableOpacity>
+              }
+
+              {this.state.isBird &&
+              <TouchableOpacity onPress={() => this.switchSelected("isBird")}>
+                <FontAwesome5 name="dove" size={30} color="#c93335" />
+              </TouchableOpacity>
+              }
+
+              {this.state.isHorse &&
+              <TouchableOpacity onPress={() => this.switchSelected("isHorse")}>
+                <FontAwesome5 name="horse" size={30} color="#0dbf0d" />
+              </TouchableOpacity>
+              }
+
+              {this.state.isFish &&
+              <TouchableOpacity onPress={() => this.switchSelected("isFish")}>
+                <FontAwesome5 name="fish" size={30} color="#71b6f7" />
+              </TouchableOpacity>
+              }
+
+              {this.state.isExotic &&
+              <TouchableOpacity onPress={() => this.switchSelected("isExotic")}>
+                <FontAwesome5 name="spider" size={30} color="#9379c2" />
+              </TouchableOpacity>
+              }
+
+              <View></View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Breed:</Text>
+
+              <TextInput
+                  style={styles.input}
+                  onChangeText={this.handleName}
+                  returnKeyType = 'done'
+                  defaultValue = {this.state.petBiology.breed}
+              /> 
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Age:</Text>
+
+              <TextInput
+                  style={styles.input}
+                  onChangeText={this.handleName}
+                  returnKeyType = 'done'
+                  defaultValue = {this.state.age}
+              /> 
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Sex:</Text>
+
+              {this.state.isMale &&
+              <TouchableOpacity onPress={() => this.switchSelectedSex("isMale")}>
+                <FontAwesome5 name="mars" size={30} color="#009dff" /> 
+              </TouchableOpacity>
+              }
+              {this.state.isFemale &&
+              <TouchableOpacity onPress={() => this.switchSelectedSex("isFemale")}>
+                <FontAwesome5 name="venus" size={30} color="#e75480" /> 
+              </TouchableOpacity>
+              }
+
+              <View/>
+              <View/>
+              <View/>
+              <View/>
+              <View/>
+
+            </View>
 
           </Card>
-          <View style={styles.labContainer}>
-            <TouchableOpacity
-              style={styles.labButton}
-              onPress={this.goToLabResults}
-            >
-                <Text>
-                  View {this.state.petDetails.name}'s Lab Results
-                </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.container}>
-            <TouchableOpacity
-              style={styles.labButton}
-              onPress={this.goToTrainingScreen}
-            >
-                <Text>
-                  View training videos on {this.state.petDetails.breed}s
-                </Text>
-            </TouchableOpacity>
-          </View>
           <View style={{height:300}}/>
         </View>
       </ScrollView>
@@ -415,7 +423,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   side: {
-      width: 30,
+      width: 80,
+  },
+  btnPressNormal: {
+    backgroundColor:"white",
+  },
+  btnPressSelected: {
+    borderWidth:3,
+    borderColor:'red',
   },
   cardContainer: {
     backgroundColor: '#FFF',
@@ -436,10 +451,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  emailContainer: {
-    backgroundColor: '#FFF',
-    paddingTop: 30,
-  },
   headerBackgroundImage: {
     paddingBottom: 20,
     paddingTop: 45,
@@ -458,16 +469,25 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  labButton:{
-    backgroundColor: '#9dffb0',
-    alignSelf: 'center',
-    padding: 10,
+  input: {
+    // borderColor: "red",
+    // borderWidth: 3,
+    backgroundColor: "#FAFAFA",
+    width: width - 70,
+    right:0,
   },
-  labContainer: {
-    width: '100%',
-    height: '10%',
-    justifyContent: 'center',
+  inputContainer: {
+    height: 40,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
+  navContent: {
+    marginTop: Platform.OS === "ios" ? 0 : 20,
+    height: 57,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+},
   placeIcon: {
     color: 'white',
     fontSize: 26,
