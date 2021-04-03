@@ -17,11 +17,8 @@ export default class ListItem extends Component {
     const pet_uid = this.props.pet_uid
     const { getDataFunc } = this.props
     // this.props.navigation.navigate("PetDetailView", { pet_uid });
-<<<<<<< HEAD
+    
     this.props.navigation.navigate("PetDetailView", { pet_uid });
-=======
-    this.props.navigation.navigate("PetDetailView", { onSelect: this.onSelect, getData: () => getDataFunc, pet_uid });
->>>>>>> 459c2ee6b769a1e7b991e39e08cf3ba0e588e2f0
   }
 
   render() {
