@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  Button
 } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
 import { inject, observer } from "mobx-react";
@@ -25,7 +26,7 @@ type InjectedProps = {
 @inject("profileStore")
 @observer
 export default class ProfileComp extends React.Component<
-  ScreenProps<> & InjectedProps
+ScreenProps<> & InjectedProps
 > {
 
   @autobind
@@ -38,30 +39,39 @@ export default class ProfileComp extends React.Component<
     const { profileStore, navigation } = this.props;
     const { profile } = profileStore;
     return (
-      <View style={styles.container}>
-        {/* <NavHeader title="Profile" {...{ navigation }} /> */}
-        <NavHeaderWithButton title="Profile" buttonFn={this.settings} buttonIcon="settings" />
-        <LinearGradient
-          colors={["#81f1f7", "#9dffb0"]}
-          style={styles.gradient}
-        />
-        <View style={styles.header}>
-          {/* <TouchableOpacity onPress={this.settings} style={styles.settings}>
-            <View>
-              <Icon name="settings" size={30} color={Theme.palette.black} />
-            </View>
-          </TouchableOpacity> */}
-          <View style={styles.title}>
-            {/* <Text type="large" style={styles.outline}>Pet Owner</Text> */}
-            <Text type="header2" style={styles.name}>{profile.name}</Text>
-          </View>
-          <Avatar
-            size={avatarSize}
-            style={styles.avatar}
-            {...profile.picture}
+      <>
+        <View style={styles.container}>
+          {/* <NavHeader title="Profile" {...{ navigation }} /> */}
+          <NavHeaderWithButton title="Profile" buttonFn={this.settings} buttonIcon="settings" />
+          <LinearGradient
+            colors={["#81f1f7", "#9dffb0"]}
+            style={styles.gradient}
           />
+          <View style={styles.header}>
+            {/* <TouchableOpacity onPress={this.settings} style={styles.settings}>
+              <View>
+                <Icon name="settings" size={30} color={Theme.palette.black} />
+              </View>
+            </TouchableOpacity> */}
+            <View style={styles.title}>
+              {/* <Text type="large" style={styles.outline}>Pet Owner</Text> */}
+              <Text type="header2" style={styles.name}>{profile.name}</Text>
+            </View>
+            <Avatar
+              size={avatarSize}
+              style={styles.avatar}
+              {...profile.picture}
+            />
+          </View>
+          <View style={styles.button}>
+            <Button
+            title="View Lab Results"
+            onPress={() => this.props.navigation.navigate("ViewDocuments")}
+            color="brown"
+            />
+          </View>
         </View>
-      </View>
+      </>
     );
   }
 }
@@ -113,4 +123,7 @@ const styles = StyleSheet.create({
   name: {
     color: Theme.palette.black,
   },
+  button: {
+    paddingTop: 250,
+  }
 });
