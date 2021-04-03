@@ -51,7 +51,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     this.state = {
       petDetails: "",
       loading: true,
-      imagePath: "",
+      imagePath: require("../../../assets/PetCare.png"),
       isLoading: false,
       status: '',
       avatar: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg",
@@ -173,7 +173,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
 
     task.then(() => {
         console.log('Image uploaded to the bucket!');
-        this.setState({ loading: false, status: 'Image uploaded successfully' });
+        this.setState({ status: 'Image uploaded successfully' });
         ref.getDownloadURL().then(function(pic) {
             console.log(pic);
             Firebase.firestore
@@ -186,7 +186,8 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
         , function(error){
             console.log(error);
         });
-        this.retrieveFireStorePetDetails();
+        this.retrieveFireStorePetDetails()
+          .then(this.setState({loading: false}));
         // this.goBackToPets();
     }).catch((e) => {
         status = 'Something went wrong';
