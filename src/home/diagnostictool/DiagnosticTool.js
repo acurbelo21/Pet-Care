@@ -1,10 +1,10 @@
 // @flow
 import * as React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from '@expo/vector-icons';
 
-import {Text, NavHeader, Theme, Button} from "../../components";
+import {Theme, Button, NavHeader} from "../../components";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 
 type DropdownIsVisibleState = { dropdownIsVisible: boolean };
@@ -55,13 +55,13 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
   }
 
   render(): React.Node {
-    // const selectPetSpeciesMessage = <Text style={styles.message}>Please select the pet species you want to diagnose. </Text>;
     const { navigation } = this.props;
     
     return (
       <View style={styles.container}>
         <NavHeader title="Diagnostic Tool" {...{ navigation }} />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
+        <ScrollView contentContainerStyle={styles.scroll} persistentScrollbar={false} >
         <View style={styles.buttonContainer}>
           <View style={styles.iconContainer}>
             <FontAwesome5 name="dog" size={Theme.typography.header1.fontSize} style={styles.image} />
@@ -86,8 +86,9 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
           </View>
         </View>
         <View style={styles.multiSelectContainer}>
-          <MultiSelectDropdown ref={ref => (this._multiselectdropdown = ref)} />
+          <MultiSelectDropdown navigation={this.props.navigation} ref={ref => (this._multiselectdropdown = ref)} />
         </View>
+        </ScrollView>
       </View>
     );
   }

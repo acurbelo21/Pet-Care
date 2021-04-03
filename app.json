@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "react-native-fiber-firebase",
-    "slug": "react-native-fiber-firebase",
-    "description": "UI elements, multi-screen implemented in React Native, now in one handy kit",
-    "version": "2.0.0",
+    "name": "pet-care-app",
+    "slug": "pet-care-app",
+    "description": "A React Native application that serves to be an all-around tool for pet owners",
+    "version": "1.0.0",
     "orientation": "portrait",
     "privacy": "public",
-    "icon": "./assets/app.png",
+    "icon": "./assets/PetCareLogo.png",
     "primaryColor": "#00AAFF",
     "splash": {
-      "image": "./assets/app.png",
+      "image": "./assets/PetCare.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
@@ -36,7 +36,7 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favi.png"
     }
   }
 }

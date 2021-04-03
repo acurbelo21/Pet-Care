@@ -45,7 +45,7 @@ export default class Feed extends React.Component<FeedProps> {
     const { post, profile } = item;
     return (
       <View style={styles.post}>
-        <Post {...{ navigation, post, store, profile }} />
+        {/* <Post {...{ navigation, post, store, profile }} /> */}
       </View>
     );
   }

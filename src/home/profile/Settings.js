@@ -137,7 +137,7 @@ export default class Settings extends React.Component<ScreenParams<{ profile: Pr
                         onChangeText={this.setName}
                     />
                     <Button label="Save" full primary onPress={this.save} {...{ loading }} />
-                    <Button label="Sign-Out" full onPress={logout} />
+                    <Button label="Sign Out" full onPress={logout} />
                 </Content>
             </View>
         );

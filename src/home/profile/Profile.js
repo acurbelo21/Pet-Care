@@ -12,29 +12,21 @@ import { Feather as Icon } from "@expo/vector-icons";
 import { inject, observer } from "mobx-react";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
-import { NavigationEvents } from "react-navigation";
 
 import ProfileStore from "../ProfileStore";
 
-import { Text, Avatar, Theme, Images, Feed, FeedStore } from "../../components";
-import type { FeedEntry } from "../../components/Model";
+import { Text, Avatar, Theme, NavHeaderWithButton } from "../../components";
 import type { ScreenProps } from "../../components/Types";
 
 type InjectedProps = {
-  profileStore: ProfileStore,
-  userFeedStore: FeedStore,
+  profileStore: ProfileStore
 };
 
-@inject("profileStore", "userFeedStore")
+@inject("profileStore")
 @observer
 export default class ProfileComp extends React.Component<
   ScreenProps<> & InjectedProps
 > {
-  componentDidMount() {
-    this.loadFeed();
-  }
-
-  loadFeed = () => this.props.userFeedStore.checkForNewEntriesInFeed();
 
   @autobind
   settings() {
@@ -42,62 +34,40 @@ export default class ProfileComp extends React.Component<
     this.props.navigation.navigate("Settings", { profile });
   }
 
-  @autobind
-  loadMore() {
-    this.props.userFeedStore.loadFeed();
-  }
-
-  @autobind
-  // eslint-disable-next-line class-methods-use-this
-  keyExtractor(item: FeedEntry): string {
-    return item.post.id;
-  }
-
   render(): React.Node {
-    const { navigation, userFeedStore, profileStore } = this.props;
+    const { profileStore, navigation } = this.props;
     const { profile } = profileStore;
     return (
       <View style={styles.container}>
-        <NavigationEvents onWillFocus={this.loadFeed} />
+        {/* <NavHeader title="Profile" {...{ navigation }} /> */}
+        <NavHeaderWithButton title="Profile" buttonFn={this.settings} buttonIcon="settings" />
         <LinearGradient
-          colors={["#5cc0f1", "#d6ebf4", "white"]}
+          colors={["#81f1f7", "#9dffb0"]}
           style={styles.gradient}
         />
-        <Feed
-          bounce={false}
-          ListHeaderComponent={
-            <View style={styles.header}>
-              <Image style={styles.cover} source={Images.cover} />
-              <TouchableOpacity onPress={this.settings} style={styles.settings}>
-                <View>
-                  <Icon name="settings" size={25} color="white" />
-                </View>
-              </TouchableOpacity>
-              <View style={styles.title}>
-                <Text type="large" style={styles.outline}>
-                  {profile.outline}
-                </Text>
-                <Text type="header2" style={styles.name}>
-                  {profile.name}
-                </Text>
-              </View>
-              <Avatar
-                size={avatarSize}
-                style={styles.avatar}
-                {...profile.picture}
-              />
+        <View style={styles.header}>
+          {/* <TouchableOpacity onPress={this.settings} style={styles.settings}>
+            <View>
+              <Icon name="settings" size={30} color={Theme.palette.black} />
             </View>
-          }
-          store={userFeedStore}
-          {...{ navigation }}
-        />
+          </TouchableOpacity> */}
+          <View style={styles.title}>
+            {/* <Text type="large" style={styles.outline}>Pet Owner</Text> */}
+            <Text type="header2" style={styles.name}>{profile.name}</Text>
+          </View>
+          <Avatar
+            size={avatarSize}
+            style={styles.avatar}
+            {...profile.picture}
+          />
+        </View>
       </View>
     );
   }
 }
 
-const avatarSize = 100;
-const { width } = Dimensions.get("window");
+const avatarSize = 150;
+const { width, height } = Dimensions.get("window");
 const { statusBarHeight } = Constants;
 const styles = StyleSheet.create({
   container: {
@@ -108,19 +78,20 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: width,
+    bottom: 0,
   },
   header: {
     marginBottom: avatarSize * 0.5 + Theme.spacing.small,
   },
   cover: {
     width,
-    height: width,
+    height: height * 0.9,
   },
   avatar: {
     position: "absolute",
-    right: Theme.spacing.small,
-    bottom: -avatarSize * 0.5,
+    // right: Theme.spacing.small,
+    alignSelf: "center",
+    top: statusBarHeight + Theme.spacing.xLarge,
   },
   settings: {
     position: "absolute",
@@ -131,13 +102,15 @@ const styles = StyleSheet.create({
   },
   title: {
     position: "absolute",
-    left: Theme.spacing.small,
-    bottom: 50 + Theme.spacing.small,
+    // left: Theme.spacing.small,
+    alignSelf: "center",
+    top: 175 + statusBarHeight + Theme.spacing.xLarge,
   },
   outline: {
-    color: "rgba(255, 255, 255, 0.8)",
+    color: Theme.palette.black,
+    alignSelf: "center",
   },
   name: {
-    color: "white",
+    color: Theme.palette.black,
   },
 });

@@ -22,6 +22,17 @@ export default class Pets extends Component {
         items: [],
         loading: true,
       };
+
+      const { uid } = Firebase.auth.currentUser;
+
+      Firebase.firestore
+        .collection("users")
+        .doc(uid)
+        .collection("pets")
+        .onSnapshot(docs => {
+          this.retrieveFireStorePets()
+        }
+        );
     }
 
     componentWillMount(){
@@ -37,37 +48,37 @@ export default class Pets extends Component {
 
   retrieveFireStorePets() {
     const { uid } = Firebase.auth.currentUser;
-        let currentUsersPets = []
+    let currentUsersPets = []
 
-        Firebase.firestore
-        .collection("users")
-        .doc(uid)
-        .collection("pets")
-        .get()
-        .then(docs => {
-            var i = 0;
-            docs.forEach(doc => {
-                currentUsersPets.push(doc.data());
-                currentUsersPets[i++].pet_uid = doc.id;
-            })
-
-            var n = currentUsersPets.length;
-            for (var k = 0; k < n-1; k++)
-              for (var l = 0; l < n-k-1; l++)
-                if (currentUsersPets[l].name > currentUsersPets[l+1].name)
-                {
-                    // swap currentUsersPets[l+1] and currentUsersPets[l]
-                    var temp = currentUsersPets[l];
-                    currentUsersPets[l] = currentUsersPets[l+1];
-                    currentUsersPets[l+1] = temp;
-                }
-
-            var j = 0;
-            currentUsersPets.forEach(pet => {
-                pet.id = j++;
-            })
-            this.setState({items:currentUsersPets, loading:false})
+    Firebase.firestore
+    .collection("users")
+    .doc(uid)
+    .collection("pets")
+    .get()
+    .then(docs => {
+        var i = 0;
+        docs.forEach(doc => {
+            currentUsersPets.push(doc.data());
+            currentUsersPets[i++].pet_uid = doc.id;
         })
+
+        var n = currentUsersPets.length;
+        for (var k = 0; k < n-1; k++)
+          for (var l = 0; l < n-k-1; l++)
+            if (currentUsersPets[l].name > currentUsersPets[l+1].name)
+            {
+                // swap currentUsersPets[l+1] and currentUsersPets[l]
+                var temp = currentUsersPets[l];
+                currentUsersPets[l] = currentUsersPets[l+1];
+                currentUsersPets[l+1] = temp;
+            }
+
+        var j = 0;
+        currentUsersPets.forEach(pet => {
+            pet.id = j++;
+        })
+        this.setState({items:currentUsersPets, loading:false})
+    })
   }
 
     //create each list item

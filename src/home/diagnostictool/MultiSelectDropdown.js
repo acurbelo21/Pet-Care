@@ -2,9 +2,10 @@
 import * as React from "react";
 import { Dimensions, StyleSheet, View, FlatList } from "react-native";
 
-import { Text, Theme, Button } from "../../components";
+import { Text, Theme, Button, NavHeaderWithButton } from "../../components";
 import Firebase from "../../components/Firebase";
 import MultiSelect from "react-native-multiple-select";
+import autobind from 'autobind-decorator';
 
 type Symptom = { name: string };
 
@@ -147,6 +148,7 @@ export default class MultiSelectDropdown extends React.Component {
     let generalDiagnosis = {};
     let diagnoses = []; // Can most likely refactor these arrays to directly push to unique array in state
     let filteredDiagnoses = [];
+    const { uid } = Firebase.auth.currentUser;
 
     this.state.selectedItems.forEach( (symptom) => {
       Firebase.firestore
@@ -172,12 +174,31 @@ export default class MultiSelectDropdown extends React.Component {
               // console.log("Final filtered list of diagnoses: ", this.state.uniqueFilteredDiagnoses);
             }
           }
+      })
+      .then(() => {
+        // Add unique filtered diagnoses for user to Firestore to display in Results screen List View
+        Firebase.firestore
+            .collection("users")
+            .doc(uid)
+            .get()
+            .then(() => {
+                Firebase.firestore.collection("users").doc(uid).update({
+                    diagnosedDiseases: this.state.uniqueFilteredDiagnoses
+                })
+                  .catch((error) => {
+                      console.error("Error writing document: ", error);
+                  });
+              });
+      })
+      .then(() => {
+        this.props.navigation.navigate("DiagnosticToolResults");
       });
     });
   }
 
   render() {
     const { items, selectedItems } = this.state;
+
     return (
       <>
         <View style={styles.multiSelectOptionsContainer}>
@@ -225,21 +246,12 @@ export default class MultiSelectDropdown extends React.Component {
         {this.state.selectedItems.length > 3 && 
           <Button
             style={styles.diagnoseButtonContainer}
-            label="Diagnose Disease"
+            label="Diagnose My Pet!"
             onPress={(e) => this.searchForSymptomsInFirestore(e, this.state.selectedItems)}
             full
             primary
           />
         }
-        <Text style={styles.diagnosisResultsHeader}>Diagnosed diseases:</Text>
-        {this.state.uniqueFilteredDiagnoses.length < 1 && <Text style={styles.noDiagnosisResultsFoundText}>No diseases found.</Text>}
-        <FlatList
-          style={styles.diagnosisResultsContainer}
-          data={this.state.uniqueFilteredDiagnoses}
-          renderItem={({ item }) => (
-            <Text style={styles.diagnosisResultsText}>{ item }</Text>
-          )}
-        />
       </>
     );
   }
@@ -256,39 +268,7 @@ const styles = StyleSheet.create({
     bottom: -200,
     zIndex: 0,
     padding: 5,
-    alignSelf: "center"
-    // Really not sure why flex isn't working, went with temporary styling for now ^
-    // flexDirection: 'column',
-    // flexGrow: 1,
-    // justifyContent: 'space-between',
-  },
-  // Stylesheets for Diagnosis Result placeholder text - can delete after adding new screen dedicated to results:
-  diagnosisResultsContainer: {
-    position: 'absolute',
-    bottom: -140,
-    zIndex: 1,
-    alignSelf: "center"
-  },
-  diagnosisResultsHeader: {
-    fontSize: 25,
-    padding: 5,
-    position: 'absolute',
-    bottom: -100,
-    fontWeight: "bold",
-    fontFamily: "SFProText-Heavy",
-    alignSelf: "center"
-  },
-  diagnosisResultsText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    alignSelf: "center"
-  },
-  noDiagnosisResultsFoundText: {
-    position: 'absolute',
-    bottom: -140,
-    zIndex: 1,
     alignSelf: "center",
-    fontSize: 15
   }
 });
 

@@ -36,7 +36,7 @@ export default class NavHeaderWithButton extends React.Component<NavHeaderProps>
                     <Text type="header3">{title}</Text>
                     <View style={styles.side}>
                         <TouchableOpacity onPress={onPressButton}>
-                            <Icon name={buttonIcon} size={25} />
+                            <Icon name={buttonIcon} size={25} color={Theme.palette.black} />
                         </TouchableOpacity>
                     </View>
                 </View>
