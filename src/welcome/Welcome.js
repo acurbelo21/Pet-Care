@@ -1,8 +1,7 @@
 // @flow
 import autobind from "autobind-decorator";
 import * as React from "react";
-import {StyleSheet, Dimensions, Linking, TouchableOpacity} from "react-native";
-import {LinearGradient} from "expo-linear-gradient";
+import {StyleSheet, Dimensions} from "react-native";
 
 import {Text, Button, Container, Logo, Theme, AnimatedView, Firebase, serializeException} from "../components";
 import type {ScreenProps} from "../components/Types";
@@ -32,15 +31,11 @@ export default class Welcome extends React.Component<ScreenProps<>> {
                     {/* <Button label="Login Anonymously" onPress={loginAnonymously} full /> */}
                     <Button label="Sign Up" onPress={this.signUp} full />
                 </AnimatedView>
-                {/* <TouchableOpacity style={styles.framer} onPress={framer}>
-                    <Text style={styles.framerText}>Designed by Framer</Text>
-                </TouchableOpacity> */}
             </Container>
         );
     }
 }
 
-const framer = () => Linking.openURL("https://framer.com/fiber");
 const loginAnonymously = async (): Promise<void> => {
     try {
         await Firebase.auth.signInAnonymously();
@@ -63,15 +58,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: Theme.spacing.base * 2,
         marginBottom: Theme.spacing.base * 2
-    },
-    framer: {
-        position: "absolute",
-        bottom: Theme.spacing.tiny,
-        width
-    },
-    framerText: {
-        textAlign: "center",
-        fontSize: 12
     },
     gradient: {
         position: "absolute",

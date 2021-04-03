@@ -51,7 +51,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     this.state = {
       petDetails: "",
       loading: true,
-      imagePath: require("../../../assets/splash.png"),
+      imagePath: require("../../../assets/PetCare.png"),
       isLoading: false,
       status: '',
       avatar: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg",
