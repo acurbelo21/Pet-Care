@@ -1,106 +1,44 @@
-// @flow
-import * as React from "react";
-import {StyleSheet, View} from "react-native";
+import React from 'react';
+import { StyleSheet, View, TextInput, ScrollView, Animated, Dimensions, Keyboard, UIManager } from "react-native";
+import { Text, NavHeader, Theme, Button, TextField, NavHeaderWithButton } from "../components";
 import { FontAwesome5 } from '@expo/vector-icons';
-
-import {Text, Theme, Button} from "../components";
 import Firebase from "../components/Firebase";
 import TextInputComponent from "./TextInputComponent";
+import DropDownPicker from 'react-native-dropdown-picker';
+import Icon from 'react-native-vector-icons/Feather';
+import { LinearGradient } from "expo-linear-gradient";
+import { Container } from 'native-base';
 
-type VisibleState = { visible: boolean };
-type PetNameTextInputIsVisibleState = { petNameTextInputIsVisible: boolean };
-type SpeciesSelected = { speciesSelected: string };
-type Pet = { label: string, image: string };
+const { State: TextInputState } = TextInput;
 
-export class SelectPetButton extends React.Component {
-    // Call after species button is pressed
-    addPetSpeciesToFirestore(species) {
-        const { uid } = Firebase.auth.currentUser;
-
-        // Firebase.firestore
-        //     .collection("pets")
-        //     .where("species", "==", "Dog")
-        //     .get()
-        //     .then(docs => {
-        //         let petnames = []
-        //         docs.forEach(doc => {
-        //             petnames.push(doc.data())
-        //             console.log("Name of dog: ", doc.data().name, "\n");
-        //         })
-        //     })
-
-        //     Firebase.firestore
-        //         .collection("pets")
-        //         .where("owner-uid", "==", uid)
-        //         .get()
-        //         .then(docs => {
-        //             let currentuserspetnames = []
-        //             docs.forEach(doc => {
-        //                 currentuserspetnames.push(doc.data())
-        //                 console.log("Name of ", uid, "'s pet: ", doc.data().name, "\n");
-        //             })
-        //         })
-
-        Firebase.firestore
-            .collection("pets")
-            .doc(uid)
-            .get()
-            .then(documentSnapshot => {
-                console.log('User exists: ', documentSnapshot.exists);
-            
-                if (documentSnapshot.exists) {
-                    Firebase.firestore.collection("pets").doc(uid).update({
-                        species
-                    })
-                        .then(() => {
-                            console.log("TO DA MOOON 🙌💎🙌 - Pet species added: ", species, "\n");
-                        })
-                        .catch((error) => {
-                            console.error("Error writing document: ", error);
-                        });
-                }
-                else {
-                    Firebase.firestore.collection("pets").doc(uid).set({
-                        species
-                    })
-                        .then(() => {
-                            console.log("TO DA MOOON 🙌💎🙌 - Pet species added: ", species, "\n");
-                        })
-                        .catch((error) => {
-                            console.error("Error writing document: ", error);
-                        });
-                }
-              });
+export default class AddPets extends React.Component<SettingsState> {
+   
+    async componentDidMount(): Promise<void> {
+        const { navigation } = this.props;
     }
 
-    render() {
-        return (
-            <Button
-                label={this.props.label}
-                onPress={(event) => this.props.onPress(event, this.props.label, this.addPetSpeciesToFirestore)}
-                full
-                primary
-            />
-        );
+    componentWillMount() {
+        this.keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this.handleKeyboardDidShow);
+        this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this.handleKeyboardDidHide);
     }
-}
+    
+      componentWillUnmount() {
+        this.keyboardDidShowSub.remove();
+        this.keyboardDidHideSub.remove();
+        this.props.navigation.state.params.getData();
+    }
 
-// eslint-disable-next-line react/no-multi-comp
-export default class Select extends React.Component<VisibleState, PetNameTextInputIsVisibleState, SpeciesSelected> {
-    state = {
-        visible: false,
-        petNameTextInputIsVisible: false,
-        speciesSelected: ""
-    };
-
-    static pets: Pet[] = [
-        { label: "Dog", image: "dog" },
-        { label: "Cat", image: "cat" },
-        { label: "Bird", image: "dove" },
-        { label: "Horse", image: "horse" },
-        { label: "Fish", image: "fish" },
-        { label: "Exotic", image: "spider" }
-    ];
+    constructor(props) {
+        super(props);
+        this.state = {
+            species: null,
+            breed: null,
+            name: null,
+            age: null,
+            sex: null,
+            shift: new Animated.Value(0),
+        };
+    }
 
     hide() {
         this.setState({ visible: false });
@@ -110,117 +48,196 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
         this.setState({ visible: true });
     }
 
-    // Use this for a cancel putting in pet name/go back to selecting pet species button also you look great today :)
-    hidePetNameTextInput() {
-        this.setState({ petNameTextInputIsVisible: false });
+    handleAge = (text) => {
+        this.setState({age: text})
     }
 
-    showPetNameTextInput() {
-        this.setState({ petNameTextInputIsVisible: true });
+    handleBreed = (text) => {
+        this.setState({breed: text})
     }
 
-    selectDog = (event, species, onPressSpeciesButtonCallback) => {
-        this.showPetNameTextInput();
-        this.setState({ speciesSelected: Select.pets[0].image });
-
-        // After the user presses a species button, call this function!
-        onPressSpeciesButtonCallback(species);
+    handleName = (text) => {
+        this.setState({name: text})
     }
 
-    selectCat = (event, species, onPressSpeciesButtonCallback) => {
-        this.showPetNameTextInput();
-        this.setState({ speciesSelected: Select.pets[1].image });
+    addPetToFireStore = (event) =>{
+        var pet_uid = this.guidGenerator();
+        const { uid } = Firebase.auth.currentUser;
+        var owner_uid = uid;
+        var pic = "null";
+        const {species, breed, name, age, sex} = this.state;
+        var checkForInputs = [species, breed, name, age, sex];
 
-        // After the user presses a species button, call this function!
-        onPressSpeciesButtonCallback(species);
-    }
-
-    selectBird = (event, species, onPressSpeciesButtonCallback) => {
-        this.showPetNameTextInput();
-        this.setState({ speciesSelected: Select.pets[2].image });
-
-        // After the user presses a species button, call this function!
-        onPressSpeciesButtonCallback(species);
-    }
-
-    selectHorse = (event, species, onPressSpeciesButtonCallback) => {
-        this.showPetNameTextInput();
-        this.setState({ speciesSelected: Select.pets[3].image });
-
-        // After the user presses a species button, call this function!
-        onPressSpeciesButtonCallback(species);
-    }
-
-    selectFish = (event, species, onPressSpeciesButtonCallback) => {
-        this.showPetNameTextInput();
-        this.setState({ speciesSelected: Select.pets[4].image });
-
-        // After the user presses a species button, call this function!
-        onPressSpeciesButtonCallback(species);
-    }
-
-    selectExotic = (event, species, onPressSpeciesButtonCallback) => {
-        this.showPetNameTextInput();
-        this.setState({ speciesSelected: Select.pets[5].image });
-
-        // After the user presses a species button, call this function!
-        onPressSpeciesButtonCallback(species);
-    }
-
-    render(): React.Node {
-        const selectPetBreedMessage = <Text style={styles.message}>Please select the breed of your first pet. </Text>;
-        // var selectedPet = pets.map((pet) => {
-        //     return (
-        //         <View key={pet.label}>
-        //             <FontAwesome5 name={pet.image} size={Theme.typography.header2.fontSize} color={Theme.palette.white} />
-        //         </View>
-        //     )
-        // })
-        var selectedPet = <FontAwesome5 name={this.state.speciesSelected} size={Theme.typography.header1.fontSize} color={Theme.palette.white} />
-
-        if (!this.state.visible) {
-            return <View />;
+        for (let i = 0; i < checkForInputs.length; i++)
+        {
+            if (checkForInputs[i] == null)
+            {
+                alert("Fill all fields");
+                return;
+            }
         }
 
+        var docRef = Firebase.firestore.collection("users").doc(uid).collection("pets").doc(pet_uid);
+
+        docRef.get().then((doc) => {
+            if (doc.exists) {
+                this.addPetToFireStore();
+            } else {
+                Firebase.firestore.collection("users").doc(uid).collection("pets").doc(pet_uid).set({
+                    species, breed, name, age, sex, pic, owner_uid
+                })
+                .catch((error) => {
+                    console.error("Error writing document: ", error);
+                });
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+
+        this.props.navigation.goBack();
+    }
+
+    guidGenerator = (event) => {
+        var S4 = function() {
+           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
+    }
+
+    handleKeyboardDidShow = (event) => {
+        const { height: windowHeight } = Dimensions.get('window');
+        const keyboardHeight = event.endCoordinates.height;
+        const currentlyFocusedField = TextInputState.currentlyFocusedField();
+        UIManager.measure(currentlyFocusedField, (originX, originY, width, height, pageX, pageY) => {
+          const fieldHeight = height;
+          const fieldTop = pageY;
+          const gap = (windowHeight - keyboardHeight) - (fieldTop + fieldHeight);
+          if (gap >= 0) {
+            return;
+          }
+          Animated.timing(
+            this.state.shift,
+            {
+              toValue: gap,
+              duration: 300,
+              useNativeDriver: true,
+            }
+          ).start();
+        });
+    }
+    
+      handleKeyboardDidHide = () => {
+        Animated.timing(
+          this.state.shift,
+          {
+            toValue: 0,
+            duration: 1000,
+            useNativeDriver: true,
+          }
+        ).start();
+    }
+    
+
+    render() {
+        const { navigation } = this.props;
+        const { shift } = this.state;
+
         return (
-            <>
-                <View style={styles.image}>
-                    {this.state.petNameTextInputIsVisible ? selectedPet : <Text /> }
-                </View>
-                <View style={styles.container}>
-                    <SelectPetButton
-                        label={Select.pets[0].label}
-                        onPress={this.selectDog}
-                    />
-                    <SelectPetButton
-                        label={Select.pets[1].label}
-                        onPress={this.selectCat}
-                    />
-                    <SelectPetButton
-                        label={Select.pets[2].label}
-                        onPress={this.selectBird}
-                    />
-                </View>
-                <View style={styles.container}>
-                    <SelectPetButton
-                        label={Select.pets[3].label}
-                        onPress={this.selectHorse}
-                    />
-                    <SelectPetButton
-                        label={Select.pets[4].label}
-                        onPress={this.selectFish}
-                    />
-                    <SelectPetButton
-                        label={Select.pets[5].label}
-                        onPress={this.selectExotic}
-                    />
-                </View>
-                {/* <View style={{marginTop: Theme.spacing.large}}> */}
-                {/* Removed marginTop ^ because TextInput and button was being covered by white bottom slide container */}
-                <View>
-                    {this.state.petNameTextInputIsVisible ? <TextInputComponent /> : selectPetBreedMessage}
-                </View>
-            </>
+            
+            
+            <Animated.View style={[{ transform: [{translateY: shift}] }]}>  
+                {/* <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} /> */}
+                {/* <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.addPetToFireStore} buttonIcon="check" /> */}
+            <Container>
+                <DropDownPicker
+                    items={[
+                        {label: 'Dog', value: 'Dog', icon: () => <FontAwesome5 name="dog" size={18} color="#900" />},
+                        {label: 'Cat', value: 'Cat', icon: () => <FontAwesome5 name="cat" size={18} color="#900" />},
+                        {label: 'Bird', value: 'Bird', icon: () => <FontAwesome5 name="dove" size={18} color="#900" />},
+                        {label: 'Horse', value: 'Horse', icon: () => <FontAwesome5 name="horse" size={18} color="#900" />},
+                        {label: 'Fish', value: 'Fish', icon: () => <FontAwesome5 name="fish" size={18} color="#900" />},
+                        {label: 'Exotic', value: 'Exotic', icon: () => <FontAwesome5 name="spider" size={18} color="#900" />},
+                    ]}
+                    defaultValue={this.state.species}
+                    containerStyle={{height: 40, marginTop:15, marginBottom: 15}}
+                    style={{backgroundColor: '#fafafa'}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        species: item.value
+                    })}
+                    placeholder="Select a species"
+                    isVisible={this.state.isVisibleA}
+                    onOpen={() => this.setState({
+                        isVisibleA: true
+                    })}
+                    onClose={() => this.setState({
+                        isVisibleA: false
+                    })}
+                />
+
+                <DropDownPicker
+                    items={[
+                        {label: 'Male', value: 'male', icon: () => <FontAwesome5 name="mars" size={18} color="#900" />},
+                        {label: 'Female', value: 'female', icon: () => <FontAwesome5 name="venus" size={18} color="#900" />},
+                    ]}
+                    defaultValue={this.state.sex}
+                    containerStyle={{height: 40, marginTop:15, marginBottom: 15}}
+                    style={{backgroundColor: '#fafafa'}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        sex: item.value
+                    })}
+                    placeholder="Select sex"
+                    isVisible={this.state.isVisibleB}
+                    onOpen={() => this.setState({
+                        isVisibleB: true
+                    })}
+                    onClose={() => this.setState({
+                        isVisibleB: false
+                    })}
+                />
+                
+                <Text containerStyle={{marginTop:15}}>Name:</Text>
+
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.handleName}
+                    returnKeyType = 'done'
+                    value= "Name"
+                />
+                
+
+                <Text containerStyle={{marginTop:15}}>Breed:</Text>
+
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.handleBreed}
+                    returnKeyType = 'done'
+                    value= "Breed"
+                />
+                
+                <Text containerStyle={{marginTop:15}}>Age:</Text>
+
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.handleAge}
+                    keyboardType="numeric"
+                    returnKeyType = 'done'
+                    value= "Age"
+                /> 
+                <Button
+                    onPress={this.addPetToFireStore}
+                    label="Add Pet"
+                    color="#00000"
+                />
+                </Container>
+            </Animated.View>
         );
     }
 }
@@ -241,5 +258,26 @@ const styles = StyleSheet.create({
         fontFamily: Theme.typography.semibold,
         textAlign: "center",
         marginBottom: Theme.spacing.base
-    }
+    },
+    input: {
+        height: 30,
+        margin: 6,
+        width: 300,
+        borderWidth: 1,
+        paddingTop: 0,
+        textAlign: 'left'
+    },
+    buttonContainer: {
+        height: 30,
+        margin: 6,
+        paddingTop: 0,
+        textAlign: 'left'
+    },
+    gradient: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: -500
+      },
 });
