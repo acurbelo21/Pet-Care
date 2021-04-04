@@ -16,6 +16,9 @@
   "dependencies": {
     "@expo/vector-icons": "^12.0.0",
     "@react-native-community/masked-view": "0.1.10",
+    "@react-native-community/progress-bar-android": "^1.0.4",
+    "@react-native-community/progress-view": "^1.2.4",
+    "@react-native-community/viewpager": "4.2.0",
     "@react-native-picker/picker": "^1.9.11",
     "@react-navigation/bottom-tabs": "^5.11.8",
     "@react-navigation/native": "^5.9.3",
@@ -53,6 +56,7 @@
     "react-native-image-picker": "^3.3.2",
     "react-native-multiple-select": "^0.5.6",
     "react-native-pagination": "^1.5.5",
+    "react-native-pdf": "^6.3.0",
     "react-native-progress": "^4.1.2",
     "react-native-reanimated": "~1.13.0",
     "react-native-screens": "^2.15.2",
@@ -61,9 +65,12 @@
     "react-native-swipe-view": "^3.0.1",
     "react-native-swiper": "^1.6.0",
     "react-native-web": "~0.13.12",
+    "react-native-webview": "^11.3.2",
     "react-navigation": "^4.4.3",
     "react-navigation-stack": "^2.10.2",
-    "react-navigation-tabs": "^2.10.1"
+    "react-navigation-tabs": "^2.10.1",
+    "rn-fetch-blob": "^0.12.0",
+    "rn-pdf-reader-js": "^4.1.1"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
