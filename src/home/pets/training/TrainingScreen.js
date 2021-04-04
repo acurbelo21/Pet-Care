@@ -6,10 +6,10 @@ import Pagination,{Icon,Dot} from 'react-native-pagination';//{Icon,Dot} also av
 import Firebase from "../../../components/Firebase";
 import {Text, NavHeader, Theme, Button} from "../../../components";
 import { LinearGradient } from "expo-linear-gradient";
+import PlayYouTube from "./PlayYouTube";
 
 export default class TrainingScreen extends Component {
     async componentDidMount(): Promise<void> {
-        const { navigation } = this.props;
     }
 
     render()
@@ -17,11 +17,27 @@ export default class TrainingScreen extends Component {
         const { navigation } = this.props;
         return(
             <View>
+                <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
                 <NavHeader title="Training Videos" back {...{navigation}}/>
                 <SafeAreaView>
-                    <Text>Training Videos</Text>
+                    <PlayYouTube videoId="dQw4w9WgXcQ"/>
+                    <View style={{
+                        height: 400
+                    }}>
+
+                    </View>
                 </SafeAreaView>
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    gradient: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      },
+})

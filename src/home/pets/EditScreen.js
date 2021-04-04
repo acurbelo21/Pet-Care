@@ -2,10 +2,9 @@ import autobind from "autobind-decorator";
 import Firebase from "../../components/Firebase";
 import React from 'react'
 import type { ScreenParams } from "../../components/Types";
-import { Card, Icon, Overlay, Badge } from 'react-native-elements'
+import { Card, Icon } from 'react-native-elements'
 import { FontAwesome5 } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import * as Progress from 'react-native-progress';
 import {
   ActivityIndicator,
   Alert,
@@ -23,7 +22,8 @@ import {
   View,
 } from 'react-native'
 import {Text, Theme} from "../../components";
-import { reduce } from "lodash";
+import Separator from './Separator';
+import { update } from "lodash";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -52,9 +52,20 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
       avatar: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg",
       avatarBackground: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg", 
       name: "Gina Mahdi",
+      sex: "female",
       petBiology: {"species": "Miami", "breed": "Florida"},
       setOverlay: false,
     };
+
+    const { uid } = Firebase.auth.currentUser;
+
+    Firebase.firestore
+      .collection("users")
+      .doc(uid)
+      .collection("pets")
+      .onSnapshot(docs => {
+        this.retrieveFireStorePetDetails();
+      });
   }
 
   async componentDidMount(): Promise<void> {
@@ -81,9 +92,10 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
           petBiology: {"species" : doc.data().species, "breed" : doc.data().breed},
           avatar: doc.data().pic,
           avatarBackground: doc.data().pic,
+          sex: doc.data().sex,
         });
 
-        console.log(doc.data());
+        // console.log(doc.data());
 
         if(doc.data().pic == "null")
         {
@@ -133,6 +145,25 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
             }
           }
           this.setState({loading: false,})
+    })
+  }
+
+  @autobind
+  updateFireStorePetDetails() {
+    const { uid } = Firebase.auth.currentUser;
+    const { navigation } = this.props;
+    const pet_uid  = navigation.state.params;
+    const { name, age, sex} = this.state;
+    const { species, breed } = this.state.petBiology;
+    console.log(species);
+
+    Firebase.firestore
+    .collection("users")
+    .doc(uid)
+    .collection("pets")
+    .doc(pet_uid.pet_uid)
+    .update({
+      name, age, sex, species, breed
     })
   }
 
@@ -207,7 +238,7 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
   }
 
   @autobind
-  switchSelected(species) {
+  updatingSpecies(species) {
     let turnOff = {
       isDog: false,
       isCat: false,
@@ -222,9 +253,31 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     this.setState(
       turnOff
     );
+
+    switch(species){
+      case("isDog"):
+        this.setState({petBiology: {"species":"Dog", breed: this.state.petBiology.breed}});
+        break;
+      case("isCat"):
+        this.setState({petBiology: {species: "Cat", breed: this.state.petBiology.breed}});
+        console.log("Hello");
+        break;
+      case("isBird"):
+        this.setState({petBiology: {species: "Bird", breed: this.state.petBiology.breed}});
+        break;
+      case("isFish"):
+        this.setState({petBiology: {species: "Fish", breed: this.state.petBiology.breed}});
+        break;
+      case("isHorse"):
+        this.setState({petBiology: {species: "Horse", breed: this.state.petBiology.breed}});
+        break;
+      case("isExotic"):
+        this.setState({petBiology: {species: "Exotic", breed: this.state.petBiology.breed}});
+        break;
+    }
   }
 
-  switchSelectedSex(sex) {
+  updateSex(sex) {
     let turnOff = {
       isMale: false,
       isFemale: false,
@@ -235,6 +288,32 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     this.setState(
       turnOff
     );
+
+    if(sex=="isFemale") {
+      this.setState({sex: "female"})
+    }
+    else {
+      this.setState({sex: "male"})
+    }
+  }
+
+  handleName = (text) => {
+    this.setState({name: text})
+  }
+
+  handleBreed = (text) => {
+    this.setState({petBiology: {species: this.state.petBiology.species, breed: text}});
+  }
+
+  handleAge = (text) => {
+    this.setState({age: text})
+  }
+
+  @autobind
+  submitChanges()
+  {
+    this.updateFireStorePetDetails();
+    this.props.navigation.goBack();
   }
 
   renderHeader = () => {
@@ -267,6 +346,11 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
                 style={styles.userImage}
                 source={{uri: avatar}}
               />
+                  <Text style={{
+                    alignSelf: "center",
+                    color: "black",
+                    fontSize: 20,
+                  }}>Edit Image</Text>
             </TouchableOpacity>
          </View>
         </ImageBackground>
@@ -292,8 +376,8 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     return (
       <ScrollView contentContainerStyle={styles.scroll} persistentScrollbar={false} >
         <View style={styles.container}>
+          {this.renderHeader()}
           <Card containerStyle={styles.cardContainer}>
-            {this.renderHeader()}
             <Text type="header3" style={styles.cardText}> Edit Information </Text>
             <View style={styles.inputContainer}>
               <Text style={{
@@ -314,37 +398,37 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
               }}>Species:</Text>
 
               {this.state.isDog &&
-              <TouchableOpacity onPress={() => this.switchSelected("isDog")}>
+              <TouchableOpacity onPress={() => this.updatingSpecies("isDog")}>
                 <FontAwesome5 name="dog" size={30} color="#0080ff" />
               </TouchableOpacity>
              }
 
              {this.state.isCat &&
-              <TouchableOpacity onPress={() => this.switchSelected("isCat")}>
+              <TouchableOpacity onPress={() => this.updatingSpecies("isCat")}>
                 <FontAwesome5 name="cat" size={30} color="#ffb347" /> 
               </TouchableOpacity>
               }
 
               {this.state.isBird &&
-              <TouchableOpacity onPress={() => this.switchSelected("isBird")}>
+              <TouchableOpacity onPress={() => this.updatingSpecies("isBird")}>
                 <FontAwesome5 name="dove" size={30} color="#c93335" />
               </TouchableOpacity>
               }
 
               {this.state.isHorse &&
-              <TouchableOpacity onPress={() => this.switchSelected("isHorse")}>
+              <TouchableOpacity onPress={() => this.updatingSpecies("isHorse")}>
                 <FontAwesome5 name="horse" size={30} color="#0dbf0d" />
               </TouchableOpacity>
               }
 
               {this.state.isFish &&
-              <TouchableOpacity onPress={() => this.switchSelected("isFish")}>
+              <TouchableOpacity onPress={() => this.updatingSpecies("isFish")}>
                 <FontAwesome5 name="fish" size={30} color="#71b6f7" />
               </TouchableOpacity>
               }
 
               {this.state.isExotic &&
-              <TouchableOpacity onPress={() => this.switchSelected("isExotic")}>
+              <TouchableOpacity onPress={() => this.updatingSpecies("isExotic")}>
                 <FontAwesome5 name="spider" size={30} color="#9379c2" />
               </TouchableOpacity>
               }
@@ -359,7 +443,7 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
 
               <TextInput
                   style={styles.input}
-                  onChangeText={this.handleName}
+                  onChangeText={this.handleBreed}
                   returnKeyType = 'done'
                   defaultValue = {this.state.petBiology.breed}
               /> 
@@ -372,7 +456,7 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
 
               <TextInput
                   style={styles.input}
-                  onChangeText={this.handleName}
+                  onChangeText={this.handleAge}
                   returnKeyType = 'done'
                   defaultValue = {this.state.age}
               /> 
@@ -384,12 +468,12 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
               }}>Sex:</Text>
 
               {this.state.isMale &&
-              <TouchableOpacity onPress={() => this.switchSelectedSex("isMale")}>
+              <TouchableOpacity onPress={() => this.updateSex("isMale")}>
                 <FontAwesome5 name="mars" size={30} color="#009dff" /> 
               </TouchableOpacity>
               }
               {this.state.isFemale &&
-              <TouchableOpacity onPress={() => this.switchSelectedSex("isFemale")}>
+              <TouchableOpacity onPress={() => this.updateSex("isFemale")}>
                 <FontAwesome5 name="venus" size={30} color="#e75480" /> 
               </TouchableOpacity>
               }
@@ -403,6 +487,21 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
             </View>
 
           </Card>
+          
+          <View style={{
+            alignItems:"center",
+            paddingTop: 15,
+          }}>
+          <TouchableOpacity
+              style={styles.submitButton}
+              onPress={this.submitChanges}
+            >
+                <Text>
+                  Submit Changes
+                </Text>
+          </TouchableOpacity>
+          </View>
+
           <View style={{height:300}}/>
         </View>
       </ScrollView>
@@ -438,6 +537,7 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 0,
     padding: 0,
+    paddingTop: 10,
   },
   cardText: {
     flexDirection: "row",
@@ -495,6 +595,11 @@ const styles = StyleSheet.create({
   },
   scroll: {
     backgroundColor: '#FFF',
+  },
+  submitButton:{
+    backgroundColor: '#9dffb0',
+    alignSelf: 'center',
+    padding: 10,
   },
   telContainer: {
     backgroundColor: '#FFF',

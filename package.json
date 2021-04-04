@@ -59,6 +59,9 @@
     "react-native-swipe-view": "^3.0.1",
     "react-native-swiper": "^1.6.0",
     "react-native-web": "~0.13.12",
+    "react-native-webview": "^11.3.2",
+    "react-native-youtube": "^2.0.1",
+    "react-native-youtube-iframe": "^2.0.1",
     "react-navigation": "^4.4.3",
     "react-navigation-stack": "^2.10.2",
     "react-navigation-tabs": "^2.10.1"
