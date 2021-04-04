@@ -11,40 +11,105 @@ export default class ViewDocuments extends Component {
         const { navigation } = this.props;
     }
 
-    buttonFn = async () => {
-        //this.props.navigation.navigate("AddPets", { onSelect: this.onSelect, getData: () => this.retrieveFireStorePets() });
-        try {
-            const res = await DocumentPicker.getDocumentAsync({
-                type: "*/*",
-                //There can me more options as well
-                // DocumentPicker.types.allFiles
-                // DocumentPicker.types.images
-                // DocumentPicker.types.plainText
-                // DocumentPicker.types.audio
-                // DocumentPicker.types.pdf
-            });
-            //Printing the log realted to the file
-            //Setting the state to show single file attributes
-            setSingleFile(res);
-        } catch (err) {
-            //Handling any exception (If any)
-            if (DocumentPicker.isCancel(err)) {
-                //If user canceled the document selection
-                alert('Canceled from single doc picker');
-            } else {
-                //For Unknown Error
-                alert('Unknown Error: ' + JSON.stringify(err));
-                throw err;
-            }
+    constructor (props)
+    {
+        super(props);
+
+        this.state = {
+            loading: true,
+            imagePath: require("../../../assets/PetCare.png"),
+            isLoading: false,
+            status: "",
         }
     }
+
+    chooseFile = async () => {
+        let result = await DocumentPicker.getDocumentAsync();
+
+        if (result.type == "cancel"){
+            console.log("canceled");
+        }
+        else {
+            let path = result.uri;
+            let documentName = this.getFileName(result.name, path);
+            this.setState({ imagePath: path });
+            this.uploadDocument(path, documentName);
+            console.log(path);
+            console.log(documentName);
+        }
+    }
+
+    getFileName(name, path) {
+        if (name != null) { return name; }
+  
+        if (Platform.OS === "ios") {
+            path = "~" + path.substring(path.indexOf("/Documents"));
+        }
+        return path.split("/").pop();
+    }
+
+    uploadDocument = async (path, documentName) => {
+        // const response = await fetch(path);
+        // const blob = await response.blob();
+    
+        // const { uid } = Firebase.auth.currentUser;
+    
+        // var ref = Firebase.storage.ref().child("labResults/" + documentName);
+        // let task = ref.put(blob);
+
+        const { uid } = Firebase.auth.currentUser;
+        var docRef = Firebase.firestore.collection("users").doc(uid);
+        console.log(uid);
+    
+        docRef.get().then(documentSnapshot => {
+                if (documentSnapshot.exists) {
+                    console.log("Exists");
+                    Firebase.firestore.collection("users").doc(uid).update({
+                        labResults: Firebase.firestore.FieldValue.arrayUnion(path)
+                    })
+                }
+                else {
+                    console.log("no exist");
+                    Firebase.firestore.collection("users").doc(uid).set({
+                        labResults: [path]
+                    })
+                }
+            }).catch((e) => {
+                status = 'Something went wrong';
+                console.log('uploading document error => ', e);
+                this.setState({ loading: false, status: 'Something went wrong' });
+            });
+        
+        // task.then(() => {
+        //     console.log('Document uploaded to the bucket!');
+        //     this.setState({ loading: false, status: 'Document uploaded successfully' });
+        //     ref.getDownloadURL().then(function(doc) {
+        //         console.log(doc);
+        //         Firebase.firestore
+        //           .collection("users")
+        //           .doc(uid)
+        //           .update({
+        //               labResults: Firebase.firestore.FieldValue.arrayUnion(doc)
+        //           });
+        //     }
+        //     , function(error){
+        //         console.log(error);
+        //     });
+        //     // this.goBackToPets();
+        //     //this.retrieveFireStorePetDetails();
+        // }).catch((e) => {
+        //     status = 'Something went wrong';
+        //     console.log('uploading document error => ', e);
+        //     this.setState({ loading: false, status: 'Something went wrong' });
+        // });
+      }
 
     render() {
         const { navigation } = this.props;
 
         return (
             <View>
-                <NavHeaderWithButton title="Documents" back {...{ navigation }} buttonFn={this.buttonFn} buttonIcon="plus" />
+                <NavHeaderWithButton title="Documents" back {...{ navigation }} buttonFn={this.chooseFile} buttonIcon="plus" />
                 <SafeAreaView>
                     <Text>View documents</Text>
                 </SafeAreaView>

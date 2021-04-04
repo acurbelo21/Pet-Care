@@ -19,7 +19,7 @@ import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
 import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, Pets,
          PetDetailView, LabResults, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults,
-         DiagnosisDetailView, AddDocuments, ViewDocuments } from "./src/home";
+         DiagnosisDetailView, ViewDocuments } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -145,7 +145,6 @@ const ProfileNavigator = createStackNavigator(
         Profile: { screen: Profile },
         Settings: { screen: Settings },
         Comments: { screen: Comments },
-        AddDocuments: { screen: AddDocuments },
         ViewDocuments: { screen: ViewDocuments },
     },
     StackNavigatorOptions
