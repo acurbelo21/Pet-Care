@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, SafeAreaView, Dimensions } from 'react-native';
 import Firebase from "../../components/Firebase";
-import { Text, NavHeader, Theme, Button } from "../../components";
+import { Text, NavHeaderWithButton, Theme, Button } from "../../components";
 import { LinearGradient } from "expo-linear-gradient";
-import { NavHeaderWithButton } from '../../components';
 import * as DocumentPicker from 'expo-document-picker';
 import PDFReader from 'rn-pdf-reader-js';
 import ViewPager from '@react-native-community/viewpager';
@@ -90,31 +89,31 @@ export default class ViewDocuments extends Component {
             //     this.setState({ loading: false, status: 'Something went wrong' });
             // });
         })
-        // IF SOMETHING BREAKS TRY TO REMOVE THIS .THEN RIGHT HERE ON LINE 92 AND THE BRACES ON 110
-        .then(() => {
-        task.then(() => {
-            console.log('Document uploaded to the bucket!');
-            this.setState({ loading: false, status: 'Document uploaded successfully' });
-            ref.getDownloadURL().then(function(pdf) {
-                console.log(pdf);
-                labResultFiles.push(pdf);
+            // IF SOMETHING BREAKS TRY TO REMOVE THIS .THEN RIGHT HERE ON LINE 92 AND THE BRACES ON 110
+            .then(() => {
+                task.then(() => {
+                    console.log('Document uploaded to the bucket!');
+                    this.setState({ loading: false, status: 'Document uploaded successfully' });
+                    ref.getDownloadURL().then(function (pdf) {
+                        console.log(pdf);
+                        labResultFiles.push(pdf);
 
-                Firebase.firestore
-                .collection("users")
-                .doc(uid)
-                .update({labResults: labResultFiles})
-            }
-            , function(error){
-                console.log(error);
+                        Firebase.firestore
+                            .collection("users")
+                            .doc(uid)
+                            .update({ labResults: labResultFiles })
+                    }
+                        , function (error) {
+                            console.log(error);
+                        });
+                    // this.goBackToPets();
+                    //this.retrieveFireStorePetDetails();
+                })
+            }).catch((e) => {
+                status = 'Something went wrong';
+                console.log('uploading document error => ', e);
+                this.setState({ loading: false, status: 'Something went wrong' });
             });
-            // this.goBackToPets();
-            //this.retrieveFireStorePetDetails();
-        })
-        }).catch((e) => {
-            status = 'Something went wrong';
-            console.log('uploading document error => ', e);
-            this.setState({ loading: false, status: 'Something went wrong' });
-        });
     }
 
     render() {
@@ -125,46 +124,69 @@ export default class ViewDocuments extends Component {
             // style={{
             //     width: Dimensions.get ('window'). width,
             //     height: Dimensions.get ('window'). height, backgroundColor:'#000'}}>
-                // <NavHeaderWithButton title="Documents" back {...{ navigation }} buttonFn={this.chooseFile} buttonIcon="plus" />
+            // <NavHeaderWithButton title="Documents" back {...{ navigation }} buttonFn={this.chooseFile} buttonIcon="plus" />
             //     {/* <SafeAreaView> */}
-                // <PDFReader
-                //         source={{
-                //         uri: 'https://drive.google.com/file/d/1Aozi9jTceIhrlJuzKVLuKjHhWiChc0dH/view?usp=sharing',
-                //         }}
-                //     />
+            // <PDFReader
+            //         source={{
+            //         uri: 'https://drive.google.com/file/d/1Aozi9jTceIhrlJuzKVLuKjHhWiChc0dH/view?usp=sharing',
+            //         }}
+            //     />
             //     {/* </SafeAreaView> */}
             // </SafeAreaView>
             <View style={{ flex: 1 }}>
-            <NavHeaderWithButton title="Documents" back {...{ navigation }} buttonFn={this.chooseFile} buttonIcon="plus" />
-            <ViewPager style={styles.viewPager} initialPage={0}>
-              <View style={{
-                width: Dimensions.get ('window'). width,
-                height: Dimensions.get ('window'). height, backgroundColor:'#000'}} key="1">
-                <Text style={{backgroundColor: "white"}}>Please swipe left to view the next PDF.</Text>
-              <PDFReader
-                        source={{
-                        uri: 'https://drive.google.com/file/d/1Aozi9jTceIhrlJuzKVLuKjHhWiChc0dH/view?usp=sharing',
-                        }}
-                    />
-              </View>
-              <View style={styles.page} key="2">
-                <Text>Second page</Text>
-              </View>
-              <View style={styles.page} key="3">
-                <Text>Third page</Text>
-              </View>
-            </ViewPager>
-          </View>
+                <NavHeaderWithButton title="Lab Results" back {...{ navigation }} buttonFn={this.chooseFile} buttonIcon="plus" />
+                <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
+                <ViewPager style={styles.viewPager} initialPage={0}>
+                    <View key="1">
+                        <View style={styles.pdfReader}>
+                            <PDFReader
+                                source={{
+                                    // uri: 'https://drive.google.com/file/d/1Aozi9jTceIhrlJuzKVLuKjHhWiChc0dH/view?usp=sharing',
+                                    uri: 'https://drive.google.com/file/d/1Aozi9jTceIhrlJuzKVLuKjHhWiChc0dH/preview',
+                                }}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.page} key="2">
+                        <Text>Second page</Text>
+                    </View>
+                    <View style={styles.page} key="3">
+                        <Text>Third page</Text>
+                    </View>
+                </ViewPager>
+                <Text style={styles.text} type="large">Swipe → to view the next PDF.</Text>
+            </View>
         )
     }
 }
 
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
+    gradient: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    },
     viewPager: {
-      flex: 1,
+        flex: 1,
     },
     page: {
-      justifyContent: 'center',
-      alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        color: Theme.palette.black
     },
-  });
+    text: {
+        paddingVertical: Theme.spacing.base,
+        textAlign: "center",
+        fontSize: 21,
+        color: Theme.palette.black
+    },
+    pdfReader: {
+        height: height / 1.45,
+        justifyContent: "space-around",
+        paddingTop: Theme.spacing.base
+    }
+});
