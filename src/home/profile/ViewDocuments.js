@@ -10,12 +10,7 @@ import _ from 'lodash';
 
 export default class ViewDocuments extends Component {
     async componentDidMount(): Promise<void> {
-        this.setState({ loading: true})
         const { navigation } = this.props;
-        this.fillArrayWithFiles();
-    }
-    componentDidUpdate(prevState) {
-        if (this.state.loading !== prevState.loading)
         this.fillArrayWithFiles();
     }
 
@@ -23,7 +18,7 @@ export default class ViewDocuments extends Component {
         super(props);
 
         this.state = {
-            loading: false,
+            loading: true,
             imagePath: require("../../../assets/PetCare.png"),
             isLoading: false,
             status: "",
@@ -96,38 +91,34 @@ export default class ViewDocuments extends Component {
             //     console.log('uploading document error => ', e);
             //     this.setState({ loading: false, status: 'Something went wrong' });
             // });
-        
-        // IF SOMETHING BREAKS TRY TO REMOVE THIS .THEN RIGHT HERE ON LINE 92 AND THE BRACES ON 110
-        .then(() => {
-        task.then(() => {
-            console.log('Document uploaded to the bucket!');
-            // this.setState({ loading: false, status: 'Document uploaded successfully' });
-            this.setState({ status: 'Document uploaded successfully' });
-            ref.getDownloadURL().then(function(pdf) {
-                console.log("UMMMM OMEGAPOGGERS NO CAP ON A GLIZZY ON A STACK???? ", pdf);
-                labResultFiles.push(pdf);
 
-                Firebase.firestore
-                .collection("users")
-                .doc(uid)
-                .update({labResults: labResultFiles})
-            }
-            , function(error){
-                console.log(error);
+            // IF SOMETHING BREAKS TRY TO REMOVE THIS .THEN RIGHT HERE ON LINE 92 AND THE BRACES ON 110
+            .then(() => {
+                task.then(() => {
+                    console.log('Document uploaded to the bucket!');
+                    // this.setState({ loading: false, status: 'Document uploaded successfully' });
+                    this.setState({ status: 'Document uploaded successfully' });
+                    ref.getDownloadURL().then(function (pdf) {
+                        console.log("UMMMM OMEGAPOGGERS NO CAP ON A GLIZZY ON A STACK???? ", pdf);
+                        labResultFiles.push(pdf);
+
+                        Firebase.firestore
+                            .collection("users")
+                            .doc(uid)
+                            .update({ labResults: labResultFiles })
+                    }
+                        , function (error) {
+                            console.log(error);
+                        });
+                    // this.goBackToPets();
+                    //this.retrieveFireStorePetDetails();
+                })
+                    .catch((e) => {
+                        status = 'Something went wrong';
+                        console.log('uploading document error => ', e);
+                        this.setState({ loading: false, status: 'Something went wrong' });
+                    });
             });
-            // this.goBackToPets();
-            //this.retrieveFireStorePetDetails();
-        })
-        .then(() => {
-            // Component Did Update or force update should go here
-            // this.forceUpdate();
-            this.setState({ loading: false });
-        }).catch((e) => {
-            status = 'Something went wrong';
-            console.log('uploading document error => ', e);
-            this.setState({ loading: false, status: 'Something went wrong' });
-        });
-    });
     }
 
     fillArrayWithFiles() {
@@ -144,35 +135,36 @@ export default class ViewDocuments extends Component {
             }
         })
 
-        // for (let i = 0; i < array.length; i++)
-        // {
-        //     console.log(array[i]);
-        // }  
-        .then(() => {
-            this.setState({
-                pdfs: array
+            // for (let i = 0; i < array.length; i++)
+            // {
+            //     console.log(array[i]);
+            // }  
+            .then(() => {
+                this.setState({
+                    pdfs: array
+                })
             })
-        })
     }
 
     // FIRST SEPARATE THE FUNCTION THAT QUERIES THE ARRAY OF LAB RESULTS
     // 1. onPageSelected = {this.renderPdfViewer}
     // 2. REPLACE THAT I DOWN THERE LOOKIN SUS WITH POSITION
     renderPage = (position) => {
-            // console.log(this.state.pdfs);
-            console.log("THIS IS THE FIREBASE STORAGE LINK: ", this.state.pdfs[position]);
-        return(
+        // console.log(this.state.pdfs);
+        console.log("THIS IS THE FIREBASE STORAGE LINK: ", this.state.pdfs[position]);
+        return (
             <>
                 <View style={{
-                    width: Dimensions.get ('window'). width,
-                    height: Dimensions.get ('window'). height, backgroundColor:'#000'}} key={(position).toString()}>
-                    <Text style={{backgroundColor: "white"}}>Please swipe left to view the next PDF.</Text>
-                  <PDFReader
-                            source={{
+                    width: Dimensions.get('window').width,
+                    height: Dimensions.get('window').height, backgroundColor: '#000'
+                }} key={(position).toString()}>
+                    <Text style={{ backgroundColor: "white" }}>Please swipe left to view the next PDF.</Text>
+                    <PDFReader
+                        source={{
                             uri: this.state.pdfs[position],
-                            }}
-                        />
-                  </View>
+                        }}
+                    />
+                </View>
             </>
         )
     }
@@ -180,23 +172,22 @@ export default class ViewDocuments extends Component {
     renderPdfViewer = () => {
         var views = [];
 
-        for (let i = 0; i < (this.state.pdfs).length; i++)
-        {
+        for (let i = 0; i < (this.state.pdfs).length; i++) {
             // console.log(this.state.pdfs);
             views.push(
-                <View style={{
-                    width: Dimensions.get ('window'). width,
-                    height: Dimensions.get ('window'). height, backgroundColor:'#000', zIndex: 100}} key={(i + 1).toString()}>
-                  <PDFReader
+                <View style={{ zIndex: 100 }} key={(i + 1).toString()}>
+                    <View style={styles.pdfReader}>
+                        <PDFReader
                             source={{
-                            uri: this.state.pdfs[i],
+                                uri: this.state.pdfs[i],
                             }}
                         />
-                  </View>
+                    </View>
+                </View>
             )
         }
 
-        return(
+        return (
             <>
                 {views}
             </>
@@ -224,7 +215,7 @@ export default class ViewDocuments extends Component {
         //           </View>
         //     )
         // }
-    
+
 
         return (
             // <SafeAreaView
@@ -240,27 +231,31 @@ export default class ViewDocuments extends Component {
             //     />
             //     {/* </SafeAreaView> */}
             // </SafeAreaView>
-            <View style={{ flex: 1 }}>
+            <View style={styles.container}>
 
-            <NavHeaderWithButton title="Documents" back {...{ navigation }} buttonFn={this.chooseFile} buttonIcon="plus" />
-            {/* <ViewPager style={styles.viewPager} initialPage={0} onPageSelected={}> */}
-            {/* <ViewPager style={styles.viewPager} initialPage={0} showPageIndicator={true} onPageScroll = {(event) => {const{position} = event.nativeEvent; console.log(position);}}> */}
-            {/* <ViewPager style={styles.viewPager} initialPage={0} showPageIndicator={true} onPageScroll = {(event) => console.log(event.nativeEvent.position)}> */}
-            {/* <ViewPager style={styles.viewPager} initialPage={0} showPageIndicator={true} onPageSelected = {(event) => this.renderPage(event.nativeEvent.position)}> */}
+                <NavHeaderWithButton title="Lab Results" back {...{ navigation }} buttonFn={this.chooseFile} buttonIcon="plus" />
+                <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
+                {/* <ViewPager style={styles.viewPager} initialPage={0} onPageSelected={}> */}
+                {/* <ViewPager style={styles.viewPager} initialPage={0} showPageIndicator={true} onPageScroll = {(event) => {const{position} = event.nativeEvent; console.log(position);}}> */}
+                {/* <ViewPager style={styles.viewPager} initialPage={0} showPageIndicator={true} onPageScroll = {(event) => console.log(event.nativeEvent.position)}> */}
+                {/* <ViewPager style={styles.viewPager} initialPage={0} showPageIndicator={true} onPageSelected = {(event) => this.renderPage(event.nativeEvent.position)}> */}
                 {/* {views} */}
                 {/* {this.renderPdfViewer()} */}
-            {/* </ViewPager> */}
-            <ScrollView>
-                {/* {views} */}
-                {this.renderPdfViewer()}
-            </ScrollView>
-          </View>
+                {/* </ViewPager> */}
+                <ScrollView>
+                    {/* {views} */}
+                    {this.renderPdfViewer()}
+                </ScrollView>
+            </View>
         )
     }
 }
 
 const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     gradient: {
         position: "absolute",
         top: 0,
@@ -268,24 +263,9 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0
     },
-    viewPager: {
-        flex: 1,
-    },
-    page: {
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        color: Theme.palette.black
-    },
-    text: {
-        paddingVertical: Theme.spacing.base,
-        textAlign: "center",
-        fontSize: 21,
-        color: Theme.palette.black
-    },
     pdfReader: {
-        height: height / 1.45,
+        height: 500,
         justifyContent: "space-around",
-        paddingTop: Theme.spacing.base
+        margin: Theme.spacing.base
     }
 });
