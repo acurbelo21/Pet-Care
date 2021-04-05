@@ -54,10 +54,10 @@ export default class ViewDocuments extends Component {
     uploadDocument = async (path, documentName) => {
         const response = await fetch(path);
         const blob = await response.blob();
-        let task = ref.put(blob);
 
         const { uid } = Firebase.auth.currentUser;
-        var ref = Firebase.storage.ref().child("labResults/" + documentName);
+        var ref = Firebase.storage.ref().child("labResults/" + uid + "/" + documentName);
+        let task = ref.put(blob);
         let docRef = Firebase.firestore.collection("users").doc(uid);
 
         let labResultFiles = [];
