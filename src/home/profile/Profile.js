@@ -6,8 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Image,
-  Button
+  Image
 } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
 import { inject, observer } from "mobx-react";
@@ -16,7 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import ProfileStore from "../ProfileStore";
 
-import { Text, Avatar, Theme, NavHeaderWithButton } from "../../components";
+import { Text, Avatar, Theme, NavHeaderWithButton, Button } from "../../components";
 import type { ScreenProps } from "../../components/Types";
 
 type InjectedProps = {
@@ -65,9 +64,10 @@ ScreenProps<> & InjectedProps
           </View>
           <View style={styles.button}>
             <Button
-            title="View Lab Results"
-            onPress={() => this.props.navigation.navigate("ViewDocuments")}
-            color="brown"
+              label="View Lab Results"
+              onPress={() => this.props.navigation.navigate("ViewDocuments")}
+              primary
+              style={{alignSelf: "center"}}
             />
           </View>
         </View>
