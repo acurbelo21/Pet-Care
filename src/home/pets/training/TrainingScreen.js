@@ -13,7 +13,7 @@ const MAX_RESULT = 15;
 const PLAYLIST_ID = "PLScC8g4bqD47c-qHlsfhGH3j6Bg7jzFy-"; 
 const API_KEY = "AIzaSyBXllWz7Ax4PqQ3sBInkoANDC74TYVa3Pw";
 
-export default class TrainingScreen extends React.Component<ScreenParams<{ pet_uid: String }>, SettingsState>{
+export default class TrainingScreen extends React.Component<ScreenParams<{ breed: String, species: String }>, SettingsState>{
     
     constructor(props){
         super(props);
@@ -32,7 +32,7 @@ export default class TrainingScreen extends React.Component<ScreenParams<{ pet_u
     async componentDidMount(): Promise<void> {
         const params = this.props.navigation.state.params;
 
-        this.fetchYouTubeVideos(params.breed + "+training");
+        this.fetchYouTubeVideos(params.species + "+" + params.breed + "+training");
         this.setState({loading:false});
     }
 
