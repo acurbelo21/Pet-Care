@@ -22,7 +22,7 @@ export default class AddPets extends React.Component<SettingsState> {
         this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this.handleKeyboardDidHide);
     }
     
-      componentWillUnmount() {
+    componentWillUnmount() {
         this.keyboardDidShowSub.remove();
         this.keyboardDidHideSub.remove();
         this.props.navigation.state.params.getData();
@@ -89,12 +89,12 @@ export default class AddPets extends React.Component<SettingsState> {
                 .catch((error) => {
                     console.error("Error writing document: ", error);
                 });
+                console.log("POGGERS! ADDED YOUR " + species + ", " + name + " TO THE DB!");
             }
         }).catch((error) => {
             console.log("Error getting document:", error);
         });
 
-        this.props.navigation.goBack();
     }
 
     guidGenerator = (event) => {
@@ -145,10 +145,7 @@ export default class AddPets extends React.Component<SettingsState> {
         return (
             
             
-            <Animated.View style={[{ transform: [{translateY: shift}] }]}>  
-                {/* <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} /> */}
-                {/* <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.addPetToFireStore} buttonIcon="check" /> */}
-            <Container>
+            <Animated.View style={[{ transform: [{translateY: shift}] }]}> 
                 <DropDownPicker
                     items={[
                         {label: 'Dog', value: 'Dog', icon: () => <FontAwesome5 name="dog" size={18} color="#900" />},
@@ -159,7 +156,7 @@ export default class AddPets extends React.Component<SettingsState> {
                         {label: 'Exotic', value: 'Exotic', icon: () => <FontAwesome5 name="spider" size={18} color="#900" />},
                     ]}
                     defaultValue={this.state.species}
-                    containerStyle={{height: 40, marginTop:15, marginBottom: 15}}
+                    containerStyle={{height: 40, marginBottom: 6}}
                     style={{backgroundColor: '#fafafa'}}
                     itemStyle={{
                         justifyContent: 'flex-start'
@@ -184,7 +181,7 @@ export default class AddPets extends React.Component<SettingsState> {
                         {label: 'Female', value: 'female', icon: () => <FontAwesome5 name="venus" size={18} color="#900" />},
                     ]}
                     defaultValue={this.state.sex}
-                    containerStyle={{height: 40, marginTop:15, marginBottom: 15}}
+                    containerStyle={{height: 40, marginBottom: 6}}
                     style={{backgroundColor: '#fafafa'}}
                     itemStyle={{
                         justifyContent: 'flex-start'
@@ -203,40 +200,41 @@ export default class AddPets extends React.Component<SettingsState> {
                     })}
                 />
                 
-                <Text containerStyle={{marginTop:15}}>Name:</Text>
+                <Text>Name:</Text>
 
                 <TextInput
                     style={styles.input}
                     onChangeText={this.handleName}
                     returnKeyType = 'done'
-                    value= "Name"
                 />
                 
 
-                <Text containerStyle={{marginTop:15}}>Breed:</Text>
+                <Text>Breed:</Text>
 
                 <TextInput
                     style={styles.input}
                     onChangeText={this.handleBreed}
                     returnKeyType = 'done'
-                    value= "Breed"
                 />
                 
-                <Text containerStyle={{marginTop:15}}>Age:</Text>
+                <Text>Age:</Text>
 
                 <TextInput
                     style={styles.input}
                     onChangeText={this.handleAge}
                     keyboardType="numeric"
                     returnKeyType = 'done'
-                    value= "Age"
                 /> 
+                
                 <Button
-                    onPress={this.addPetToFireStore}
-                    label="Add Pet"
-                    color="#00000"
-                />
-                </Container>
+                label="Add Pet"
+                name={this.props.name}
+                onPress={this.addPetToFireStore}
+                style={{borderColor: Theme.palette.secondary}}
+                full
+                primary
+            />
+            
             </Animated.View>
         );
     }
@@ -247,7 +245,8 @@ const styles = StyleSheet.create({
         width: 283,
         justifyContent: "space-evenly",
         flexDirection: "row",
-        marginVertical: Theme.spacing.base
+        margin: 6,
+        marginVertical: Theme.spacing.base,
     },
     image: {
         padding: 10
