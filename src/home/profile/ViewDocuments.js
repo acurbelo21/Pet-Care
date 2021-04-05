@@ -11,7 +11,10 @@ import _ from 'lodash';
 export default class ViewDocuments extends Component {
     async componentDidMount(): Promise<void> {
         const { navigation } = this.props;
+        const { uid } = Firebase.auth.currentUser;
+
         this.fillArrayWithFiles();
+        Firebase.firestore.collection("users").doc(uid).onSnapshot(docs => {this.fillArrayWithFiles()});
     }
 
     constructor(props) {
