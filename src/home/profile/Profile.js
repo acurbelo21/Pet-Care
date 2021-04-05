@@ -5,8 +5,6 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  TouchableOpacity,
-  Image
 } from "react-native";
 import { inject, observer } from "mobx-react";
 import Constants from "expo-constants";
@@ -39,20 +37,13 @@ ScreenProps<> & InjectedProps
     return (
       <>
         <View style={styles.container}>
-          {/* <NavHeader title="Profile" {...{ navigation }} /> */}
           <NavHeaderWithButton title="Profile" buttonFn={this.settings} buttonIcon="settings" />
           <LinearGradient
             colors={["#81f1f7", "#9dffb0"]}
             style={styles.gradient}
           />
           <View style={styles.header}>
-            {/* <TouchableOpacity onPress={this.settings} style={styles.settings}>
-              <View>
-                <Icon name="settings" size={30} color={Theme.palette.black} />
-              </View>
-            </TouchableOpacity> */}
             <View style={styles.title}>
-              {/* <Text type="large" style={styles.outline}>Pet Owner</Text> */}
               <Text type="header2" style={styles.name}>{profile.name}</Text>
             </View>
             <Avatar
@@ -91,10 +82,6 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: avatarSize * 0.5 + Theme.spacing.small,
-  },
-  cover: {
-    width,
-    height: height * 0.9,
   },
   avatar: {
     position: "absolute",

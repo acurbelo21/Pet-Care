@@ -1,11 +1,7 @@
 import React, { Component , createRef} from 'react';
-import {AppRegistry, Animated, StyleSheet, View, FlatList, SafeAreaView, Image, ActivityIndicator} from 'react-native';
-import faker from 'faker'; // makes fake data
-import _, { reduce } from 'lodash';
-import Pagination,{Icon,Dot} from 'react-native-pagination';//{Icon,Dot} also available
-import Firebase from "../../../components/Firebase";
+import { StyleSheet, View, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
 import type { ScreenParams } from "../../components/Types";
-import {Text, NavHeader, Theme, Button} from "../../../components";
+import { NavHeader } from "../../../components";
 import { LinearGradient } from "expo-linear-gradient";
 import PlayYouTube from "./PlayYouTube";
 
@@ -47,7 +43,6 @@ export default class TrainingScreen extends React.Component<ScreenParams<{ pet_u
             videos.push(keyPair);
         });
         this.setState({ videos: videos, loading:false });
-        // console.log(this.state.videos);
     };
 
     render()

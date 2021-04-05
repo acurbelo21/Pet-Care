@@ -27,11 +27,8 @@ export default class DiagnosticToolResults extends Component {
             .doc(uid)
             .get()
             .then(docRef => {
-                // console.log("Diagnosed Diseases from Firestore query: ", docRef.data()[Object.keys(docRef.data())[0]]);
                 diagnosedDiseases = docRef.data()[Object.keys(docRef.data())[0]];
                 diagnosedDiseases = diagnosedDiseases.map((str, index) => ({ name: str, id: index + 1}));
-                // console.log("Diagnosed diseases in array of objects for pagination: ", diagnosedDiseases);
-
                 this.setState({items: diagnosedDiseases})
             })
             .then(() => {

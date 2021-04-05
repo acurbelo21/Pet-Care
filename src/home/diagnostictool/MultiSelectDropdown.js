@@ -1,11 +1,10 @@
 // @flow
 import * as React from "react";
-import { Dimensions, StyleSheet, View, FlatList } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 
-import { Text, Theme, Button, NavHeaderWithButton } from "../../components";
+import { Theme, Button } from "../../components";
 import Firebase from "../../components/Firebase";
 import MultiSelect from "react-native-multiple-select";
-import autobind from 'autobind-decorator';
 
 type Symptom = { name: string };
 
@@ -160,18 +159,15 @@ export default class MultiSelectDropdown extends React.Component {
         this.setState({uniqueFilteredDiagnoses: []});
 
         querySnapshot.forEach((doc) => {
-          // console.log("Snapshot return: ", doc.id, " =>", Object.keys(doc.data()));
           generalDiagnosis[doc.id] = doc.data();
           diagnoses.push(generalDiagnosis); // Can most likely refactor/remove this and directly read generalDiagnosis instead
         });
       })
       .then(() => {
           for (const [key, value] of Object.entries(diagnoses[0])) {
-            // console.log(`Disease name (key) and symptoms (value) ${key}: ${Object.keys(value["symptoms"])}`);
             if (this.state.selectedItems.every(symptom => (Object.keys(value["symptoms"]).includes(symptom)))) {
               filteredDiagnoses.push(key);
               this.setState({uniqueFilteredDiagnoses: [ ...new Set(filteredDiagnoses)]});
-              // console.log("Final filtered list of diagnoses: ", this.state.uniqueFilteredDiagnoses);
             }
           }
       })
@@ -233,7 +229,6 @@ export default class MultiSelectDropdown extends React.Component {
             tagRemoveIconColor={Theme.palette.black}
             tagBorderColor={Theme.palette.primary}
             tagContainerStyle={{backgroundColor: Theme.palette.white, alignSelf: "flex-start"}}
-            // styleTextTag={{size: Theme.typography.regular.fontSize}}
 
             submitButtonColor={Theme.palette.primary}
             submitButtonText="Confirm"

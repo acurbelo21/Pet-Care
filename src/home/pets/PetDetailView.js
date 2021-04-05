@@ -3,19 +3,14 @@ import Firebase from "../../components/Firebase";
 import React, { Component, useState } from 'react'
 import type { ScreenParams } from "../../components/Types";
 import { Card, Icon, Overlay, Badge } from 'react-native-elements'
-import * as ImagePicker from 'expo-image-picker';
-// import storage from '@react-native-firebase/storage';
-import * as Progress from 'react-native-progress';
 import {
   ActivityIndicator,
-  Alert,
   Dimensions,
   FlatList,
   Image,
   ImageBackground,
   Linking,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -98,8 +93,6 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
           avatarBackground: doc.data().pic,
         });
 
-        console.log(doc.data());
-
         if(doc.data().pic == "null")
         {
           switch (this.state.petDetails.species) {
@@ -160,12 +153,6 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   goBackToPets() {
     const { navigation } = this.props;
     navigation.goBack();
-  }
-
-  @autobind
-  goToLabResults() {
-    const { navigation } = this.props;
-    navigation.navigate("LabResults");
   }
 
   @autobind
@@ -341,16 +328,6 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
             {Separator()}
             {this.renderEmail()}
           </Card>
-          {/* <View style={styles.labContainer}>
-            <TouchableOpacity
-              style={styles.labButton}
-              onPress={this.goToLabResults}
-            >
-                <Text>
-                  View {this.state.petDetails.name}'s Lab Results
-                </Text>
-            </TouchableOpacity>
-          </View> */}
           <View style={styles.labContainer}>
             <TouchableOpacity
               style={styles.labButton}
@@ -370,16 +347,6 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
 }
 
 const styles = StyleSheet.create({
-  topContainer: {
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
-    borderColor: Theme.palette.borderColor,
-    borderBottomWidth: Platform.OS === "ios" ? 0 : 1,
-    zIndex: 10000,
-    backgroundColor: "white",
-  },
   side: {
       width: 80,
   },

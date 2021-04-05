@@ -3,7 +3,6 @@ import * as React from "react";
 import {StyleSheet, Dimensions, View} from "react-native";
 import Constants from "expo-constants";
 import {LinearGradient} from "expo-linear-gradient";
-
 import {Text, Theme} from "../components";
 
 type SlideProps = {

@@ -7,14 +7,10 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import {
   ActivityIndicator,
-  Alert,
   Dimensions,
-  FlatList,
   Image,
   ImageBackground,
-  Linking,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -22,8 +18,6 @@ import {
   View,
 } from 'react-native'
 import {Text, Theme} from "../../components";
-import Separator from './Separator';
-import { update } from "lodash";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -95,8 +89,6 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
           sex: doc.data().sex,
         });
 
-        // console.log(doc.data());
-
         if(doc.data().pic == "null")
         {
           switch (this.state.petDetails.species) {
@@ -155,7 +147,6 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     const pet_uid  = navigation.state.params;
     const { name, age, sex} = this.state;
     const { species, breed } = this.state.petBiology;
-    console.log(species);
 
     Firebase.firestore
     .collection("users")
@@ -173,8 +164,6 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
 
     if (result.cancelled) {
       this.setState({loading: false});
-      console.log('User cancelled image picker');
-      // console.log('User cancelled image picker', Firebase.storage);
     } else if (result.error) {
         console.log('ImagePicker Error: ', result.error);
     } else if (result.customButton) {
@@ -198,10 +187,8 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     let task = ref.put(blob);
 
     task.then(() => {
-        console.log('Image uploaded to the bucket!');
         this.setState({ status: 'Image uploaded successfully' });
         ref.getDownloadURL().then(function(pic) {
-            console.log(pic);
             Firebase.firestore
               .collection("users")
               .doc(uid)
@@ -214,7 +201,6 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
         });
         this.retrieveFireStorePetDetails()
           .then(this.setState({loading: false}));
-        // this.goBackToPets();
     }).catch((e) => {
         status = 'Something went wrong';
         console.log('uploading image error => ', e);
@@ -260,7 +246,6 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
         break;
       case("isCat"):
         this.setState({petBiology: {species: "Cat", breed: this.state.petBiology.breed}});
-        console.log("Hello");
         break;
       case("isBird"):
         this.setState({petBiology: {species: "Bird", breed: this.state.petBiology.breed}});
@@ -511,25 +496,8 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
 }
 
 const styles = StyleSheet.create({
-  topContainer: {
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
-    borderColor: Theme.palette.borderColor,
-    borderBottomWidth: Platform.OS === "ios" ? 0 : 1,
-    zIndex: 10000,
-    backgroundColor: "white",
-  },
   side: {
       width: 80,
-  },
-  btnPressNormal: {
-    backgroundColor:"white",
-  },
-  btnPressSelected: {
-    borderWidth:3,
-    borderColor:'red',
   },
   cardContainer: {
     backgroundColor: '#FFF',
@@ -542,11 +510,6 @@ const styles = StyleSheet.create({
   cardText: {
     flexDirection: "row",
     alignSelf: "center",
-  },
-  overlayContainer: {
-    backgroundColor: '#FFF',
-    width: width - 100,
-    padding: 0,
   },
   container: {
     flex: 1,
@@ -570,8 +533,6 @@ const styles = StyleSheet.create({
     }),
   },
   input: {
-    // borderColor: "red",
-    // borderWidth: 3,
     backgroundColor: "#FAFAFA",
     width: width - 70,
     right:0,
@@ -588,11 +549,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
 },
-  placeIcon: {
-    color: 'white',
-    fontSize: 26,
-    paddingRight: 5,
-  },
   scroll: {
     backgroundColor: '#FFF',
   },
@@ -601,23 +557,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 10,
   },
-  telContainer: {
-    backgroundColor: '#FFF',
-    paddingTop: 30,
-  },
-  userAddressRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  userCityRow: {
-    backgroundColor: 'transparent',
-  },
-  userCityText: {
-    color: '#A5A5A5',
-    fontSize: 15,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
   userImage: {
     borderColor: '#FFF',
     borderRadius: 85,
@@ -625,12 +564,5 @@ const styles = StyleSheet.create({
     height: 170,
     marginBottom: 15,
     width: 170,
-  },
-  userNameText: {
-    color: '#FFF',
-    fontSize: 22,
-    fontWeight: 'bold',
-    paddingBottom: 8,
-    textAlign: 'center',
   },
 })

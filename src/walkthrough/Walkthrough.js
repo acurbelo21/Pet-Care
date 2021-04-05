@@ -3,14 +3,11 @@ import autobind from "autobind-decorator";
 import * as React from "react";
 import {View, StyleSheet, SafeAreaView, StatusBar, Platform} from "react-native";
 import Swiper from "react-native-swiper";
-
 import Slide from "./Slide";
 import Connect from "./Connect";
 import Chat from "./Chat";
 import Share from "./Share";
 import Select from "./Select";
-import DiagnosticTool from "./DiagnosticTool";
-
 import {Button, Theme} from "../components";
 import type {ScreenProps} from "../components/Types";
 
@@ -77,8 +74,6 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
     }
 }
 
-/*
-*/
 const onIndexChanged = (index: number) => {
     slides.filter((slide, i) => index !== i).forEach(slide => slide.hide());
     slides[index].show();
@@ -87,7 +82,6 @@ let connect: Connect;
 let chat: Chat;
 let share: Share;
 let select: Select;
-let diagnosticTool: DiagnosticTool;
 
 const slides = [
     {
@@ -111,18 +105,6 @@ const slides = [
         show: () => share.show(),
         hide: () => share.hide()
     },
-    /* NOTE:
-        So this diagnostic tool uses the sectioned version of the same multi-select dropdown and also
-        presents modally but I'm not 100% sure if I like the subheadings... Might also make it harder
-        to diagnose which diseases based on selected symptoms but *shrugs* let me know what you think 
-    */
-    // {
-    //     title: "Diagnostic Tool",
-    //     description: "",
-    //     icon: <DiagnosticTool ref={ref => (ref ? diagnosticTool = ref : undefined)} />,
-    //     show: () => diagnosticTool.show(),
-    //     hide: () => diagnosticTool.hide()
-    // },
     {
         title: "Add Your Pet",
         description: "Don't worry! You will be able to edit and add more of your pets later on.",

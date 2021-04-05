@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { Text, TextInput, View, StyleSheet } from "react-native";
+import { TextInput, View, StyleSheet } from "react-native";
 
 import { Theme, Button } from "../components";
 import Firebase from "../components/Firebase";
@@ -19,9 +19,6 @@ export class GetStartedButton extends React.Component {
             .catch((error) => {
                 console.error("Error writing document: ", error);
             });
-
-        /* Call another function to navigate to the custom home screen HERE */
-
     }
 
     render() {
@@ -82,16 +79,4 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         textAlign: "center"
     },
-    petName: {
-        padding: 5,
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column"
-    },
-    getStarted: {
-        flex: 1,
-        textAlignVertical: "top",
-        justifyContent: "center",
-        alignItems: "center"
-    }
 });

@@ -20,7 +20,6 @@ export default class Welcome extends React.Component<ScreenProps<>> {
 
     render(): React.Node {
         return (
-            // <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
             <Container gutter={2} style={styles.root}>
                 <Logo />
                 <AnimatedView style={styles.container}>
@@ -28,7 +27,6 @@ export default class Welcome extends React.Component<ScreenProps<>> {
                 </AnimatedView>
                 <AnimatedView style={styles.container} delay={600} duration={300}>
                     <Button label="Login" onPress={this.login} full primary style={{o: Theme.palette.warning}} />
-                    {/* <Button label="Login Anonymously" onPress={loginAnonymously} full /> */}
                     <Button label="Sign Up" onPress={this.signUp} full />
                 </AnimatedView>
             </Container>
@@ -40,7 +38,6 @@ const loginAnonymously = async (): Promise<void> => {
     try {
         await Firebase.auth.signInAnonymously();
     } catch (e) {
-        // eslint-disable-next-line no-alert
         alert(serializeException(e));
     }
 };
