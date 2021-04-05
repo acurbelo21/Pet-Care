@@ -179,7 +179,8 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   @autobind
   goToTrainingScreen() {
     const { navigation } = this.props;
-    navigation.navigate("TrainingScreen");
+    const { breed } = this.state.petBiology
+    navigation.navigate("TrainingScreen", {breed});
   }
 
   onPressPlace = () => {
