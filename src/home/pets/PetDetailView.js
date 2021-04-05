@@ -36,8 +36,8 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     this.name = "Gina Mahdi"
     this.address = {"city": "Miami", "country": "Florida"};
     this.tels = [
-      { "id": 1, "name": "Office", "number": "+66 (089)-928-2134" },
-      { "id": 2, "name": "Work", "number": "+41 (112)-435-9887" }
+      { "id": 1, "name": "Office", "number": "+1 (305)-928-2134" },
+      { "id": 2, "name": "Work", "number": "+1 (305)-435-9887" }
     ];
     this.emails = [
       { "id": 1, "name": "Personal", "email": "petcare@gmail.com" },
@@ -324,6 +324,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
               <Text> Where is the pet kept? Outside</Text>
             </View>
             {Separator()}
+            <Text type="header3" style={styles.cardText}> Veterinary Contact Information </Text>
             {this.renderTel()}
             {Separator()}
             {this.renderEmail()}
