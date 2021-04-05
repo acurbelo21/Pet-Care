@@ -31,8 +31,7 @@ export default class Pets extends Component {
         .collection("pets")
         .onSnapshot(docs => {
           this.retrieveFireStorePets()
-        }
-        );
+        });
     }
 
     componentWillMount(){
@@ -92,8 +91,7 @@ export default class Pets extends Component {
         breed={item.breed}
         species={item.species}
         age={item.age}
-        gender={item.gender}
-        getDataFunc = {retrieveFireStorePets}
+        sex={item.sex}
         {...{navigation}}
       />)
     };

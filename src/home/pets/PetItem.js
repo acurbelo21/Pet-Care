@@ -17,11 +17,12 @@ export default class ListItem extends Component {
     const pet_uid = this.props.pet_uid
     const { getDataFunc } = this.props
     // this.props.navigation.navigate("PetDetailView", { pet_uid });
-    this.props.navigation.navigate("PetDetailView", { onSelect: this.onSelect, getData: () => getDataFunc, pet_uid });
+    
+    this.props.navigation.navigate("PetDetailView", { pet_uid });
   }
 
   render() {
-    const { name, pic, color, seen, selected, key, id, species, breed, age, gender, getDataFunc } = this.props;
+    const { name, pic, color, seen, selected, key, id, species, breed, age, sex } = this.props;
     var speciesColor;
     var petIcon;
 
@@ -157,7 +158,7 @@ export default class ListItem extends Component {
               >
                 {name}
               </Text>
-              <FontAwesome5 name={gender=="female" ? "venus" : "mars"} size={30} color={gender=="female" ? "#e75480" : "#009dff"} />
+              <FontAwesome5 name={sex=="female" ? "venus" : "mars"} size={30} color={sex=="female" ? "#e75480" : "#009dff"} />
             </View>
             {breed && (
               <Text
@@ -176,7 +177,7 @@ export default class ListItem extends Component {
           <View>
           {age && (
               <Text
-                style={gender=="female" ? {
+                style={sex=="female" ? {
                   height: 60,
                   fontSize: 20,
                   fontWeight: '300',

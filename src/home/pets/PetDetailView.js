@@ -60,6 +60,16 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
       petBiology: {"species": "Miami", "breed": "Florida"},
       setOverlay: false,
     };
+
+    const { uid } = Firebase.auth.currentUser;
+
+    Firebase.firestore
+      .collection("users")
+      .doc(uid)
+      .collection("pets")
+      .onSnapshot(docs => {
+        this.retrieveFireStorePetDetails();
+      });
   }
 
   async componentDidMount(): Promise<void> {
@@ -70,13 +80,13 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   retrieveFireStorePetDetails() {
     const { uid } = Firebase.auth.currentUser;
     const { navigation } = this.props;
-    const pet_uid  = navigation.state.params;
+    const params  = navigation.state.params;
 
     Firebase.firestore
     .collection("users")
     .doc(uid)
     .collection("pets")
-    .doc(pet_uid.pet_uid)
+    .doc(params.pet_uid)
     .get()
     .then(doc => {
         this.setState({
@@ -141,77 +151,10 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     })
   }
 
-  chooseFile = async () => {
-    this.setState({loading: true});
-    let result = await ImagePicker.launchImageLibraryAsync();
-
-    if (result.cancelled) {
-      this.setState({loading: false});
-      console.log('User cancelled image picker');
-      // console.log('User cancelled image picker', Firebase.storage);
-    } else if (result.error) {
-        console.log('ImagePicker Error: ', result.error);
-    } else if (result.customButton) {
-        console.log('User tapped custom button: ', result.customButton);
-    } else {
-        let path = result.uri;
-        let imageName = this.getFileName(result.fileName, path);
-        this.setState({ imagePath: path });
-        this.uploadImage(path, imageName);
-    }
-  }
-
-  uploadImage = async (path, imageName) => {
-    const response = await fetch(path);
-    const blob = await response.blob();
-
-    const { uid } = Firebase.auth.currentUser;
-    const pet_uid  = this.props.navigation.state.params;
-
-    var ref = Firebase.storage.ref().child("petPictures/" + imageName);
-    let task = ref.put(blob);
-
-    task.then(() => {
-        console.log('Image uploaded to the bucket!');
-        this.setState({ loading: false, status: 'Image uploaded successfully' });
-        ref.getDownloadURL().then(function(pic) {
-            console.log(pic);
-            Firebase.firestore
-              .collection("users")
-              .doc(uid)
-              .collection("pets")
-              .doc(pet_uid.pet_uid)
-              .update({pic})
-        }
-        , function(error){
-            console.log(error);
-        });
-        // this.goBackToPets();
-        this.retrieveFireStorePetDetails();
-    }).catch((e) => {
-        status = 'Something went wrong';
-        console.log('uploading image error => ', e);
-        this.setState({ loading: false, status: 'Something went wrong' });
-    });
-  }
-
-  getFileName(name, path) {
-      if (name != null) { return name; }
-
-      if (Platform.OS === "ios") {
-          path = "~" + path.substring(path.indexOf("/Documents"));
-      }
-      return path.split("/").pop();
-  }
-
   @autobind
   toggleOverlay() {
     this.setState({"setOverlay":!this.state.setOverlay});
   }
-
-  componentWillUnmount() {
-    // this.props.navigation.state.params.getData();
-}
 
   @autobind
   goBackToPets() {
@@ -226,9 +169,18 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   }
 
   @autobind
+  goToEditScreen() {
+    const { navigation } = this.props;
+    const params  = navigation.state.params;
+    const pet_uid = params.pet_uid;
+    navigation.navigate("EditScreen", { pet_uid });
+  }
+
+  @autobind
   goToTrainingScreen() {
     const { navigation } = this.props;
-    navigation.navigate("TrainingScreen");
+    const { breed } = this.state.petBiology
+    navigation.navigate("TrainingScreen", {breed});
   }
 
   onPressPlace = () => {
@@ -264,20 +216,27 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
           blurRadius={10}
           source={{uri: avatarBackground}}
         >
-          <View style={styles.side}>
-            <TouchableOpacity onPress={this.goBackToPets}>
-                <View style={styles.back}>
-                    <Icon name="chevron-left" size={50} color="white" />
-                </View>
-            </TouchableOpacity>
+          <View style={styles.navContent}>
+            <View style={styles.side}>
+              <TouchableOpacity onPress={this.goBackToPets}>
+                  <View>
+                      <Icon name="chevron-left" size={50} color="white" />
+                  </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.side}>
+              <TouchableOpacity onPress={this.goToEditScreen}>
+                  <View>
+                      <Icon type="font-awesome-5" name="edit" size={40} color="white" />
+                  </View>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.headerColumn}>
-            <TouchableOpacity onPress={this.chooseFile}>
-              <Image
-                style={styles.userImage}
-                source={{uri: avatar}}
-              />
-            </TouchableOpacity>
+            <Image
+              style={styles.userImage}
+              source={{uri: avatar}}
+            />
             <Text style={styles.userNameText}>{name}</Text>
             <View style={styles.userAddressRow}>
               <View>
@@ -367,20 +326,22 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     return (
       <ScrollView contentContainerStyle={styles.scroll} persistentScrollbar={false} >
         <View style={styles.container}>
+        {this.renderHeader()}
           <Card containerStyle={styles.cardContainer}>
-            {this.renderHeader()}
-            {/* {this.renderTel()}
+            <View style={{
+              paddingBottom: 10,
+            }}>
+              <Text type="header3" style={styles.cardText}> Pet Information </Text>
+              <Text> Age: {this.state.age}</Text>
+              <Text> Years owned: 4</Text>
+              <Text> Where is the pet kept? Outside</Text>
+            </View>
             {Separator()}
-            {this.renderEmail()} */}
-            <Text type="header3" style={styles.cardText}> Pet Information </Text>
-            <Text> Age: {this.state.age}</Text>
-            <Text> Years owned: </Text>
-            <Text> Where is the pet kept? </Text>
+            {this.renderTel()}
             {Separator()}
-            <Text type="header3" style={styles.cardText}> Diseases </Text>
-
+            {this.renderEmail()}
           </Card>
-          <View style={styles.labContainer}>
+          {/* <View style={styles.labContainer}>
             <TouchableOpacity
               style={styles.labButton}
               onPress={this.goToLabResults}
@@ -389,8 +350,8 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                   View {this.state.petDetails.name}'s Lab Results
                 </Text>
             </TouchableOpacity>
-          </View>
-          <View style={styles.container}>
+          </View> */}
+          <View style={styles.labContainer}>
             <TouchableOpacity
               style={styles.labButton}
               onPress={this.goToTrainingScreen}
@@ -400,7 +361,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                 </Text>
             </TouchableOpacity>
           </View>
-          <View style={{height:300}}/>
+          <View style={{height:100}}/>
         </View>
       </ScrollView>
     )
@@ -420,14 +381,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   side: {
-      width: 30,
+      width: 80,
   },
   cardContainer: {
     backgroundColor: '#FFF',
     borderWidth: 0,
     flex: 1,
     margin: 0,
-    padding: 0,
+    paddingTop: 10,
   },
   cardText: {
     flexDirection: "row",
@@ -473,6 +434,13 @@ const styles = StyleSheet.create({
     height: '10%',
     justifyContent: 'center',
   },
+  navContent: {
+    marginTop: Platform.OS === "ios" ? 0 : 20,
+    height: 57,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+},
   placeIcon: {
     color: 'white',
     fontSize: 26,

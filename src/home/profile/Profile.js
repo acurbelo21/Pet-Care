@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Image
 } from "react-native";
-import { Feather as Icon } from "@expo/vector-icons";
 import { inject, observer } from "mobx-react";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
@@ -99,26 +98,13 @@ const styles = StyleSheet.create({
   },
   avatar: {
     position: "absolute",
-    // right: Theme.spacing.small,
     alignSelf: "center",
     top: statusBarHeight + Theme.spacing.xLarge,
   },
-  settings: {
-    position: "absolute",
-    top: statusBarHeight + Theme.spacing.small,
-    right: Theme.spacing.base,
-    backgroundColor: "transparent",
-    zIndex: 10000,
-  },
   title: {
     position: "absolute",
-    // left: Theme.spacing.small,
     alignSelf: "center",
     top: 175 + statusBarHeight + Theme.spacing.xLarge,
-  },
-  outline: {
-    color: Theme.palette.black,
-    alignSelf: "center",
   },
   name: {
     color: Theme.palette.black,

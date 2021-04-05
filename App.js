@@ -19,7 +19,7 @@ import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
 import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, Pets,
          PetDetailView, LabResults, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults,
-         DiagnosisDetailView, ViewDocuments } from "./src/home";
+         DiagnosisDetailView, EditScreen, ViewDocuments } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -165,7 +165,8 @@ const PetsNavigator = createStackNavigator(
         PetDetailView: { screen: PetDetailView },
         AddPets: {screen: AddPets},
         LabResults: { screen: LabResults },
-        TrainingScreen: { screen: TrainingScreen }
+        TrainingScreen: { screen: TrainingScreen },
+        EditScreen: { screen: EditScreen }
     },
     StackNavigatorOptions
 );
