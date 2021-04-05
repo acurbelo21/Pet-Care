@@ -22,7 +22,7 @@ export default class ListItem extends Component {
   }
 
   render() {
-    const { name, pic, color, seen, selected, key, id, species, breed, age, gender } = this.props;
+    const { name, pic, color, seen, selected, key, id, species, breed, age, sex } = this.props;
     var speciesColor;
     var petIcon;
 
@@ -158,7 +158,7 @@ export default class ListItem extends Component {
               >
                 {name}
               </Text>
-              <FontAwesome5 name={gender=="female" ? "venus" : "mars"} size={30} color={gender=="female" ? "#e75480" : "#009dff"} />
+              <FontAwesome5 name={sex=="female" ? "venus" : "mars"} size={30} color={sex=="female" ? "#e75480" : "#009dff"} />
             </View>
             {breed && (
               <Text
@@ -177,7 +177,7 @@ export default class ListItem extends Component {
           <View>
           {age && (
               <Text
-                style={gender=="female" ? {
+                style={sex=="female" ? {
                   height: 60,
                   fontSize: 20,
                   fontWeight: '300',
