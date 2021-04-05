@@ -238,6 +238,44 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
   }
 
   @autobind
+  deletePet() {
+    Alert.alert(
+      "Delete pet?",
+      "Are you sure you want to delete this pet?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Delete", onPress: () => this.deletingPet(), style:"destructive" }
+      ]);
+  }
+
+  @autobind
+  deletingPet()
+  {
+    const { navigation } = this.props;
+    const { uid } = Firebase.auth.currentUser;
+    const pet_uid  = navigation.state.params;
+
+    Firebase.firestore
+      .collection("users")
+      .doc(uid)
+      .collection("pets")
+      .doc(pet_uid.pet_uid)
+      .delete()
+      .then(() => {
+        console.log("Document successfully deleted!");
+      }).catch((error) => {
+          console.error("Error removing document: ", error);
+      });
+
+    console.log("Delete Pressed")
+    navigation.navigate("Pets");
+  }
+
+  @autobind
   updatingSpecies(species) {
     let turnOff = {
       isDog: false,
@@ -336,6 +374,13 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
               <TouchableOpacity onPress={this.goBackToPets}>
                   <View>
                       <Icon name="chevron-left" size={50} color="white" />
+                  </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.side}>
+              <TouchableOpacity onPress={this.deletePet}>
+                  <View>
+                      <Icon type="font-awesome-5" name="trash-alt" size={30} color="#C70000"/>
                   </View>
               </TouchableOpacity>
             </View>
