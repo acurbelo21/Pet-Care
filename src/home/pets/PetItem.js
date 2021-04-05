@@ -1,14 +1,11 @@
 PropTypes;
 import autobind from "autobind-decorator";
 import React, { Component } from 'react';
-import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { FontAwesome5 } from '@expo/vector-icons';
 const { width, height } = Dimensions.get('window');
-import { NavigationEvents } from "react-navigation";
-import contactData from '../../mocks/contact.json'
-import { Left } from "native-base";
 
 export default class ListItem extends Component {
 
@@ -16,8 +13,6 @@ export default class ListItem extends Component {
   goToPetDetailView() {
     const pet_uid = this.props.pet_uid
     const { getDataFunc } = this.props
-    // this.props.navigation.navigate("PetDetailView", { pet_uid });
-    
     this.props.navigation.navigate("PetDetailView", { pet_uid });
   }
 

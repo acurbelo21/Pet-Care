@@ -58,7 +58,7 @@ export default class Password extends React.Component<NavigationProps<*>, Passwo
         const {navigation} = this.props;
         const {loading} = this.state;
         return (
-            <SignUpContainer title="Your Password" subtitle="Stay Safe" next={this.next} {...{ navigation, loading }}>
+            <SignUpContainer title="Your Password" subtitle="" next={this.next} {...{ navigation, loading }}>
                 <TextField
                     secureTextEntry
                     placeholder="Password"

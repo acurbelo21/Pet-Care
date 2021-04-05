@@ -1,11 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, ScrollView, Animated, Dimensions, Keyboard, UIManager } from "react-native";
-import { Text, NavHeader, Theme, Button, TextField, NavHeaderWithButton } from "../../components";
+import { StyleSheet, TextInput, Animated, Dimensions, Keyboard, UIManager } from "react-native";
+import { Text, Theme, NavHeaderWithButton } from "../../components";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Firebase from "../../components/Firebase";
-import TextInputComponent from "../../walkthrough/TextInputComponent";
 import DropDownPicker from 'react-native-dropdown-picker';
-import Icon from 'react-native-vector-icons/Feather';
 import { LinearGradient } from "expo-linear-gradient";
 
 const { State: TextInputState } = TextInput;
@@ -16,6 +14,7 @@ export default class AddPets extends React.Component<SettingsState> {
         const { navigation } = this.props;
     }
 
+    //Handles moving screen up and down with keyboard
     componentWillMount() {
         this.keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this.handleKeyboardDidShow);
         this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this.handleKeyboardDidHide);
@@ -24,7 +23,7 @@ export default class AddPets extends React.Component<SettingsState> {
       componentWillUnmount() {
         this.keyboardDidShowSub.remove();
         this.keyboardDidHideSub.remove();
-        this.props.navigation.state.params.getData();
+        this.props.navigation.state.params.getData(); //Reloads pets list when going back
     }
 
     constructor(props) {
@@ -59,6 +58,7 @@ export default class AddPets extends React.Component<SettingsState> {
         const {species, breed, name, age, sex} = this.state;
         var checkForInputs = [species, breed, name, age, sex];
 
+        //Checks to see if any inputs are not filled out
         for (let i = 0; i < checkForInputs.length; i++)
         {
             if (checkForInputs[i] == null)
@@ -70,6 +70,7 @@ export default class AddPets extends React.Component<SettingsState> {
 
         var docRef = Firebase.firestore.collection("users").doc(uid).collection("pets").doc(pet_uid);
 
+        //Add pet to firestore
         docRef.get().then((doc) => {
             if (doc.exists) {
                 this.addPetToFireStore();
@@ -88,6 +89,7 @@ export default class AddPets extends React.Component<SettingsState> {
         this.props.navigation.goBack();
     }
 
+    //Generate pet ids
     guidGenerator = (event) => {
         var S4 = function() {
            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -95,6 +97,7 @@ export default class AddPets extends React.Component<SettingsState> {
         return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
     }
 
+    //Handles keyboard stuff
     handleKeyboardDidShow = (event) => {
         const { height: windowHeight } = Dimensions.get('window');
         const keyboardHeight = event.endCoordinates.height;
@@ -222,32 +225,10 @@ export default class AddPets extends React.Component<SettingsState> {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width: 283,
-        justifyContent: "space-evenly",
-        flexDirection: "row",
-        marginVertical: Theme.spacing.base
-    },
-    image: {
-        padding: 10
-    },
-    message: {
-        color: Theme.palette.black,
-        fontSize: 20,
-        fontFamily: Theme.typography.semibold,
-        textAlign: "center",
-        marginBottom: Theme.spacing.base
-    },
     input: {
         height: 30,
         margin: 6,
         borderWidth: 1,
-        paddingTop: 0,
-        textAlign: 'left'
-    },
-    buttonContainer: {
-        height: 30,
-        margin: 6,
         paddingTop: 0,
         textAlign: 'left'
     },

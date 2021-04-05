@@ -17,13 +17,12 @@ import type { ScreenProps } from "./src/components/Types";
 import { Welcome } from "./src/welcome";
 import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
-import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, Pets,
-         PetDetailView, LabResults, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults,
+import { Profile, HomeTab, Settings, ProfileStore, Pets,
+         PetDetailView, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults,
          DiagnosisDetailView, EditScreen, ViewDocuments } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
-import { fromPairs } from "lodash";
 
 // $FlowFixMe
 const SFProTextMedium = require("./assets/fonts/SF-Pro-Text-Medium.otf");
@@ -144,7 +143,6 @@ const ProfileNavigator = createStackNavigator(
     {
         Profile: { screen: Profile },
         Settings: { screen: Settings },
-        Comments: { screen: Comments },
         ViewDocuments: { screen: ViewDocuments },
     },
     StackNavigatorOptions
@@ -164,7 +162,6 @@ const PetsNavigator = createStackNavigator(
         Pets: { screen: Pets },
         PetDetailView: { screen: PetDetailView },
         AddPets: {screen: AddPets},
-        LabResults: { screen: LabResults },
         TrainingScreen: { screen: TrainingScreen },
         EditScreen: { screen: EditScreen }
     },

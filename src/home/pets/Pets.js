@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import {AppRegistry, StyleSheet, View, FlatList, SafeAreaView, ActivityIndicator} from 'react-native';
 import PetItem from './PetItem';
-import faker from 'faker'; // makes fake data
 import _ from 'lodash';
 import Pagination,{Icon,Dot} from 'react-native-pagination';//{Icon,Dot} also available
 import Firebase from "../../components/Firebase";
-import {Text, NavHeaderWithButton, Theme, Button} from "../../components";
+import { NavHeaderWithButton, Theme } from "../../components";
 import { LinearGradient } from "expo-linear-gradient";
 import autobind from 'autobind-decorator';
 
 export default class Pets extends Component {
-
   @autobind
   buttonFn() {
     this.props.navigation.navigate("AddPets", { onSelect: this.onSelect, getData: () => this.retrieveFireStorePets() });
@@ -95,13 +93,10 @@ export default class Pets extends Component {
         {...{navigation}}
       />)
     };
-    //pressed an item
-//   onPressItem = (item) => console.log("onPressItem:item ",item);
-    // onPressItem = (item) => console.log(Firebase.auth.currentUser)
-    // onPressItem = (item) => console.log(MockPersonList)
+    // pressed an item
     onPressItem = (item) => this.printStuffToConsole()
 
-  //map to some od. We use the "id" attribute of each item in our list created in our MockPersonList
+  // map to some od. We use the "id" attribute of each item in our list created in our MockPersonList
   _keyExtractor = (item, index) => item.id.toString();
 
   // REQUIRED for ReactNativePagination to work correctly
@@ -161,31 +156,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0
   },
-  message: {
-    color: Theme.palette.black,
-    fontSize: 20,
-    fontFamily: Theme.typography.semibold,
-    textAlign: "center",
-    marginBottom: Theme.spacing.base
-  },
-  buttonContainer: {
-    justifyContent: "space-evenly",
-    flexDirection: "row",
-    marginVertical: Theme.spacing.base
-  },
-  image: {
-    padding: 10,
-    color: Theme.palette.white
-  },
-  iconContainer: {
-    justifyContent: "center",
-    flexDirection: "column",
-    marginHorizontal: Theme.spacing.base
-  },
-  multiSelectContainer: {
-    padding: 10,
-    alignSelf: "stretch",
-  }
 });
 
 AppRegistry.registerComponent('ReactNativePaginationExample', () => App);

@@ -45,7 +45,6 @@ export default class DiagnosticTool extends React.Component<DropdownIsVisibleSta
   }
 
   selectSpecies = (event, species, onPressSpeciesButtonCallback) => {
-    // this.showDropdown();
     if (this._multiselectdropdown === undefined) {
       this.hideDropdown();
       onPressSpeciesButtonCallback(this._multiselectdropdown, "Dog");

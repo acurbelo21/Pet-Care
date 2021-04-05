@@ -1,7 +1,6 @@
 // @flow
 import * as React from "react";
 import {StyleSheet, View, Platform} from "react-native";
-
 import {Theme} from "../components";
 import {AnimatedView, simpleInterpolation, directInterpolation} from "../components/Animations";
 

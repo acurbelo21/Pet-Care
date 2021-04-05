@@ -2,11 +2,10 @@ import Firebase from "../../components/Firebase";
 import React, { Component } from 'react'
 import type { ScreenParams } from "../../components/Types";
 import { NavHeader } from "../../components";
-import { Card, Icon } from 'react-native-elements'
+import { Card } from 'react-native-elements'
 import {
   ActivityIndicator,
   FlatList,
-  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -39,9 +38,6 @@ export default class PetDetailView extends React.Component<ScreenParams<{ diagno
     .doc(diagnosisName)
     .get()
     .then(doc => {
-        // console.log("All fields of selected diagnosed disease: ", doc.data());
-        // console.log("DIS DA DESCRIP: ", doc.data().description);
-        // console.log("DIS DA STAGE TWO BIDNESS: ", doc.data().stageTwo)
         this.setState({
             description: doc.data().description, 
             symptoms: doc.data().symptoms,
@@ -136,7 +132,6 @@ const styles = StyleSheet.create({
   separator: {
     borderColor: Theme.palette.black,
     borderWidth: 0.8,
-    // borderStyle: "dashed",
     flex: 8,
     flexDirection: "row"
   },

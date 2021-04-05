@@ -2,7 +2,6 @@
 import * as React from "react";
 import {StyleSheet, View} from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
-
 import {Text, Theme, Button} from "../components";
 import Firebase from "../components/Firebase";
 import TextInputComponent from "./TextInputComponent";
@@ -16,30 +15,6 @@ export class SelectPetButton extends React.Component {
     // Call after species button is pressed
     addPetSpeciesToFirestore(species) {
         const { uid } = Firebase.auth.currentUser;
-
-        // Firebase.firestore
-        //     .collection("pets")
-        //     .where("species", "==", "Dog")
-        //     .get()
-        //     .then(docs => {
-        //         let petnames = []
-        //         docs.forEach(doc => {
-        //             petnames.push(doc.data())
-        //             console.log("Name of dog: ", doc.data().name, "\n");
-        //         })
-        //     })
-
-        //     Firebase.firestore
-        //         .collection("pets")
-        //         .where("owner-uid", "==", uid)
-        //         .get()
-        //         .then(docs => {
-        //             let currentuserspetnames = []
-        //             docs.forEach(doc => {
-        //                 currentuserspetnames.push(doc.data())
-        //                 console.log("Name of ", uid, "'s pet: ", doc.data().name, "\n");
-        //             })
-        //         })
 
         Firebase.firestore
             .collection("pets")
@@ -85,7 +60,6 @@ export class SelectPetButton extends React.Component {
     }
 }
 
-// eslint-disable-next-line react/no-multi-comp
 export default class Select extends React.Component<VisibleState, PetNameTextInputIsVisibleState, SpeciesSelected> {
     state = {
         visible: false,
@@ -169,13 +143,7 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
 
     render(): React.Node {
         const selectPetBreedMessage = <Text style={styles.message}>Please select the breed of your first pet. </Text>;
-        // var selectedPet = pets.map((pet) => {
-        //     return (
-        //         <View key={pet.label}>
-        //             <FontAwesome5 name={pet.image} size={Theme.typography.header2.fontSize} color={Theme.palette.white} />
-        //         </View>
-        //     )
-        // })
+
         var selectedPet = <FontAwesome5 name={this.state.speciesSelected} size={Theme.typography.header1.fontSize} color={Theme.palette.white} />
 
         if (!this.state.visible) {

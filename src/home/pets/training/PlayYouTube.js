@@ -23,11 +23,9 @@ export default function PlayYouTube(props) {
         <YoutubePlayer
           height={220}
           play={playing}
-          // videoId={"iee2TATGMyI"}
           videoId={props.videoId}
           onChangeState={onStateChange}
         />
-        {/* <Button title={playing ? "pause" : "play"} onPress={togglePlaying} /> */}
       </View>
     </View>
   );
