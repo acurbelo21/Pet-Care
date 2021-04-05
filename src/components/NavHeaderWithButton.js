@@ -19,21 +19,41 @@ type NavHeaderProps = NavigationProps<*> & {
 
 export default class NavHeaderWithButton extends React.Component<NavHeaderProps> {
     @autobind
+    onPress() {
+        const { backFn, navigation } = this.props;
+        if (backFn) {
+            backFn();
+        } else {
+            navigation.goBack();
+        }
+    }
+
+    @autobind
     onPressButton() {
         const { buttonFn } = this.props;
         buttonFn();
     }
 
     render(): React.Node {
+        const { onPress } = this;
         const { onPressButton } = this;
-        const { title } = this.props;
+        const { title, back } = this.props;
         const { buttonIcon } = this.props;
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.content}>
                     <View style={styles.side}>
+                        {back && (
+                            <TouchableOpacity {...{ onPress }}>
+                                <View style={styles.back}>
+                                    <Icon name="chevron-left" size={25} />
+                                </View>
+                            </TouchableOpacity>
+                        )}
                     </View>
-                    <Text type="header3">{title}</Text>
+                    <View style={styles.side}>
+                    </View>
+                    <Text type="header3" style={styles.title}>{title}</Text>
                     <View style={styles.side}>
                         <TouchableOpacity onPress={onPressButton}>
                             <Icon name={buttonIcon} size={25} color={Theme.palette.black} />
@@ -69,4 +89,8 @@ const styles = StyleSheet.create({
     back: {
         marginLeft: Theme.spacing.tiny,
     },
+    title: {
+        paddingRight: 65,
+        alignContent: "center"
+    }
 });

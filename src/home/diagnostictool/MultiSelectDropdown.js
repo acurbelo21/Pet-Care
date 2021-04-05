@@ -122,13 +122,13 @@ export default class MultiSelectDropdown extends React.Component {
   selectPet = (species) => {
     switch(species) {
       case "Dog":
-        this.setState({ items: MultiSelectDropdown.dogSymptoms });
+        this.setState({ items: MultiSelectDropdown.dogSymptoms, selectedItems: [] });
         break;
       case "Cat":
-        this.setState({ items: MultiSelectDropdown.catSymptoms });
+        this.setState({ items: MultiSelectDropdown.catSymptoms, selectedItems: [] });
         break;
       case "Bird":
-        this.setState({ items: MultiSelectDropdown.birdSymptoms });
+        this.setState({ items: MultiSelectDropdown.birdSymptoms, selectedItems: [] });
         break;
       default:
         this.setState({ items: species });

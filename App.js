@@ -2,7 +2,7 @@
 /* eslint-disable no-console, func-names */
 import * as React from "react";
 import { StatusBar, Platform, LogBox } from "react-native";
-import { StyleProvider } from "native-base";
+import { StyleProvider, View } from "native-base";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -19,7 +19,7 @@ import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
 import { Profile, Explore, Share, SharePicture, HomeTab, Comments, Settings, ProfileStore, Pets,
          PetDetailView, LabResults, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults,
-         DiagnosisDetailView, EditScreen } from "./src/home";
+         DiagnosisDetailView, EditScreen, ViewDocuments } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -145,6 +145,7 @@ const ProfileNavigator = createStackNavigator(
         Profile: { screen: Profile },
         Settings: { screen: Settings },
         Comments: { screen: Comments },
+        ViewDocuments: { screen: ViewDocuments },
     },
     StackNavigatorOptions
 );
