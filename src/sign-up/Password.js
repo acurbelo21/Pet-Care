@@ -46,7 +46,10 @@ export default class Password extends React.Component<NavigationProps<*>, Passwo
                     preview: "data:image/gif;base64,R0lGODlhAQABAPAAAKyhmP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                 }
             };
-            await Firebase.firestore.collection("users").doc(user.user.uid).set(profile);
+            await Firebase.firestore.collection("users").doc(user.user.uid).set(profile)
+            .then(() => {
+                this.props.navigation.navigate("Walkthrough")
+            });
         } catch (e) {
             // eslint-disable-next-line no-alert
             alert(e);
