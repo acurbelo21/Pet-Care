@@ -5,8 +5,6 @@ import { NavHeader } from "../../../components";
 import { LinearGradient } from "expo-linear-gradient";
 import PlayYouTube from "./PlayYouTube";
 
-const MAX_RESULT = 15; 
-const PLAYLIST_ID = "PLScC8g4bqD47c-qHlsfhGH3j6Bg7jzFy-"; 
 const API_KEY = "AIzaSyDRwHH_1BDlU_1_t_UJe2S2757JPTnLvfQ";
 
 export default class TrainingScreen extends React.Component<ScreenParams<{ breed: String, species: String }>, SettingsState>{
