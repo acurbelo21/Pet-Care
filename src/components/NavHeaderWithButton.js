@@ -51,9 +51,7 @@ export default class NavHeaderWithButton extends React.Component<NavHeaderProps>
                             </TouchableOpacity>
                         )}
                     </View>
-                    <View style={styles.side}>
-                    </View>
-                    <Text type="header3" style={styles.title}>{title}</Text>
+                    <Text type="header3">{title}</Text>
                     <View style={styles.side}>
                         <TouchableOpacity onPress={onPressButton}>
                             <Icon name={buttonIcon} size={25} color={Theme.palette.black} />
@@ -89,8 +87,4 @@ const styles = StyleSheet.create({
     back: {
         marginLeft: Theme.spacing.tiny,
     },
-    title: {
-        paddingRight: 65,
-        alignContent: "center"
-    }
 });
