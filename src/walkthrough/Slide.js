@@ -34,13 +34,13 @@ export default class Slide extends React.PureComponent<SlideProps> {
 const {height} = Dimensions.get("window");
 const styles = StyleSheet.create({
     slide: {
-        paddingHorizontal: Theme.spacing.base * 2,
         paddingBottom: Theme.spacing.base * 2,
         paddingTop: (Theme.spacing.base * 2) + Constants.statusBarHeight,
-        flexGrow: 1
+        flexGrow: 1,
     },
     title: {
-        color: Theme.palette.black
+        paddingHorizontal: Theme.spacing.base * 2,
+        color: Theme.palette.black,
     },
     description: {
         position: "absolute",

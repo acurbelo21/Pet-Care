@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     },
     input: {
         backgroundColor: "#FAFAFA",
-        width: 250,
+        width: 300,
         right:0,
       },
     inputContainer: {
