@@ -15,8 +15,51 @@ type WalkthroughState = {
     disabled: boolean
 };
 
+var someNavigation;
+
+let connect: Connect;
+let chat: Chat;
+let share: Share;
+let select: Select;
+
 export default class Walkthrough extends React.Component<ScreenProps<>, WalkthroughState> {
 
+    onIndexChanged = (index: number) => {
+        this.slides.filter((slide, i) => index !== i).forEach(slide => slide.hide());
+        this.slides[index].show();
+    }
+    
+    slides = [
+        {
+            title: "Review",
+            description: "Access your pet's medical information and lab results to monitor their health.",
+            icon: <Connect ref={ref => (ref ? connect = ref : undefined)} />,
+            show: () => connect.show(),
+            hide: () => connect.hide()
+        },
+        {
+            title: "Chat",
+            description: "Connect with a veterinarian to ask urgent questions about your pet on-demand.",
+            icon: <Chat ref={ref => (ref ? chat = ref : undefined)} />,
+            show: () => chat.show(),
+            hide: () => chat.hide()
+        },
+        {
+            title: "Share",
+            description: "Share pictures of your adorable pet on your personalized profile page.",
+            icon: <Share ref={ref => (ref ? share = ref : undefined)} />,
+            show: () => share.show(),
+            hide: () => share.hide()
+        },
+        {
+            title: "Add Your Pet",
+            description: "Don't worry! You will be able to edit and add more of your pets later on.",
+            icon: <Select ref={ref => (ref ? select = ref : undefined)} navigateHome={() => this.props.navigation.navigate("Home")}/>,
+            show: () => select.show(),
+            hide: () => select.hide()
+        }
+    ];
+    
     state = {
         disabled: false
     };
@@ -48,6 +91,7 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
         const isLast = index === total - 1;
         const back = () => context.scrollBy(-1);
         const next = () => (isLast ? this.home() : context.scrollBy(1));
+        
         return (
             <SafeAreaView style={styles.footer}>
                 <Button label="Back" onPress={back} primary white disabled={isFirst} />
@@ -59,11 +103,11 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
     }
 
     render(): React.Node {
-        const {renderPagination} = this;
+        const {renderPagination, onIndexChanged} = this;
         return (
             <Swiper loop={false} {...{ renderPagination, onIndexChanged }}>
                 {
-                    slides.map(slide => (
+                    this.slides.map(slide => (
                         <View key={slide.title}>
                             <Slide {...slide} />
                         </View>
@@ -73,46 +117,6 @@ export default class Walkthrough extends React.Component<ScreenProps<>, Walkthro
         );
     }
 }
-
-const onIndexChanged = (index: number) => {
-    slides.filter((slide, i) => index !== i).forEach(slide => slide.hide());
-    slides[index].show();
-};
-let connect: Connect;
-let chat: Chat;
-let share: Share;
-let select: Select;
-
-const slides = [
-    {
-        title: "Review",
-        description: "Access your pet's medical information and lab results to monitor their health.",
-        icon: <Connect ref={ref => (ref ? connect = ref : undefined)} />,
-        show: () => connect.show(),
-        hide: () => connect.hide()
-    },
-    {
-        title: "Chat",
-        description: "Connect with a veterinarian to ask urgent questions about your pet on-demand.",
-        icon: <Chat ref={ref => (ref ? chat = ref : undefined)} />,
-        show: () => chat.show(),
-        hide: () => chat.hide()
-    },
-    {
-        title: "Share",
-        description: "Share pictures of your adorable pet on your personalized profile page.",
-        icon: <Share ref={ref => (ref ? share = ref : undefined)} />,
-        show: () => share.show(),
-        hide: () => share.hide()
-    },
-    {
-        title: "Add Your Pet",
-        description: "Don't worry! You will be able to edit and add more of your pets later on.",
-        icon: <Select ref={ref => (ref ? select = ref : undefined)} />,
-        show: () => select.show(),
-        hide: () => select.hide()
-    }
-];
 
 const styles = StyleSheet.create({
     footer: {

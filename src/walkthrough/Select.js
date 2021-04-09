@@ -75,6 +75,7 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
         });
 
         console.log("Added pet to firestore");
+        this.props.navigateHome();
     }
 
     //Generate pet ids
@@ -286,7 +287,7 @@ export default class Select extends React.Component<VisibleState, PetNameTextInp
                   onPress={this.addPetToFireStore}
                 >
                 <Text>
-                    Submit Changes
+                    Add Pet!
                 </Text>
             </TouchableOpacity>
             </View>
