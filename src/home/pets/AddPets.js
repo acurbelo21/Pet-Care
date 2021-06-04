@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TextInput, Animated, Dimensions, Keyboard, UIManager } from "react-native";
+import { StyleSheet, TextInput, Animated, Dimensions, Keyboard, UIManager, ScrollView } from "react-native";
 import { Text, Theme, NavHeaderWithButton } from "../../components";
 import { FontAwesome5 } from '@expo/vector-icons';
 import Firebase from "../../components/Firebase";
@@ -33,13 +33,20 @@ export default class AddPets extends React.Component<SettingsState> {
             breed: null,
             name: null,
             age: null,
+            yearsOwned: null, 
             sex: null,
+            classification: null, 
+            weight: null,
             shift: new Animated.Value(0),
         };
     }
 
     handleAge = (text) => {
         this.setState({age: text})
+    }
+    
+    handleYearsOwned = (text) => {
+        this.setState({yearsOwned: text})
     }
 
     handleBreed = (text) => {
@@ -49,14 +56,18 @@ export default class AddPets extends React.Component<SettingsState> {
     handleName = (text) => {
         this.setState({name: text})
     }
+    
+    handleWeight = (text) => {
+        this.setState({weight: text})
+    }
 
     addPetToFireStore = (event) =>{
         var pet_uid = this.guidGenerator();
         const { uid } = Firebase.auth.currentUser;
         var owner_uid = uid;
         var pic = "null";
-        const {species, breed, name, age, sex} = this.state;
-        var checkForInputs = [species, breed, name, age, sex];
+        const {species, breed, name, age, yearsOwned, sex, weight, classification} = this.state; 
+        var checkForInputs = [species, breed, name, age, yearsOwned, sex, weight, classification];
 
         //Checks to see if any inputs are not filled out
         for (let i = 0; i < checkForInputs.length; i++)
@@ -76,7 +87,7 @@ export default class AddPets extends React.Component<SettingsState> {
                 this.addPetToFireStore();
             } else {
                 Firebase.firestore.collection("users").doc(uid).collection("pets").doc(pet_uid).set({
-                    species, breed, name, age, sex, pic, owner_uid
+                    species, breed, name, age, yearsOwned, sex, weight, classification, pic, owner_uid 
                 })
                 .catch((error) => {
                     console.error("Error writing document: ", error);
@@ -133,10 +144,12 @@ export default class AddPets extends React.Component<SettingsState> {
     
 
     render() {
+         
         const { navigation } = this.props;
         const { shift } = this.state;
 
         return (
+            <ScrollView>
             <Animated.View style={[{ transform: [{translateY: shift}] }]}>  
                 <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
                 <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.addPetToFireStore} buttonIcon="check" />
@@ -151,7 +164,7 @@ export default class AddPets extends React.Component<SettingsState> {
                         {label: 'Exotic', value: 'Exotic', icon: () => <FontAwesome5 name="spider" size={18} color="#900" />},
                     ]}
                     defaultValue={this.state.species}
-                    containerStyle={{height: 40, marginBottom: 160}}
+                    containerStyle={{height: 40, marginBottom: 150}}
                     style={{backgroundColor: '#fafafa'}}
                     itemStyle={{
                         justifyContent: 'flex-start'
@@ -195,6 +208,31 @@ export default class AddPets extends React.Component<SettingsState> {
                     })}
                 />
 
+                <DropDownPicker
+                    items={[
+                        {label: 'Indoors', value: 'Indoors', icon: () => <FontAwesome5 name="home" size={18} color="#900" />},
+                        {label: 'Outdoors', value: 'Outdoors', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                    ]}
+                    defaultValue={this.state.classification}
+                    containerStyle={{height: 40, marginBottom: 80}}
+                    style={{backgroundColor: '#fafafa'}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        classification: item.value
+                    })}
+                    placeholder="Select living space"
+                    isVisible={this.state.isVisibleC}
+                    onOpen={() => this.setState({
+                        isVisibleC: true
+                    })}
+                    onClose={() => this.setState({
+                        isVisibleC: false
+                    })}
+                />
+
                 <Text>Name:</Text>
 
                 <TextInput
@@ -218,8 +256,27 @@ export default class AddPets extends React.Component<SettingsState> {
                     onChangeText={this.handleAge}
                     keyboardType="numeric"
                     returnKeyType = 'done'
-                /> 
+                />
+
+                <Text>Years Owned:</Text>
+
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.handleYearsOwned}
+                    keyboardType="numeric"
+                    returnKeyType = 'done'
+                />
+
+                <Text>Weight:</Text>
+
+                <TextInput
+                    style={styles.input}
+                    onChangeText={this.handleWeight}
+                    keyboardType="numeric"
+                    returnKeyType = 'done'
+                />
             </Animated.View>
+            </ScrollView>
         );
     }
 }
