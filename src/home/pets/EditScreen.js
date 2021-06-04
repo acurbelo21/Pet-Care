@@ -43,6 +43,8 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
       isExotic: true,
       isMale: true,
       isFemale: true,
+      isIndoors: true,
+      isOutdoors: true,
       status: '',
       avatar: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg",
       avatarBackground: "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg", 
@@ -84,6 +86,9 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
           petDetails: doc.data(), 
           name: doc.data().name,
           age: doc.data().age,
+          yearsOwned: doc.data().yearsOwned, 
+          weight: doc.data().weight,
+          classification: doc.data().classification, 
           petBiology: {"species" : doc.data().species, "breed" : doc.data().breed},
           avatar: doc.data().pic,
           avatarBackground: doc.data().pic,
@@ -146,7 +151,7 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     const { uid } = Firebase.auth.currentUser;
     const { navigation } = this.props;
     const pet_uid  = navigation.state.params;
-    const { name, age, sex} = this.state;
+    const { name, age, yearsOwned, sex, classification, weight} = this.state; 
     const { species, breed } = this.state.petBiology;
 
     Firebase.firestore
@@ -155,7 +160,7 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     .collection("pets")
     .doc(pet_uid.pet_uid)
     .update({
-      name, age, sex, species, breed
+      name, age, yearsOwned, sex, classification, weight, species, breed 
     })
   }
 
@@ -321,6 +326,26 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     }
   }
 
+  updateClassification(classification) {
+    let turnOff = {
+      isIndoors: false,
+      isOutdoors: false,
+    }
+    
+    turnOff[classification] = true;
+    
+    this.setState(
+      turnOff
+    );
+      
+    if(classification=="isOutdoors") {
+      this.setState({classification: "Outdoors"})
+    }
+    else {
+      this.setState({classification: "Indoors"})
+    }
+  } 
+
   handleName = (text) => {
     this.setState({name: text})
   }
@@ -331,6 +356,14 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
 
   handleAge = (text) => {
     this.setState({age: text})
+  }
+
+  handleYearsOwned = (text) => {
+    this.setState({yearsOwned: text})
+  }
+
+  handleWeight = (text) => {
+    this.setState({weight: text})
   }
 
   @autobind
@@ -496,6 +529,32 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
             <View style={styles.inputContainer}>
               <Text style={{
                 padding: 5,
+              }}>Years Owned:</Text>
+
+              <TextInput
+                  style={styles.input}
+                  onChangeText={this.handleYearsOwned}
+                  returnKeyType = 'done'
+                  defaultValue = {this.state.yearsOwned}
+              /> 
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Weight:</Text>
+
+              <TextInput
+                  style={styles.input}
+                  onChangeText={this.handleWeight}
+                  returnKeyType = 'done'
+                  defaultValue = {this.state.weight}
+              /> 
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
               }}>Sex:</Text>
 
               {this.state.isMale &&
@@ -506,6 +565,30 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
               {this.state.isFemale &&
               <TouchableOpacity onPress={() => this.updateSex("isFemale")}>
                 <FontAwesome5 name="venus" size={30} color="#e75480" /> 
+              </TouchableOpacity>
+              }
+
+              <View/>
+              <View/>
+              <View/>
+              <View/>
+              <View/>
+
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Living Space:</Text>
+
+              {this.state.isIndoors &&
+              <TouchableOpacity onPress={() => this.updateClassification("isIndoors")}>
+                <FontAwesome5 name="home" size={30} color="#71b6f7" /> 
+              </TouchableOpacity>
+              }
+              {this.state.isOutdoors &&
+              <TouchableOpacity onPress={() => this.updateClassification("isOutdoors")}>
+                <FontAwesome5 name="tree" size={30} color="#0dbf0d" /> 
               </TouchableOpacity>
               }
 

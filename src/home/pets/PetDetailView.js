@@ -22,6 +22,7 @@ import Email from './Email'
 import Separator from './Separator'
 import Tel from './Tel'
 import { reduce } from "lodash";
+import darkColors from "react-native-elements/dist/config/colorsDark";
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
@@ -88,6 +89,9 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
           petDetails: doc.data(), 
           name: doc.data().name,
           age: doc.data().age,
+          yearsOwned: doc.data().yearsOwned,
+          weight: doc.data().weight,
+          classification: doc.data().classification, 
           petBiology: {"species" : doc.data().species, "breed" : doc.data().breed},
           avatar: doc.data().pic,
           avatarBackground: doc.data().pic,
@@ -320,8 +324,9 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
             }}>
               <Text type="header3" style={styles.cardText}> Pet Information </Text>
               <Text> Age: {this.state.age}</Text>
-              <Text> Years owned: 4</Text>
-              <Text> Where is the pet kept? Outside</Text>
+              <Text> Weight: {this.state.weight}</Text>
+              <Text> Years Owned: {this.state.yearsOwned}</Text>
+              <Text> Living Space: {this.state.classification}</Text>
             </View>
             {Separator()}
             <Text type="header3" style={styles.cardText}> Veterinary Contact Information </Text>
