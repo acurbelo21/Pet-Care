@@ -89,7 +89,10 @@ export default class Pets extends Component {
         breed={item.breed}
         species={item.species}
         age={item.age}
+        yearsOwned={item.yearsOwned} 
         sex={item.sex}
+        weight={item.weight} 
+        classification={item.classification} 
         {...{navigation}}
       />)
     };
