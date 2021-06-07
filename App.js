@@ -19,7 +19,7 @@ import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
 import { Profile, HomeTab, Settings, ProfileStore, Pets,
          PetDetailView, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults,
-         DiagnosisDetailView, EditScreen, ViewDocuments } from "./src/home";
+         DiagnosisDetailView, EditScreen, ViewDocuments, ChatTest } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -168,11 +168,19 @@ const PetsNavigator = createStackNavigator(
     StackNavigatorOptions
 );
 
+const ChatNavigator = createStackNavigator(
+    {
+        ChatTest: { screen: ChatTest }
+    },
+    StackNavigatorOptions
+);
+
 const HomeTabs = createBottomTabNavigator(
     {
         Pets: { screen: PetsNavigator},
         DiagnosticTool: { screen: ToolNavigator},
-        Profile: { screen: ProfileNavigator }
+        Profile: { screen: ProfileNavigator },
+        Chat: { screen: ChatNavigator }
     },
     {
         animationEnabled: true,

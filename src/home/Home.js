@@ -14,7 +14,8 @@ export class HomeTab extends React.Component<NavigationProps<*>> {
     static tabs: Tab[] = [
         { label: "Pets", icon: "paw"},
         { label: "DiagnosticTool", icon: "clipboard" },
-        { label: "Profile", icon: "user" }
+        { label: "Profile", icon: "user" },
+        { label: "Chat", icon: "comment-dots"}
     ];
 
     render(): React.Node {
