@@ -17,7 +17,7 @@ export default class ListItem extends Component {
   }
 
   render() {
-    const { name, pic, color, seen, selected, key, id, species, breed, age, sex } = this.props;
+    const { name, pic, color, seen, selected, key, id, species, breed, age, yearsOwned, sex, weight, classification } = this.props; 
     var speciesColor;
     var petIcon;
 
