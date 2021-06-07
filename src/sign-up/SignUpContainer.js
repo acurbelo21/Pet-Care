@@ -4,6 +4,7 @@ import * as React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import { Content } from "native-base";
 
+
 import { Text, Container, Button, Theme } from "../components";
 import type { NavigationProps } from "../components/Types";
 
@@ -64,5 +65,5 @@ const styles = StyleSheet.create({
     innerContainer: {
         height: height - Theme.spacing.base * 2,
         justifyContent: "center",
-    },
+    }
 });
