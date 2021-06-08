@@ -23,7 +23,6 @@ export default class Login extends React.Component<NavigationProps<*>, LoginStat
         email: "",
         password: "",
         loading: false,
-        label: "View Password",
         icon: "eye",
         passView: true
     };

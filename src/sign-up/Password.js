@@ -15,6 +15,8 @@ import type {Profile} from "../components/Model";
 type PasswordState = {
     password: string,
     loading: boolean
+    icon: string,
+    passView: boolean
 };
 
 export default class Password extends React.Component<NavigationProps<*>, PasswordState> {
