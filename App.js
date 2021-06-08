@@ -143,7 +143,6 @@ const ProfileNavigator = createStackNavigator(
     {
         Profile: { screen: Profile },
         Settings: { screen: Settings },
-        ViewDocuments: { screen: ViewDocuments },
     },
     StackNavigatorOptions
 );
@@ -163,7 +162,8 @@ const PetsNavigator = createStackNavigator(
         PetDetailView: { screen: PetDetailView },
         AddPets: {screen: AddPets},
         TrainingScreen: { screen: TrainingScreen },
-        EditScreen: { screen: EditScreen }
+        EditScreen: { screen: EditScreen },
+        ViewDocuments: { screen: ViewDocuments }
     },
     StackNavigatorOptions
 );
