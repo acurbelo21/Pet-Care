@@ -14,7 +14,7 @@ import type {Profile} from "../components/Model";
 
 type PasswordState = {
     password: string,
-    loading: boolean
+    loading: boolean,
     icon: string,
     passView: boolean
 };
