@@ -27,17 +27,28 @@ export default class ViewDocuments extends Component {
     }
 
     //Opens DocumentPicker and waits for user to select one
-    chooseFile = async () => {
-        let result = await DocumentPicker.getDocumentAsync();
+    chooseFile = async() => {
+        try {
+            
+            const result = await DocumentPicker.getDocumentAsync({type: "application/pdf"});
+    
+            if(result.type == 'success'){
+                let path = result.uri;
+                let documentName = this.getFileName(result.name, path);
+                this.setState({ imagePath: path });
+                this.uploadDocument(path, documentName);
+            }
 
-        if (result.type == "cancel") {
-            console.log("canceled");
-        }
-        else {
-            let path = result.uri;
-            let documentName = this.getFileName(result.name, path);
-            this.setState({ imagePath: path });
-            this.uploadDocument(path, documentName);
+            else if(result.type == "cancel") {
+                console.log("canceled");
+            }
+            
+            else{
+            alert('Please select a PDF file')
+            }
+        
+        } catch (error) {
+          alert(error);
         }
     }
 
