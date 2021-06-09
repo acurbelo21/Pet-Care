@@ -1,1 +1,1 @@
-export { default as ChatTest } from "./chatfeature";
+export { default as ChatTest } from "./ChatTest";
