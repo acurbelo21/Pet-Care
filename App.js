@@ -19,7 +19,7 @@ import { Walkthrough } from "./src/walkthrough";
 import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
 import { Profile, HomeTab, Settings, ProfileStore, Pets,
          PetDetailView, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults,
-         DiagnosisDetailView, EditScreen, ViewDocuments } from "./src/home";
+         DiagnosisDetailView, EditScreen, ViewDocuments, ChatTest } from "./src/home";
 
 import getTheme from "./native-base-theme/components";
 import variables from "./native-base-theme/variables/commonColor";
@@ -143,7 +143,6 @@ const ProfileNavigator = createStackNavigator(
     {
         Profile: { screen: Profile },
         Settings: { screen: Settings },
-        ViewDocuments: { screen: ViewDocuments },
     },
     StackNavigatorOptions
 );
@@ -163,7 +162,15 @@ const PetsNavigator = createStackNavigator(
         PetDetailView: { screen: PetDetailView },
         AddPets: {screen: AddPets},
         TrainingScreen: { screen: TrainingScreen },
-        EditScreen: { screen: EditScreen }
+        EditScreen: { screen: EditScreen },
+        ViewDocuments: { screen: ViewDocuments }
+    },
+    StackNavigatorOptions
+);
+
+const ChatNavigator = createStackNavigator(
+    {
+        ChatTest: { screen: ChatTest }
     },
     StackNavigatorOptions
 );
@@ -172,7 +179,8 @@ const HomeTabs = createBottomTabNavigator(
     {
         Pets: { screen: PetsNavigator},
         DiagnosticTool: { screen: ToolNavigator},
-        Profile: { screen: ProfileNavigator }
+        Profile: { screen: ProfileNavigator },
+        Chat: { screen: ChatNavigator }
     },
     {
         animationEnabled: true,
