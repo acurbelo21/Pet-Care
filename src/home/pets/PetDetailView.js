@@ -170,7 +170,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   @autobind
   goToTrainingScreen() {
     const { navigation } = this.props;
-    const { breed, species } = this.state.petBiology
+    const { breed, species } = this.state.petBiology;
     navigation.navigate("TrainingScreen", {breed, species});
   }
 
@@ -335,16 +335,46 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
             {this.renderEmail()}
           </Card>
           <View style={styles.labContainer}>
+            
             <TouchableOpacity
               style={styles.labButton}
               onPress={this.goToTrainingScreen}
             >
                 <Text>
-                  View training videos on {this.state.petDetails.breed}s
+                  View Training Videos on {this.state.petDetails.breed}s
+                </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.labButton}
+              onPress={() => this.props.navigation.navigate("ViewDocuments")}
+            >
+                <Text>
+                  View Lab Results for {this.state.petDetails.name}
+                </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.labButton}
+              onPress={this.goToTrainingScreen}
+            >
+                <Text>
+                  View Prescriptions for {this.state.petDetails.name}
+                </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.labButton}
+              onPress={this.goToTrainingScreen}
+            >
+                <Text>
+                  View Recommended Diet for {this.state.petDetails.name}
                 </Text>
             </TouchableOpacity>
           </View>
-          <View style={{height:100}}/>
+
+          
+          <View style={{height:60}}/>
         </View>
       </ScrollView>
     )
@@ -401,10 +431,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#9dffb0',
     alignSelf: 'center',
     padding: 10,
+    marginTop: 20
   },
   labContainer: {
     width: '100%',
-    height: '10%',
+    height: '20%',
     justifyContent: 'center',
   },
   navContent: {

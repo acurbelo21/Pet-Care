@@ -2,6 +2,8 @@
 import autobind from "autobind-decorator";
 import * as React from "react";
 
+import { FontAwesome5 as Icon } from "@expo/vector-icons";
+
 import {TextField, Firebase} from "../components";
 
 import SignUpStore from "./SignUpStore";
@@ -12,19 +14,33 @@ import type {Profile} from "../components/Model";
 
 type PasswordState = {
     password: string,
-    loading: boolean
+    loading: boolean,
+    icon: string,
+    passView: boolean
 };
 
 export default class Password extends React.Component<NavigationProps<*>, PasswordState> {
 
     state = {
         password: "",
-        loading: false
+        loading: false,
+        icon: "eye",
+        passView: true
     };
 
     @autobind
     setPassword(password: string) {
         this.setState({ password });
+    }
+
+    @autobind
+    setIcon(icon: string) {
+        this.setState({ icon });
+    }
+
+    @autobind
+    setPassView(passView: boolean) {
+        this.setState({ passView });
     }
 
     @autobind
@@ -57,13 +73,22 @@ export default class Password extends React.Component<NavigationProps<*>, Passwo
         }
     }
 
+    onPressEye = () => {
+        this.setState(prevState => ({
+            icon: prevState.icon === 'eye' ? 'eye-slash' : 'eye',
+            passView: !prevState.passView
+        }));
+     }
+
     render(): React.Node {
         const {navigation} = this.props;
         const {loading} = this.state;
+        const {icon} = this.state;
+        const {passView} = this.state;
         return (
             <SignUpContainer title="Your Password" subtitle="" next={this.next} {...{ navigation, loading }}>
                 <TextField
-                    secureTextEntry
+                    secureTextEntry= {passView}
                     placeholder="Password"
                     contrast
                     autoCapitalize="none"
@@ -72,6 +97,7 @@ export default class Password extends React.Component<NavigationProps<*>, Passwo
                     onSubmitEditing={this.next}
                     onChangeText={this.setPassword}
                 />
+                <Icon name= {icon} color= '#00aced' size= {20} onPress= {() => this.onPressEye()} />
             </SignUpContainer>
         );
     }
