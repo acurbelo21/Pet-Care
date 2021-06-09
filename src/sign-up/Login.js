@@ -13,7 +13,6 @@ type LoginState = {
     email: string,
     password: string,
     loading: boolean,
-    label: string,
     icon: string,
     passView: boolean
 };
@@ -24,7 +23,6 @@ export default class Login extends React.Component<NavigationProps<*>, LoginStat
         email: "",
         password: "",
         loading: false,
-        label: "View Password",
         icon: "eye",
         passView: true
     };
@@ -122,7 +120,7 @@ export default class Login extends React.Component<NavigationProps<*>, LoginStat
                     onSubmitEditing={this.login}
                     onChangeText={this.setPassword}
                 />
-                        <Icon name= {icon} color= '#00aced' size= {20} onPress= {() => this.onPressEye()} />
+                    <Icon name= {icon} color= '#00aced' size= {20} onPress= {() => this.onPressEye()} />
             </SignUpContainer>
         );
     }
