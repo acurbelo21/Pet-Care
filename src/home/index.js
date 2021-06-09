@@ -5,3 +5,5 @@ export {DiagnosticTool, DiagnosticToolResults, DiagnosisDetailView} from "./diag
 export {HomeTab} from "./Home";
 export {default as ProfileStore} from "./ProfileStore";
 export {default as ChatTest} from './chatfeature/ChatTest';
+export {default as PetDiet} from './pets/diet/PetDiet';
+export {default as PetPrescription} from './pets/prescription/PetPrescription';
