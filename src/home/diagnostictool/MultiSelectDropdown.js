@@ -7,6 +7,7 @@ import Firebase from "../../components/Firebase";
 import MultiSelect from "react-native-multiple-select";
 
 type Symptom = { name: string };
+//type DiseaseP = { name: string };
 
 export default class MultiSelectDropdown extends React.Component {
   constructor(props) {
@@ -117,6 +118,19 @@ export default class MultiSelectDropdown extends React.Component {
     { name: "Swelling of the soles of the feet and joints" },
     { name: "Blindness" }
   ];
+
+  /*static diseaseForPrescriptions: DiseaseP[] = {
+    { name: "Canine Distemper" },
+    { name: "Dog Hepatitis" },
+    { name: "Existence of external agent" },
+    { name: "FHV-1" },
+    { name: "Feline Calicivirus Infection" },
+    { name: "Feline Urinary Tract (FLUTD)" },
+    { name: "Feline panleukopenia" },
+    { name: "Leptospirosis" },
+    { name: "Para-flu dog" },
+    { name: "Rabies" },
+  }*/
 
   selectPet = (species) => {
     switch(species) {
