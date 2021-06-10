@@ -5,7 +5,7 @@ import { Text, NavHeaderWithButton, Theme, Button } from "../../components";
 import { LinearGradient } from "expo-linear-gradient";
 import * as DocumentPicker from 'expo-document-picker';
 import PDFReader from 'rn-pdf-reader-js';
-import _ from 'lodash';
+import _, { constant } from 'lodash';
 
 export default class ViewDocuments extends Component {
     //On load and reload, populate screen with files
@@ -28,7 +28,7 @@ export default class ViewDocuments extends Component {
 
     //Opens DocumentPicker and waits for user to select one
     chooseFile = async () => {
-        let result = await DocumentPicker.getDocumentAsync();
+        const result = await DocumentPicker.getDocumentAsync({type: "application/pdf"});
 
         if (result.type == "cancel") {
             console.log("canceled");
