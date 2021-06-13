@@ -174,6 +174,14 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     navigation.navigate("TrainingScreen", {breed, species});
   }
 
+  @autobind
+  goToPrescriptionScreen() {
+    const { navigation } = this.props;
+    navigation.navigate("PetPrescription");
+  }
+
+  PetPrescription
+
   onPressPlace = () => {
     console.log('place')
   }
@@ -356,7 +364,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
 
             <TouchableOpacity
               style={styles.labButton}
-              onPress={this.goToTrainingScreen}
+              onPress={() => this.props.navigation.navigate("PetPrescription")}
             >
                 <Text>
                   View Prescriptions for {this.state.petDetails.name}
@@ -365,7 +373,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
 
             <TouchableOpacity
               style={styles.labButton}
-              onPress={this.goToTrainingScreen}
+              onPress={() => this.props.navigation.navigate("PetDiet")}
             >
                 <Text>
                   View Recommended Diet for {this.state.petDetails.name}
