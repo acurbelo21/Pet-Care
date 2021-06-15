@@ -35,14 +35,15 @@ export default class AddPets extends React.Component<SettingsState> {
             age: null,
             yearsOwned: null, 
             sex: null,
-            classification: null, 
+            activity: null,
+            size: null,
+            lactating: null,
+            pregnancy: null,
+            classification: null,
+            spayNeuter_Status: null,
             weight: null,
             shift: new Animated.Value(0),
         };
-    }
-
-    handleAge = (text) => {
-        this.setState({age: text})
     }
     
     handleYearsOwned = (text) => {
@@ -66,8 +67,10 @@ export default class AddPets extends React.Component<SettingsState> {
         const { uid } = Firebase.auth.currentUser;
         var owner_uid = uid;
         var pic = "null";
-        const {species, breed, name, age, yearsOwned, sex, weight, classification} = this.state; 
-        var checkForInputs = [species, breed, name, age, yearsOwned, sex, weight, classification];
+        const {species, breed, name, age, yearsOwned, sex, activity, weight, 
+                classification, spayNeuter_Status, pregnancy, lactating, size} = this.state; 
+        var checkForInputs = [species, breed, name, age, yearsOwned, sex, activity, weight, 
+                                classification, spayNeuter_Status, pregnancy, lactating, size];
 
         //Checks to see if any inputs are not filled out
         for (let i = 0; i < checkForInputs.length; i++)
@@ -87,7 +90,8 @@ export default class AddPets extends React.Component<SettingsState> {
                 this.addPetToFireStore();
             } else {
                 Firebase.firestore.collection("users").doc(uid).collection("pets").doc(pet_uid).set({
-                    species, breed, name, age, yearsOwned, sex, weight, classification, pic, owner_uid 
+                    species, breed, name, age, yearsOwned, sex, activity, weight, classification, spayNeuter_Status,
+                    pregnancy, lactating, size, pic, owner_uid 
                 })
                 .catch((error) => {
                     console.error("Error writing document: ", error);
@@ -174,12 +178,12 @@ export default class AddPets extends React.Component<SettingsState> {
                         species: item.value
                     })}
                     placeholder="Select a species"
-                    isVisible={this.state.isVisibleA}
+                    isVisible={this.state.isVisible_Species}
                     onOpen={() => this.setState({
-                        isVisibleA: true
+                        isVisible_Species: true
                     })}
                     onClose={() => this.setState({
-                        isVisibleA: false
+                        isVisible_Species: false
                     })}
                 />
 
@@ -199,12 +203,12 @@ export default class AddPets extends React.Component<SettingsState> {
                         sex: item.value
                     })}
                     placeholder="Select sex"
-                    isVisible={this.state.isVisibleB}
+                    isVisible={this.state.isVisible_Sex}
                     onOpen={() => this.setState({
-                        isVisibleB: true
+                        isVisible_Sex: true
                     })}
                     onClose={() => this.setState({
-                        isVisibleB: false
+                        isVisible_Sex: false
                     })}
                 />
 
@@ -224,12 +228,173 @@ export default class AddPets extends React.Component<SettingsState> {
                         classification: item.value
                     })}
                     placeholder="Select living space"
-                    isVisible={this.state.isVisibleC}
+                    isVisible={this.state.isVisible_Classification}
                     onOpen={() => this.setState({
-                        isVisibleC: true
+                        isVisible_Classification: true
                     })}
                     onClose={() => this.setState({
-                        isVisibleC: false
+                        isVisible_Classification: false
+                    })}
+                />
+
+                <DropDownPicker
+                    items={[
+                        {label: 'Inactive', value: 'Inactive', icon: () => <FontAwesome5 name="home" size={18} color="#900" />},
+                        {label: 'Mild', value: 'Mild', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: 'Moderate', value: 'Moderate', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: 'High', value: 'High', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                    ]}
+                    defaultValue={this.state.activity}
+                    containerStyle={{height: 40, marginBottom: 80}}
+                    style={{backgroundColor: '#fafafa'}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        activity: item.value
+                    })}
+                    placeholder="Select activty level"
+                    isVisible={this.state.isVisible_Activity}
+                    onOpen={() => this.setState({
+                        isVisible_Activity: true
+                    })}
+                    onClose={() => this.setState({
+                        isVisible_Activity: false
+                    })}
+                />
+
+                <DropDownPicker
+                    items={[
+                        {label: 'Small', value: 'Small', icon: () => <FontAwesome5 name="home" size={18} color="#900" />},
+                        {label: 'Medium', value: 'Medium', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: 'Large', value: 'Large', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: 'X-Large', value: 'X-Large', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                    ]}
+                    defaultValue={this.state.size}
+                    containerStyle={{height: 40, marginBottom: 80}}
+                    style={{backgroundColor: '#fafafa'}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        size: item.value
+                    })}
+                    placeholder="Select size"
+                    isVisible={this.state.isVisible_Size}
+                    onOpen={() => this.setState({
+                        isVisible_Size: true
+                    })}
+                    onClose={() => this.setState({
+                        isVisible_Size: false
+                    })}
+                />
+
+                <DropDownPicker
+                    items={[
+                        {label: 'Not Pregnant', value: 'Not Pregnant', icon: () => <FontAwesome5 name="home" size={18} color="#900" />},
+                        {label: '0 - 5 Weeks', value: '0 - 5 Weeks', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: '5 - 10 Weeks', value: '5 - 10 Weeks', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: '10+ Weeks', value: '10+ Weeks', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                    ]}
+                    defaultValue={this.state.pregnancy}
+                    containerStyle={{height: 40, marginBottom: 80}}
+                    style={{backgroundColor: '#fafafa'}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        pregnancy: item.value
+                    })}
+                    placeholder="Select pregnancy status"
+                    isVisible={this.state.isVisible_Pregnancy}
+                    onOpen={() => this.setState({
+                        isVisible_Pregnancy: true
+                    })}
+                    onClose={() => this.setState({
+                        isVisible_Pregnancy: false
+                    })}
+                />
+
+                <DropDownPicker
+                    items={[
+                        {label: 'Non Lactating', value: 'Non Lactating', icon: () => <FontAwesome5 name="home" size={18} color="#900" />},
+                        {label: '0 - 1 Weeks', value: '0 - 1 Weeks', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: '1 - 3 Weeks', value: '1 - 3 Weeks', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: '3 - 5+ Weeks', value: '3 - 5+ Weeks', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                    ]}
+                    defaultValue={this.state.lactating}
+                    containerStyle={{height: 40, marginBottom: 80}}
+                    style={{backgroundColor: '#fafafa'}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        lactating: item.value
+                    })}
+                    placeholder="Select lactating status"
+                    isVisible={this.state.isVisible_Lactating}
+                    onOpen={() => this.setState({
+                        isVisible_Lactating: true
+                    })}
+                    onClose={() => this.setState({
+                        isVisible_Lactating: false
+                    })}
+                />
+
+                <DropDownPicker
+                    items={[
+                        {label: '0 - 1 Months', value: '0 - 1 Months', icon: () => <FontAwesome5 name="home" size={18} color="#900" />},
+                        {label: '1 - 4 Months', value: '1 - 4 Months', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: '4 - 8 Months', value: '4 - 8 Months', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: 'Adult', value: 'Adult', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                    ]}
+                    defaultValue={this.state.age}
+                    containerStyle={{height: 40, marginBottom: 80}}
+                    style={{backgroundColor: '#fafafa'}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        age: item.value
+                    })}
+                    placeholder="Select age range"
+                    isVisible={this.state.isVisible_Age}
+                    onOpen={() => this.setState({
+                        isVisible_Age: true
+                    })}
+                    onClose={() => this.setState({
+                        isVisible_Age: false
+                    })}
+                />
+
+                <DropDownPicker
+                    items={[
+                        {label: 'Intact', value: 'Intact', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                        {label: 'Spayed', value: 'Spayed', icon: () => <FontAwesome5 name="home" size={18} color="#900" />},
+                        {label: 'Neutered', value: 'Neutered', icon: () => <FontAwesome5 name="tree" size={18} color="#900" />},
+                    ]}
+                    defaultValue={this.state.spayNeuter_Status}
+                    containerStyle={{height: 40, marginBottom: 80}}
+                    style={{backgroundColor: '#fafafa'}}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
+                    }}
+                    dropDownStyle={{backgroundColor: '#fafafa'}}
+                    onChangeItem={item => this.setState({
+                        spayNeuter_Status: item.value
+                    })}
+                    placeholder="Select Spayed/Neutered status"
+                    isVisible={this.state.isVisible_SpayNeuter_Status}
+                    onOpen={() => this.setState({
+                        isVisible_SpayNeuter_Status: true
+                    })}
+                    onClose={() => this.setState({
+                        isVisible_SpayNeuter_Status: false
                     })}
                 />
 
@@ -248,15 +413,6 @@ export default class AddPets extends React.Component<SettingsState> {
                     onChangeText={this.handleBreed}
                     returnKeyType = 'done'
                 />
-                
-                <Text>Age:</Text>
-
-                <TextInput
-                    style={styles.input}
-                    onChangeText={this.handleAge}
-                    keyboardType="numeric"
-                    returnKeyType = 'done'
-                />
 
                 <Text>Years Owned:</Text>
 
@@ -267,7 +423,7 @@ export default class AddPets extends React.Component<SettingsState> {
                     returnKeyType = 'done'
                 />
 
-                <Text>Weight:</Text>
+                <Text>Weight (kg):</Text>
 
                 <TextInput
                     style={styles.input}

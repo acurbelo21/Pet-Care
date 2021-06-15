@@ -91,7 +91,12 @@ export default class Pets extends Component {
         age={item.age}
         yearsOwned={item.yearsOwned} 
         sex={item.sex}
+        activity={item.activity}
+        size={item.size}
+        spayNeuter_Status={item.spayNeuter_Status}
         weight={item.weight} 
+        pregnancy={item.pregnancy}
+        lactating={item.lactating}
         classification={item.classification} 
         {...{navigation}}
       />)

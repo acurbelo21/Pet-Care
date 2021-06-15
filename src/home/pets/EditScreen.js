@@ -88,7 +88,12 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
           age: doc.data().age,
           yearsOwned: doc.data().yearsOwned, 
           weight: doc.data().weight,
-          classification: doc.data().classification, 
+          activity: doc.data().activity,
+          size: doc.data().size,
+          classification: doc.data().classification,
+          spayNeuter_Status: doc.data().spayNeuter_Status, 
+          pregnancy: doc.data().pregnancy,
+          lactating: doc.data().lactating,
           petBiology: {"species" : doc.data().species, "breed" : doc.data().breed},
           avatar: doc.data().pic,
           avatarBackground: doc.data().pic,
@@ -151,7 +156,8 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     const { uid } = Firebase.auth.currentUser;
     const { navigation } = this.props;
     const pet_uid  = navigation.state.params;
-    const { name, age, yearsOwned, sex, classification, weight} = this.state; 
+    const { name, age, yearsOwned, sex, classification, spayNeuter_Status, weight, activity, 
+            pregnancy, lactating, size} = this.state; 
     const { species, breed } = this.state.petBiology;
 
     Firebase.firestore
@@ -160,7 +166,8 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     .collection("pets")
     .doc(pet_uid.pet_uid)
     .update({
-      name, age, yearsOwned, sex, classification, weight, species, breed 
+      name, age, yearsOwned, sex, classification, spayNeuter_Status, weight, activity, 
+      pregnancy, lactating, size, species, breed 
     })
   }
 
@@ -268,7 +275,7 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
   }
 
   @autobind
-  updatingSpecies(species) {
+  updateSpecies(species) {
     let turnOff = {
       isDog: false,
       isCat: false,
@@ -326,6 +333,126 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     }
   }
 
+  updateActivity(activity) {
+    let turnOff = {
+      isInactive: false,
+      isMild: false,
+      isModerate: false,
+      isHigh: false,
+    }
+
+    turnOff[activity] = true;
+
+    this.setState(
+      turnOff
+    );
+
+    switch(activity){
+      case("isInactive"):
+        this.setState({activity: "Inactive"});
+        break;
+      case("isMild"):
+        this.setState({activity: "Mild"});
+        break;
+      case("isModerate"):
+        this.setState({activity: "Moderate"});
+        break;
+      case("isHigh"):
+        this.setState({activity: "High"});
+        break;
+    }
+  }
+
+  updateSize(size) {
+    let turnOff = {
+      isSmall: false,
+      isMedium: false,
+      isLarge: false,
+      isXLarge: false,
+    }
+
+    turnOff[size] = true;
+
+    this.setState(
+      turnOff
+    );
+
+    switch(size){
+      case("isSmall"):
+        this.setState({size: "Small"});
+        break;
+      case("isMedium"):
+        this.setState({size: "Medium"});
+        break;
+      case("isLarge"):
+        this.setState({size: "Large"});
+        break;
+      case("isXLarge"):
+        this.setState({size: "X-Large"});
+        break;
+    }
+  }
+
+  updatePregnancy(pregnancy) {
+    let turnOff = {
+      isNotPregnant: false,
+      isFirstStage: false,
+      isSecondStage: false,
+      isThirdStage: false,
+    }
+
+    turnOff[pregnancy] = true;
+
+    this.setState(
+      turnOff
+    );
+
+    switch(pregnancy){
+      case("isNotPregnant"):
+        this.setState({pregnancy: "Not Pregnant"});
+        break;
+      case("isFirstStage"):
+        this.setState({pregnancy: "0 - 5 Weeks"});
+        break;
+      case("isSecondStage"):
+        this.setState({pregnancy: "5 - 10 Weeks"});
+        break;
+      case("isThirdStage"):
+        this.setState({pregnancy: "10+ Weeks"});
+        break;
+    }
+  }
+
+  updateLactating(lactating) {
+    let turnOff = {
+      isNonLactating: false,
+      isShortTime: false,
+      isMediumTime: false,
+      isLongTime: false,
+    }
+
+    turnOff[lactating] = true;
+
+    this.setState(
+      turnOff
+    );
+
+    switch(lactating){
+      case("isNonLactating"):
+        this.setState({lactating: "Non Lactating"});
+        break;
+      case("isShortTime"):
+        this.setState({lactating: "0 - 1 Weeks"});
+        break;
+      case("isMedium"):
+        this.setState({lactating: "1 - 3 Weeks"});
+        break;
+      case("isLongTime"):
+        this.setState({lactating: "3 - 5+ Weeks"});
+        break;
+    }
+  }
+
   updateClassification(classification) {
     let turnOff = {
       isIndoors: false,
@@ -346,16 +473,66 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
     }
   } 
 
+  updateSpayNeuter_Status(spayNeuter_Status) {
+    let turnOff = {
+      isSpayed: false,
+      isNeutered: false,
+      isIntact: false,
+    }
+    
+    turnOff[spayNeuter_Status] = true;
+    
+    this.setState(
+      turnOff
+    );
+      
+    if(spayNeuter_Status=="isSpayed") {
+      this.setState({spayNeuter_Status: "Spayed"})
+    }
+    else if(spayNeuter_Status=="isNeutered") {
+      this.setState({spayNeuter_Status: "Neutered"})
+    }
+    else {
+      this.setState({spayNeuter_Status: "Intact"})
+    }
+  }
+
+  updateAge(age) {
+    let turnOff = {
+      isNewborn: false,
+      isInfant: false,
+      isToddler: false,
+      isAdult: false,
+    }
+    
+    turnOff[age] = true;
+    
+    this.setState(
+      turnOff
+    );
+      
+    switch(age){
+      case("isNewborn"):
+        this.setState({age: "0 - 1 Months"});
+        break;
+      case("isInfant"):
+        this.setState({age: "1 - 4 Months"});
+        break;
+      case("isToddler"):
+        this.setState({age: "4 - 8 Months"});
+        break;
+      case("isAdult"):
+        this.setState({age: "Adult"});
+        break;
+    }
+  }
+
   handleName = (text) => {
     this.setState({name: text})
   }
 
   handleBreed = (text) => {
     this.setState({petBiology: {species: this.state.petBiology.species, breed: text}});
-  }
-
-  handleAge = (text) => {
-    this.setState({age: text})
   }
 
   handleYearsOwned = (text) => {
@@ -462,37 +639,37 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
               }}>Species:</Text>
 
               {this.state.isDog &&
-              <TouchableOpacity onPress={() => this.updatingSpecies("isDog")}>
+              <TouchableOpacity onPress={() => this.updateSpecies("isDog")}>
                 <FontAwesome5 name="dog" size={30} color="#0080ff" />
               </TouchableOpacity>
              }
 
              {this.state.isCat &&
-              <TouchableOpacity onPress={() => this.updatingSpecies("isCat")}>
+              <TouchableOpacity onPress={() => this.updateSpecies("isCat")}>
                 <FontAwesome5 name="cat" size={30} color="#ffb347" /> 
               </TouchableOpacity>
               }
 
               {this.state.isBird &&
-              <TouchableOpacity onPress={() => this.updatingSpecies("isBird")}>
+              <TouchableOpacity onPress={() => this.updateSpecies("isBird")}>
                 <FontAwesome5 name="dove" size={30} color="#c93335" />
               </TouchableOpacity>
               }
 
               {this.state.isHorse &&
-              <TouchableOpacity onPress={() => this.updatingSpecies("isHorse")}>
+              <TouchableOpacity onPress={() => this.updateSpecies("isHorse")}>
                 <FontAwesome5 name="horse" size={30} color="#0dbf0d" />
               </TouchableOpacity>
               }
 
               {this.state.isFish &&
-              <TouchableOpacity onPress={() => this.updatingSpecies("isFish")}>
+              <TouchableOpacity onPress={() => this.updateSpecies("isFish")}>
                 <FontAwesome5 name="fish" size={30} color="#71b6f7" />
               </TouchableOpacity>
               }
 
               {this.state.isExotic &&
-              <TouchableOpacity onPress={() => this.updatingSpecies("isExotic")}>
+              <TouchableOpacity onPress={() => this.updateSpecies("isExotic")}>
                 <FontAwesome5 name="spider" size={30} color="#9379c2" />
               </TouchableOpacity>
               }
@@ -516,14 +693,161 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
             <View style={styles.inputContainer}>
               <Text style={{
                 padding: 5,
+              }}>Activity Level:</Text>
+
+              {this.state.isInactive &&
+              <TouchableOpacity onPress={() => this.updateActivity("isInactive")}>
+                <FontAwesome5 name="dog" size={30} color="#0080ff" />
+              </TouchableOpacity>
+             }
+
+             {this.state.isMild &&
+              <TouchableOpacity onPress={() => this.updateActivity("isMild")}>
+                <FontAwesome5 name="cat" size={30} color="#ffb347" /> 
+              </TouchableOpacity>
+              }
+
+              {this.state.isModerate &&
+              <TouchableOpacity onPress={() => this.updateActivity("isModerate")}>
+                <FontAwesome5 name="dove" size={30} color="#c93335" />
+              </TouchableOpacity>
+              }
+
+              {this.state.isHigh &&
+              <TouchableOpacity onPress={() => this.updateActivity("isHigh")}>
+                <FontAwesome5 name="horse" size={30} color="#0dbf0d" />
+              </TouchableOpacity>
+              }
+
+              <View></View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Size:</Text>
+
+              {this.state.isSmall &&
+              <TouchableOpacity onPress={() => this.updateSize("isSmall")}>
+                <FontAwesome5 name="dog" size={30} color="#0080ff" />
+              </TouchableOpacity>
+             }
+
+             {this.state.isMeduim &&
+              <TouchableOpacity onPress={() => this.updateSize("isMedium")}>
+                <FontAwesome5 name="cat" size={30} color="#ffb347" /> 
+              </TouchableOpacity>
+              }
+
+              {this.state.isLarge &&
+              <TouchableOpacity onPress={() => this.updateSize("isLarge")}>
+                <FontAwesome5 name="dove" size={30} color="#c93335" />
+              </TouchableOpacity>
+              }
+
+              {this.state.isXLarge &&
+              <TouchableOpacity onPress={() => this.updateSize("isXLarge")}>
+                <FontAwesome5 name="horse" size={30} color="#0dbf0d" />
+              </TouchableOpacity>
+              }
+
+              <View></View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Pregnancy Status:</Text>
+
+              {this.state.isNotPregnant &&
+              <TouchableOpacity onPress={() => this.updatePregnancy("isNotPregnant")}>
+                <FontAwesome5 name="dog" size={30} color="#0080ff" />
+              </TouchableOpacity>
+             }
+
+             {this.state.isFirstStage &&
+              <TouchableOpacity onPress={() => this.updatePregnancy("isFirstStage")}>
+                <FontAwesome5 name="cat" size={30} color="#ffb347" /> 
+              </TouchableOpacity>
+              }
+
+              {this.state.isSecondStage &&
+              <TouchableOpacity onPress={() => this.updatePregnancy("isSecondStage")}>
+                <FontAwesome5 name="dove" size={30} color="#c93335" />
+              </TouchableOpacity>
+              }
+
+              {this.state.isThirdStage &&
+              <TouchableOpacity onPress={() => this.updatePregnancy("isThirdStage")}>
+                <FontAwesome5 name="horse" size={30} color="#0dbf0d" />
+              </TouchableOpacity>
+              }
+
+              <View></View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Lactating Status:</Text>
+
+              {this.state.isNonLactating &&
+              <TouchableOpacity onPress={() => this.updateLactating("isNonLactating")}>
+                <FontAwesome5 name="dog" size={30} color="#0080ff" />
+              </TouchableOpacity>
+             }
+
+             {this.state.isShortTime &&
+              <TouchableOpacity onPress={() => this.updateLactating("isShortTime")}>
+                <FontAwesome5 name="cat" size={30} color="#ffb347" /> 
+              </TouchableOpacity>
+              }
+
+              {this.state.isMediumTime &&
+              <TouchableOpacity onPress={() => this.updateLactating("isMediumTime")}>
+                <FontAwesome5 name="dove" size={30} color="#c93335" />
+              </TouchableOpacity>
+              }
+
+              {this.state.isLongTime &&
+              <TouchableOpacity onPress={() => this.updatePregnancy("isLongTime")}>
+                <FontAwesome5 name="horse" size={30} color="#0dbf0d" />
+              </TouchableOpacity>
+              }
+
+              <View></View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
               }}>Age:</Text>
 
-              <TextInput
-                  style={styles.input}
-                  onChangeText={this.handleAge}
-                  returnKeyType = 'done'
-                  defaultValue = {this.state.age}
-              /> 
+              {this.state.isNewBorn &&
+              <TouchableOpacity onPress={() => this.updateAge("isNewborn")}>
+                <FontAwesome5 name="dog" size={30} color="#0080ff" />
+              </TouchableOpacity>
+             }
+
+             {this.state.isInfant &&
+              <TouchableOpacity onPress={() => this.updateAge("isInfant")}>
+                <FontAwesome5 name="cat" size={30} color="#ffb347" /> 
+              </TouchableOpacity>
+              }
+
+              {this.state.isToddler &&
+              <TouchableOpacity onPress={() => this.updateAge("isToddler")}>
+                <FontAwesome5 name="dove" size={30} color="#c93335" />
+              </TouchableOpacity>
+              }
+
+              {this.state.isAdult &&
+              <TouchableOpacity onPress={() => this.updateAge("isAdult")}>
+                <FontAwesome5 name="horse" size={30} color="#0dbf0d" />
+              </TouchableOpacity>
+              }
+
+              <View></View>
             </View>
 
             <View style={styles.inputContainer}>
@@ -588,6 +912,35 @@ export default class EditScreen extends React.Component<ScreenParams<{ pet_uid: 
               }
               {this.state.isOutdoors &&
               <TouchableOpacity onPress={() => this.updateClassification("isOutdoors")}>
+                <FontAwesome5 name="tree" size={30} color="#0dbf0d" /> 
+              </TouchableOpacity>
+              }
+
+              <View/>
+              <View/>
+              <View/>
+              <View/>
+              <View/>
+
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={{
+                padding: 5,
+              }}>Spayed/Neutered Status:</Text>
+
+              {this.state.isSpayed &&
+              <TouchableOpacity onPress={() => this.updateSpayNeuter_Status("isSpayed")}>
+                <FontAwesome5 name="home" size={30} color="#71b6f7" /> 
+              </TouchableOpacity>
+              }
+              {this.state.isNeutered &&
+              <TouchableOpacity onPress={() => this.updateSpayNeuter_Status("isNeutered")}>
+                <FontAwesome5 name="tree" size={30} color="#0dbf0d" /> 
+              </TouchableOpacity>
+              }
+              {this.state.isIntact &&
+              <TouchableOpacity onPress={() => this.updateSpayNeuter_Status("isIntact")}>
                 <FontAwesome5 name="tree" size={30} color="#0dbf0d" /> 
               </TouchableOpacity>
               }
