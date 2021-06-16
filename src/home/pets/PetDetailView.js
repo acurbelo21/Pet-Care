@@ -336,15 +336,15 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
               paddingBottom: 10,
             }}>
               <Text type="header3" style={styles.cardText}> Pet Information </Text>
-              <Text> Age: {this.state.age}</Text>
+              <Text> Age Group: {this.state.age}</Text>
               <Text> Size: {this.state.size}</Text>
               <Text> Weight (kg): {this.state.weight}</Text>
+              <Text> Level of Activty: {this.state.activity}</Text>
               <Text> Years Owned: {this.state.yearsOwned}</Text>
               <Text> Living Space: {this.state.classification}</Text>
-              <Text> Level of Activty: {this.state.activity}</Text>
               <Text> Spayed/Neutered Status: {this.state.spayNeuter_Status}</Text>
-              <Text> Pregnancy Status: {this.state.pregnancy}</Text>
-              <Text> Lactating Status: {this.state.lactating}</Text>
+              <Text> Duration of Pregnancy: {this.state.pregnancy}</Text>
+              <Text> Duration of Lactation: {this.state.lactating}</Text>
             </View>
             {Separator()}
             <Text type="header3" style={styles.cardText}> Veterinary Contact Information </Text>
