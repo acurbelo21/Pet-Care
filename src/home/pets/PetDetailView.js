@@ -175,13 +175,14 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   }
 
   @autobind
-  goToPrescriptionScreen() {
+  goToLabResults() {
     const { navigation } = this.props;
-    navigation.navigate("PetPrescription");
+    const params  = navigation.state.params;
+    const pet_uid = params.pet_uid;
+    navigation.navigate("ViewDocuments", { pet_uid });
   }
 
-  PetPrescription
-
+  
   onPressPlace = () => {
     console.log('place')
   }
@@ -355,7 +356,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
             
             <TouchableOpacity
               style={styles.labButton}
-              onPress={() => this.props.navigation.navigate("ViewDocuments")}
+              onPress={this.goToLabResults}
             >
                 <Text>
                   View Lab Results for {this.state.petDetails.name}
