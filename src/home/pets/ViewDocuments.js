@@ -5,16 +5,24 @@ import { Text, NavHeaderWithButton, Theme, Button } from "../../components";
 import { LinearGradient } from "expo-linear-gradient";
 import * as DocumentPicker from 'expo-document-picker';
 import PDFReader from 'rn-pdf-reader-js';
+import type { ScreenParams } from "../../components/Types";
 import _, { constant } from 'lodash';
 
-export default class ViewDocuments extends Component {
+export default class ViewDocuments extends React.Component<ScreenParams<{ pet_uid: String }>> {
     //On load and reload, populate screen with files
     async componentDidMount(): Promise<void> {
         const { navigation } = this.props;
         const { uid } = Firebase.auth.currentUser;
+        let params = navigation.state.params;
+        
 
         this.fillArrayWithFiles();
-        Firebase.firestore.collection("users").doc(uid).onSnapshot(docs => {this.fillArrayWithFiles()});
+        Firebase.firestore
+            .collection("users")
+            .doc(uid)
+            .collection("pets")
+            .doc(params.pet_uid)
+            .onSnapshot(docs => { this.fillArrayWithFiles() });
     }
 
     constructor(props) {
@@ -28,7 +36,7 @@ export default class ViewDocuments extends Component {
 
     //Opens DocumentPicker and waits for user to select one
     chooseFile = async () => {
-        const result = await DocumentPicker.getDocumentAsync({type: "application/pdf"});
+        const result = await DocumentPicker.getDocumentAsync({ type: "application/pdf" });
 
         if (result.type == "cancel") {
             console.log("canceled");
@@ -55,10 +63,12 @@ export default class ViewDocuments extends Component {
         const response = await fetch(path);
         const blob = await response.blob();
 
+        const { navigation } = this.props;
         const { uid } = Firebase.auth.currentUser;
+        const params = navigation.state.params;
         var ref = Firebase.storage.ref().child("labResults/" + uid + "/" + documentName);
         let task = ref.put(blob);
-        let docRef = Firebase.firestore.collection("users").doc(uid);
+        let docRef = Firebase.firestore.collection("users").doc(uid).collection("pets").doc(params.pet_uid);
 
         let labResultFiles = [];
 
@@ -70,31 +80,35 @@ export default class ViewDocuments extends Component {
                 });
             }
         })
-            .then(() => {
-                task.then(() => {
-                    //Add new file to the local array, the user field, and Firebase Storage
-                    ref.getDownloadURL().then(function (pdf) {
-                        labResultFiles.push(pdf);
+        .then(() => {
+            task.then(() => {
+                //Add new file to the local array, the user field, and Firebase Storage
+                ref.getDownloadURL().then(function (pdf) {
+                    labResultFiles.push(pdf);
 
-                        Firebase.firestore
-                            .collection("users")
-                            .doc(uid)
-                            .update({ labResults: labResultFiles })
-                    }
-                        , function (error) {
-                            console.log(error);
-                        });
-                })
-                    .catch((e) => {
-                        console.log('uploading document error => ', e);
+                    Firebase.firestore
+                        .collection("users")
+                        .doc(uid)
+                        .collection("pets")
+                        .doc(params.pet_uid)
+                        .update({ labResults: labResultFiles })
+                }
+                    , function (error) {
+                        console.log(error);
                     });
+            })
+            .catch((e) => {
+                console.log('uploading document error => ', e);
             });
+        });
     }
 
     //Retrieves user labResults files and sets state
     fillArrayWithFiles() {
+        const { navigation } = this.props;
         const { uid } = Firebase.auth.currentUser;
-        let docRef = Firebase.firestore.collection("users").doc(uid);
+        const params = navigation.state.params;
+        let docRef = Firebase.firestore.collection("users").doc(uid).collection("pets").doc(params.pet_uid);
         let array = [];
 
         docRef.get().then(doc => {
