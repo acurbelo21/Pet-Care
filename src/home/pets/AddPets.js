@@ -153,7 +153,7 @@ export default class AddPets extends React.Component<SettingsState> {
         const { shift } = this.state;
 
         return (
-            <Animated.ScrollView style={[{ transform: [{translateY: shift}] }]}>  
+            <ScrollView style={styles.scroll} persistentScrollbar={false} >  
                 <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
                 <NavHeaderWithButton title="Add Pet" back {...{ navigation }} buttonFn={this.addPetToFireStore} buttonIcon="check" />
 
@@ -429,7 +429,7 @@ export default class AddPets extends React.Component<SettingsState> {
                     keyboardType="numeric"
                     returnKeyType = 'done'
                 />
-            </Animated.ScrollView>
+            </ScrollView>
         );
     }
 }
@@ -441,6 +441,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         paddingTop: 0,
         textAlign: 'left'
+    },  
+    scroll: {
+        backgroundColor: '#FFF',
     },
     gradient: {
         position: "absolute",
