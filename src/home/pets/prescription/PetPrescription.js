@@ -1,29 +1,19 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, ScrollView, Dimensions, SectionList, TextInput} from 'react-native';
+import React, { Component, useState } from 'react';
+import { View, StyleSheet, ScrollView, Dimensions, SectionList, TextInput, TouchableOpacity} from 'react-native';
 import { Theme, NavHeaderWithButton, Text } from "../../../components";
 import type { ScreenParams } from "../../components/Types";
 import { LinearGradient } from "expo-linear-gradient";
-import MultiSelect from "react-native-multiple-select";
 import Firebase from "../../../components/Firebase";
 
 export default class PetPrescription extends Component<ScreenParams<{ pet_uid: String }>, SettingsState> {
   constructor(props) {
     super(props);
     this.state = {
-      items: [
-        { name: "A" },
-        { name: "B" },
-        { name: "C" },
-        { date: "06/06/2021"},
-        { quantity: "6"},
-        { instructions: "Take 1 per day"}
-      ],
-      role: 'c',
-      selectedPresc: [{ name: "A" }],
-      selectedDate: [{ date: "06/06/2021" }],
-      selectedQty: [{ quantity: "6"}],
-      selectedInstr: [{ instructions: "Take 1 per day"}],
-      diagnoseButtonIsVisible: true
+      role: 'v',
+      pname:'',
+      date: '',
+      quantity: '',
+      instructions: ''
     };
 
     const { uid } = Firebase.auth.currentUser;
@@ -33,74 +23,100 @@ export default class PetPrescription extends Component<ScreenParams<{ pet_uid: S
     .doc(uid)
     .onSnapshot(docs => {
       this.state.role = docs.data().role;
-    });    
-
+    })
   }
 
+  handlePname = (text) => {
+    this.setState({ pname: text })
+  }
+
+  handleDate = (text) => {
+    this.setState({ date: text })
+  }
   
-  onSelectedItemsChange = (selectedItems) => {
-    this.setState({ selectedItems: selectedItems });
+  handleQuantity = (text) => {
+    this.setState({ quantity: text })
+  }
+
+  handleInstructions = (text) => {
+      this.setState({ instructions: text })
+  }
+  
+  submitChanges()
+  {
+
   }
 
   render() {
     const { navigation } = this.props;
-    const { items, selectedItems } = this.state;
-
+    
     return (
       <ScrollView style={styles.scroll} persistentScrollbar={false} >
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
         <NavHeaderWithButton title="Prescriptions" back {...{ navigation }} />
 
-        {this.state.role == 'v' && <MultiSelect
-          items={items} // List of items to display in the multi-select component
-          uniqueKey="name" // Unique identifier that is part of each item"s properties
-          onSelectedItemsChange={this.onSelectedItemsChange} // Triggered when Submit button is clicked
-          onChangeInput={(text) => console.warn(text)} // Called every time TextInput is changed with the value
-          displayKey="name" // Used to select the key to display the objects in the items array
-          flatListProps={{ nestedScrollEnabled: true }} // Necessary for nested scrolling in Android devices
-
-          selectText="Select prescriptions"
-          fontFamily="SFProText-Semibold"
-          altFontFamily="SFProText-Semibold"
-          styleListContainer={{ backgroundColor: Theme.palette.white, paddingVertical: 10 }}
-          styleItemsContainer={{ justifyContent: "space-evenly", flexDirection: "column" }}
-          styleMainWrapper={{ height: height / 4.5, shadowColor: Theme.palette.white, shadowOffset: { width: 10, height: 10 }, shadowOpacity: 0.5, shadowRadius: 6 }}
-
-          itemTextColor={Theme.palette.black}
-          textColor={Theme.palette.black}
-          selectedItems={selectedItems}
-          selectedItemFontFamily="SFProText-Semibold"
-          selectedItemTextColor={Theme.palette.success}
-          selectedItemIconColor={Theme.palette.success}
-
-          searchInputPlaceholderText="Search symptoms..."
-          searchInputStyle={{ color: Theme.palette.black, fontFamily: "SFProText-Semibold" }}
-          styleInputGroup={{ backgroundColor: "rgba(157, 255, 176, .5)", height: height / 15, borderRadius: 10, paddingRight: 15 }}
-          styleDropdownMenuSubsection={{ height: height / 15, borderRadius: 10, width: "100%", paddingLeft: 25 }}
-
-          tagTextColor={Theme.palette.black}
-          tagRemoveIconColor={Theme.palette.black}
-          tagBorderColor={Theme.palette.primary}
-          tagContainerStyle={{ backgroundColor: Theme.palette.white, alignSelf: "flex-start" }}
-
-          submitButtonColor={Theme.palette.primary}
-          submitButtonText="Add Prescriptions"
-          // hideSubmitButton
-          // hideTags
-          hideDropdown
-          ref={(component) => { this._multiSelect = component }}
+        
+        {this.state.role == 'v' && <TextInput
+          style = {styles.input}
+          placeholder = "Prescription Name"
+          returnKeyType = 'done'
+          onChangeText = {this.handlePname}
+          defaultValue = {this.state.pname}
         />}
+
+        {this.state.role == 'v' && <TextInput
+          style = {styles.input}
+          placeholder = "Date"
+          returnKeyType = 'done'
+          onChangeText = {this.handleDate}
+          defaultValue = {this.state.date}
+        />}
+
+        {this.state.role == 'v' && <TextInput
+          style = {styles.input}
+          returnKeyType = 'done'
+          placeholder = "Quantity"
+          keyboardType='number-pad'
+          onChangeText = {this.handleQuantity}
+          defaultValue = {this.state.quantity}
+        />}
+
+        {this.state.role == 'v' && <View style={styles.biggerInput}>
+          <TextInput
+            placeholder = "Instructions"
+            returnKeyType = 'done'
+            autoCapitalize = 'sentences'
+            autoCorrect = {true}
+            onChangeText = {this.handleInstructions}
+            defaultValue = {this.state.instructions}
+            multiline = {true}
+          />
+        </View>}
+
+        {this.state.role == 'v' && <View style={{
+            alignItems:"center",
+            paddingTop: 15,
+          }}>
+          <TouchableOpacity
+              style={styles.submitButton}
+              onPress={this.submitChanges}
+            >
+                <Text>
+                  Submit Changes
+                </Text>
+          </TouchableOpacity>
+        </View>}
         
         {this.state.role != 'v' && <View style={styles.prescriptionDetailContainer}>
           <SectionList
             sections={[
-              { title: 'Prescription', data: this.state.selectedPresc },
-              { title: 'Date', data: this.state.selectedDate },
-              { title: 'Quantity', data: this.state.selectedQty},
-              { title: 'Instructions', data: this.state.selectedInstr}
+              { title: 'Prescription', data: this.state.pname},
+              { title: 'Date', data: this.state.date},
+              { title: 'Quantity', data: this.state.quantity},
+              { title: 'Instructions', data: this.state.instructions}
             ]}
             keyExtractor={(item, index) => item + index}
-            renderItem={({ item }) => <Text style={styles.item}>{item.name}{item.date}{item.quantity}{item.instructions}</Text>}          
+            renderItem={({ item }) => <Text style={styles.item}>{item.pname}{item.date}{item.quantity}{item.instructions}</Text>}          
             renderSectionHeader={({ section: { title } }) => (
               <Text style={styles.header}>{title}</Text>
             )}
@@ -121,6 +137,31 @@ const styles = StyleSheet.create({
   },
   scroll: {
     backgroundColor: '#FFF',
+  },
+  input: {
+    borderColor: '#808080',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#FAFAFA',
+    margin: 12,
+  },
+  biggerInput: {
+    borderColor: '#808080',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#FAFAFA',
+    margin: 12,
+    height: 100
+  },
+  submitButton:{
+    borderColor: '#808080',
+    borderWidth: 1,
+    borderRadius: 10,
+    backgroundColor: '#9dffb0',
+    alignSelf: 'center',
+    padding: 10,
   },
   gradient: {
     position: "absolute",
@@ -148,5 +189,5 @@ const styles = StyleSheet.create({
     fontSize: 23,
     padding: 10,
     flexDirection: "row"
-  }
+  },
 });
