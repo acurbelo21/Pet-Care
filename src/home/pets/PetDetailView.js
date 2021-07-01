@@ -187,6 +187,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     navigation.navigate("ViewDocuments", { pet_uid });
   }
 
+  
   onPressPlace = () => {
     console.log('place')
   }
