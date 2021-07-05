@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ScrollView, Dimensions, SectionList} from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions, SectionList } from 'react-native';
 import { Theme, NavHeaderWithButton, Text } from "../../../components";
 import type { ScreenParams } from "../../components/Types";
 import { LinearGradient } from "expo-linear-gradient";
@@ -15,23 +15,24 @@ export default class PetPrescription extends Component<ScreenParams<{ pet_uid: S
         { name: "B" },
         { name: "C" }
       ],
-      role: 'c',
+      role: "",
       selectedPresc: [{ name: "A" }],
-      diagnoseButtonIsVisible: true
+      diagnoseButtonIsVisible: true,
     };
 
     const { uid } = Firebase.auth.currentUser;
 
     Firebase.firestore
-    .collection("users")
-    .doc(uid)
-    .onSnapshot(docs => {
-      this.state.role = docs.data().role;
-    });    
-
+      .collection("users")
+      .doc(uid)
+      .get()
+      .then(docs => {
+        this.setState({
+          role: docs.data().role, 
+        });
+      });
   }
 
-  
   onSelectedItemsChange = (selectedItems) => {
     this.setState({ selectedItems: selectedItems });
   }
@@ -44,7 +45,7 @@ export default class PetPrescription extends Component<ScreenParams<{ pet_uid: S
       <View style={styles.container}>
         <NavHeaderWithButton title="Prescriptions" back {...{ navigation }} />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
-
+        <Text> {this.state.role}</Text>
         {this.state.role == 'v' && <MultiSelect
           items={items} // List of items to display in the multi-select component
           uniqueKey="name" // Unique identifier that is part of each item"s properties
@@ -91,7 +92,7 @@ export default class PetPrescription extends Component<ScreenParams<{ pet_uid: S
           ]}
           renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>}
           renderSectionHeader={({ section }) => <Text style={styles.sectionHeader}>{section.title}</Text>}
-          keyExtractor={(item, index) => index}/>
+          keyExtractor={(item, index) => index} />
         }
       </View>
     )
