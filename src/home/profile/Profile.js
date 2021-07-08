@@ -52,14 +52,6 @@ ScreenProps<> & InjectedProps
               {...profile.picture}
             />
           </View>
-          <View style={styles.button}>
-            <Button
-              label="View Lab Results"
-              onPress={() => this.props.navigation.navigate("ViewDocuments")}
-              primary
-              style={{alignSelf: "center"}}
-            />
-          </View>
         </View>
       </>
     );
