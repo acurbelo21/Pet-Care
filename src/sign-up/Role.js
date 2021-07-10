@@ -22,7 +22,7 @@ export default class Role extends React.Component<NavigationProps<*>, RoleState>
 
     @autobind
     setRole(role: string) {
-        this.setState({ role });
+        this.setState({ role: role });
     }
 
     @autobind
@@ -48,7 +48,7 @@ export default class Role extends React.Component<NavigationProps<*>, RoleState>
                     ]}
                     defaultIndex={0}
                     containerStyle={{height: 40, marginBottom: 80}}
-                    onChangeItem={item => console.log(item.label, item.value)}
+                    onChangeItem={this.setRole }
                 />
             </SignUpContainer>
         );

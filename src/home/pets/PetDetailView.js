@@ -27,7 +27,7 @@ import darkColors from "react-native-elements/dist/config/colorsDark";
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default class PetDetailView extends React.Component<ScreenParams<{ pet_uid: String }>, SettingsState> {
+export default class PetDetailView extends React.Component<ScreenParams<{ pet_uid: String}>, SettingsState> {
   constructor(props)
   {
     super(props);
@@ -182,6 +182,21 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     navigation.navigate("ViewDocuments", { pet_uid });
   }
 
+  @autobind
+  goToPrescription() {
+    const { navigation } = this.props;
+    const params  = navigation.state.params;
+    const pet_uid = params.pet_uid;
+    navigation.navigate("PetPrescription", { pet_uid});
+  }
+
+  @autobind
+  goToDiet() {
+    const { navigation } = this.props;
+    const params  = navigation.state.params;
+    const pet_uid = params.pet_uid;
+    navigation.navigate("PetDiet", { pet_uid });
+  }
   
   onPressPlace = () => {
     console.log('place')
@@ -365,7 +380,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
 
             <TouchableOpacity
               style={styles.labButton}
-              onPress={() => this.props.navigation.navigate("PetPrescription")}
+              onPress={this.goToPrescription}
             >
                 <Text>
                   View Prescriptions for {this.state.petDetails.name}
@@ -374,7 +389,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
 
             <TouchableOpacity
               style={styles.labButton}
-              onPress={() => this.props.navigation.navigate("PetDiet")}
+              onPress={this.goToDiet}
             >
                 <Text>
                   View Recommended Diet for {this.state.petDetails.name}
