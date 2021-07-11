@@ -202,7 +202,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     const pet_uid = params.pet_uid;
     navigation.navigate("PetDiet", { pet_uid });
   }
-  
+
   onPressPlace = () => {
     console.log('place')
   }
