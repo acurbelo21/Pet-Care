@@ -91,7 +91,12 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
           age: doc.data().age,
           yearsOwned: doc.data().yearsOwned,
           weight: doc.data().weight,
-          classification: doc.data().classification, 
+          activity: doc.data().activity,
+          size: doc.data().size,
+          pregnancy: doc.data().pregnancy,
+          lactating: doc.data().lactating,
+          classification: doc.data().classification,
+          spayNeuter_Status: doc.data().spayNeuter_Status, 
           petBiology: {"species" : doc.data().species, "breed" : doc.data().breed},
           avatar: doc.data().pic,
           avatarBackground: doc.data().pic,
@@ -347,10 +352,15 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
               paddingBottom: 10,
             }}>
               <Text type="header3" style={styles.cardText}> Pet Information </Text>
-              <Text> Age: {this.state.age}</Text>
-              <Text> Weight: {this.state.weight}</Text>
+              <Text> Age Group: {this.state.age}</Text>
+              <Text> Size: {this.state.size}</Text>
+              <Text> Weight (kg): {this.state.weight}</Text>
+              <Text> Level of Activty: {this.state.activity}</Text>
               <Text> Years Owned: {this.state.yearsOwned}</Text>
               <Text> Living Space: {this.state.classification}</Text>
+              <Text> Spayed/Neutered Status: {this.state.spayNeuter_Status}</Text>
+              <Text> Duration of Pregnancy: {this.state.pregnancy}</Text>
+              <Text> Duration of Lactation: {this.state.lactating}</Text>
             </View>
             {Separator()}
             <Text type="header3" style={styles.cardText}> Veterinary Contact Information </Text>

@@ -17,7 +17,8 @@ export default class ListItem extends Component {
   }
 
   render() {
-    const { name, pic, color, seen, selected, key, id, species, breed, age, yearsOwned, sex, weight, classification } = this.props; 
+    const { name, pic, color, seen, selected, key, id, species, breed, age, yearsOwned, sex, spayNeuter_Status, activity, 
+            weight, classification, pregnancy, lactating, size } = this.props; 
     var speciesColor;
     var petIcon;
 
@@ -189,7 +190,7 @@ export default class ListItem extends Component {
                   paddingLeft: 3,
                 }}
               >
-                {age} years
+                {age}
               </Text>
             )}
           </View>
