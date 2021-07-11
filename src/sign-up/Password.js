@@ -46,7 +46,8 @@ export default class Password extends React.Component<NavigationProps<*>, Passwo
     @autobind
     async next(): Promise<void> {
         const {password} = this.state;
-        const {email, displayName} = SignUpStore;
+        const {email, displayName, role} = SignUpStore;
+        console.log("value", role)
         try {
             if (password === "") {
                 throw new Error("Please provide a password.");
@@ -55,6 +56,7 @@ export default class Password extends React.Component<NavigationProps<*>, Passwo
             const user = await Firebase.auth.createUserWithEmailAndPassword(email, password);
             const profile: Profile = {
                 name: displayName,
+                role: role.value,
                 outline: "React Native",
                 picture: {
                     // eslint-disable-next-line max-len
