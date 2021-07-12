@@ -27,7 +27,7 @@ import darkColors from "react-native-elements/dist/config/colorsDark";
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default class PetDetailView extends React.Component<ScreenParams<{ pet_uid: String }>, SettingsState> {
+export default class PetDetailView extends React.Component<ScreenParams<{ pet_uid: String}>, SettingsState> {
   constructor(props)
   {
     super(props);
@@ -202,7 +202,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     const pet_uid = params.pet_uid;
     navigation.navigate("PetDiet", { pet_uid });
   }
-
+  
   onPressPlace = () => {
     console.log('place')
   }

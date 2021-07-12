@@ -16,7 +16,7 @@ import type { ScreenProps } from "./src/components/Types";
 
 import { Welcome } from "./src/welcome";
 import { Walkthrough } from "./src/walkthrough";
-import { SignUpName, SignUpEmail, SignUpPassword, Login } from "./src/sign-up";
+import { SignUpName, SignUpEmail, Role, SignUpPassword, Login, SignUpRole } from "./src/sign-up";
 import { Profile, HomeTab, Settings, ProfileStore, Pets,
          PetDetailView, TrainingScreen, AddPets, DiagnosticTool, DiagnosticToolResults,
          DiagnosisDetailView, EditScreen, ViewDocuments, ChatTest, PetPrescription, PetDiet } from "./src/home";
@@ -203,6 +203,7 @@ const SignUpNavigator = createStackNavigator(
     {
         SignUp: { screen: SignUpName },
         SignUpEmail: { screen: SignUpEmail },
+        SignUpRole: { screen: SignUpRole },
         SignUpPassword: { screen: SignUpPassword },
         Walkthrough: { screen: Walkthrough },
     },
