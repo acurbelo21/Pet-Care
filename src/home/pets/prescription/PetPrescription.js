@@ -1,9 +1,34 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions, SectionList, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
+import { Theme, NavHeaderWithButton, Text } from "../../../components";
+import type { ScreenParams } from "../../components/Types";
+import { LinearGradient } from "expo-linear-gradient";
+import MultiSelect from "react-native-multiple-select";
+import Firebase from "../../../components/Firebase";
 
-  export default class PetPrescription extends Component {
+export default class PetPrescription extends Component<ScreenParams<{ pet_uid: String}>, SettingsState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: [
+        { name: "Rimadyl" },
+        { name: "Metacam" },
+        { name: "Deramaxx" }
+      ],
+      role: "",
+      selectedItem: "",
+      existentPrescriptions: [],
+      diagnoseButtonIsVisible: true,      
+      instructions: "",
+      qty: "",
+      dose: "", 
+      date: ""
+    };
 
-  render(){
+    const { uid } = Firebase.auth.currentUser;
+    const { navigation } = this.props;
+    const params = navigation.state.params;
+    var pet_uid = params.pet_uid;
 
     Firebase.firestore
       .collection("users")
@@ -139,106 +164,116 @@ import { Text, View } from 'react-native';
     const { navigation } = this.props;
     const { items, selectedItem } = this.state;
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <NavHeaderWithButton title="Prescriptions" back {...{ navigation }} />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
-        <Text> {this.state.role}</Text>
-        {this.state.role == 'v' && <MultiSelect
-          single
-          items={items} // List of items to display in the multi-select component
-          uniqueKey="name" // Unique identifier that is part of each item"s properties
-          onSelectedItemsChange={this.onSelectedItemsChange} // Triggered when Submit button is clicked
-          onChangeInput={(text) => console.warn(text)} // Called every time TextInput is changed with the value
-          displayKey="name" // Used to select the key to display the objects in the items array
-          flatListProps={{ nestedScrollEnabled: true }} // Necessary for nested scrolling in Android devices
 
-          selectText="Select Prescription"
-          fontFamily="SFProText-Semibold"
-          altFontFamily="SFProText-Semibold"
-          styleListContainer={{ backgroundColor: Theme.palette.white, paddingVertical: 10 }}
-          styleItemsContainer={{ justifyContent: "space-evenly", flexDirection: "column" }}
-          styleMainWrapper={{ height: height / 4.5, shadowColor: Theme.palette.white, shadowOffset: { width: 10, height: 10 }, shadowOpacity: 0.5, shadowRadius: 6 }}
+        {this.state.role == 'v' && <View style = {styles.prescriptionInputContainer}>
 
-          itemTextColor={Theme.palette.black}
-          textColor={Theme.palette.black}
-          selectedItems={[selectedItem]}
-          selectedItemFontFamily="SFProText-Semibold"
-          selectedItemTextColor={Theme.palette.success}
-          selectedItemIconColor={Theme.palette.success}
+          <MultiSelect
+            single
+            items={items} // List of items to display in the multi-select component
+            uniqueKey="name" // Unique identifier that is part of each item"s properties
+            onSelectedItemsChange={this.onSelectedItemsChange} // Triggered when Submit button is clicked
+            onChangeInput={(text) => console.warn(text)} // Called every time TextInput is changed with the value
+            displayKey="name" // Used to select the key to display the objects in the items array
+            flatListProps={{ nestedScrollEnabled: true }} // Necessary for nested scrolling in Android devices
 
-          searchInputPlaceholderText="Search prescriptions..."
-          searchInputStyle={{ color: Theme.palette.black, fontFamily: "SFProText-Semibold" }}
-          styleInputGroup={{ backgroundColor: "rgba(157, 255, 176, .5)", height: height / 15, borderRadius: 10, paddingRight: 15 }}
-          styleDropdownMenuSubsection={{ height: height / 15, borderRadius: 10, width: "100%", paddingLeft: 25 }}
+            selectText="Select Prescription"
+            fontFamily="SFProText-Semibold"
+            altFontFamily="SFProText-Semibold"
+            styleListContainer={{ backgroundColor: Theme.palette.white, paddingVertical: 10 }}
+            styleItemsContainer={{ justifyContent: "space-evenly", flexDirection: "column" }}
+            styleMainWrapper={{ height: height / 4.5, shadowColor: Theme.palette.lightGray, shadowOffset: { width: 10, height: 10 }, shadowOpacity: 0.5, shadowRadius: 6 }}
 
-          tagTextColor={Theme.palette.black}
-          tagRemoveIconColor={Theme.palette.black}
-          tagBorderColor={Theme.palette.primary}
-          tagContainerStyle={{ backgroundColor: Theme.palette.white, alignSelf: "flex-start" }}
+            itemTextColor={Theme.palette.black}
+            textColor={Theme.palette.black}
+            selectedItems={[selectedItem]}
+            selectedItemFontFamily="SFProText-Semibold"
+            selectedItemTextColor={Theme.palette.success}
+            selectedItemIconColor={Theme.palette.success}
 
-          submitButtonColor={Theme.palette.primary}
-          submitButtonText="Add prescription"
-          // hideSubmitButton
-          // hideTags
-          hideDropdown
-          ref={(component) => { this._multiSelect = component }}
-        />}
+            searchInputPlaceholderText="Search prescriptions..."
+            searchInputStyle={{ color: Theme.palette.black, fontFamily: "SFProText-Semibold" }}
+            styleInputGroup={{ backgroundColor: "#9dffb0", height: height / 15, borderRadius: 10, paddingRight: 15 }}
+            styleDropdownMenuSubsection={{ height: height / 15, borderRadius: 10, width: "100%", paddingLeft: 25 }}
 
-        {this.state.role == 'v' && <TextInput
-          style={styles.input}
-          placeholder="Dose"
-          onChangeText={text => this.setDose(text)}
-          multiline={false}
-          value={this.state.dose}
-        />}
+            tagTextColor={Theme.palette.black}
+            tagRemoveIconColor={Theme.palette.black}
+            tagBorderColor={Theme.palette.primary}
+            tagContainerStyle={{ backgroundColor: Theme.palette.white, alignSelf: "flex-start" }}
 
-        {this.state.role == 'v' && <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          placeholder="Quantity"
-          onChangeText={text => this.setQuantity(text)}
-          multiline={false}
-          value={this.state.qty}
-        />}
+            submitButtonColor={Theme.palette.primary}
+            submitButtonText="Add prescription"
+            // hideSubmitButton
+            // hideTags
+            hideDropdown
+            ref={(component) => { this._multiSelect = component }}
+          />
+          
+          <TextInput
+            style={styles.input}
+            returnKeyType = 'done'
+            placeholder="Dose"
+            onChangeText={text => this.setDose(text)}
+            multiline={false}
+            value={this.state.dose}
+          />
 
-        {this.state.role == 'v' && <TextInput
-          style={styles.bigInput}
-          placeholder="Instructions"
-          onChangeText={text => this.setInstruction(text)}
-          multiline={true}
-          value={this.state.instructions}
-        />}
+          <TextInput
+            style={styles.input}
+            keyboardType="number-pad"
+            returnKeyType = 'done'
+            placeholder="Quantity"
+            onChangeText={text => this.setQuantity(text)}
+            multiline={false}
+            value={this.state.qty}
+          />
 
-        {this.state.role == 'v' &&
+          <TextInput
+            style={styles.bigInput}
+            returnKeyType = 'return'
+            placeholder="Instructions"
+            autoCapitalize = 'sentences'
+            autoCorrect = {true}
+            onChangeText={text => this.setInstruction(text)}
+            multiline={true}
+            value={this.state.instructions}
+          />
+
           <TouchableOpacity
-            style={styles.prescBottom}
+            style={styles.submitButton}
             onPress={this.savePrescriptionToFireStore}>
             <Text>
-              Save Prescription
+              Submit Prescription
             </Text>
           </TouchableOpacity>
-        }
+          
+        </View>}
 
-        <Text type="header3"> Prescriptions History </Text>
-        <ScrollView  persistentScrollbar={false} >
-          <View style={{paddingBottom: 10}}>
-            {
-              //console.log("**** element ===> ", this.state.existentPrescriptions);
-              this.state.existentPrescriptions.map((element, k) => {
-                console.log("**** element ===> ", element, k);
-                return <View>
-                  <Text> Prescription: {element.prescription}</Text>
-                  <Text> Dose: {element.dose}</Text>
-                  <Text> Quantity: {element.qty}</Text>
-                  <Text> Instructions: {element.instructions}</Text>
-                  <Text> Date: {element.date}</Text>
-                  <Text> --</Text>
-                </View>
-              })
-            }
+        <View style={styles.prescriptionHistoryContainer}>
+          <View style={{paddingTop:10},{paddingBottom:10}}>
+            <Text type="header3"> Prescriptions History </Text>
           </View>
-        </ScrollView>
-      </View>
+          <ScrollView  persistentScrollbar={false} >
+            <View style={{paddingBottom: 10}}>
+              {
+                //console.log("**** element ===> ", this.state.existentPrescriptions);
+                this.state.existentPrescriptions.map((element, k) => {
+                  console.log("**** element ===> ", element, k);
+                  return <View style={styles.item}>
+                    <Text> Prescription: {element.prescription}</Text>
+                    <Text> Dose: {element.dose}</Text>
+                    <Text> Quantity: {element.qty}</Text>
+                    <Text> Instructions: {element.instructions}</Text>
+                    <Text> Date: {element.date}</Text>
+                  </View>
+                })
+              }
+            </View>
+          </ScrollView>
+        </View>
+      </ScrollView>
     )
   }
 }
@@ -247,52 +282,60 @@ const { height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    overflow: 'scroll'
+    overflow: 'scroll',
   },
   gradient: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
+    backgroundColor: '#f0f0f0'
   },
-  prescBottom: {
-    backgroundColor: '#FFFFFF',
+  submitButton:{
+    borderColor: '#808080',
+    borderWidth: 1,
+    borderRadius: 10,
+    backgroundColor: '#9dffb0',
     alignSelf: 'center',
     padding: 10,
-    marginTop: 0,
-    bottom: 0,
-    position: 'absolute',
-    zIndex: 99
+  },
+  prescriptionHistoryContainer:{
+    backgroundColor: '#fff',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#e0e0e0'
+  },
+  prescriptionInputContainer:{
+    backgroundColor: '#fff',
+    paddingBottom: 35,
   },
   input: {
-    height: 30,
-    margin: 6,
+    borderColor: '#808080',
     borderWidth: 1,
-    paddingTop: 0,
-    textAlign: 'left'
-  },
-  bigInput: {
-    height: 70,
-    margin: 6,
-    borderWidth: 1,
-    paddingTop: 0,
-    textAlign: 'left'
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#FAFAFA',
+    margin: 12,
   },
   bigInput: {
     borderColor: '#808080',
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-    flexDirection: "row"
+    backgroundColor: '#FAFAFA',
+    margin: 12,
+    height: 100
   },
   item: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderRadius: 10,
+    backgroundColor: '#9dffb0',
+    borderColor: '#808080',
     fontSize: 15,
-    padding: 10,
+    padding: 5,
   },
   title: {
     fontSize: 24
   }
-}
+});
