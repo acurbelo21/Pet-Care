@@ -29,6 +29,9 @@ export default class PetDiet extends Component<ScreenParams<{ pet_uid: String }>
     Firebase.firestore
     .collection("users")
     .doc(uid)
+    .collection("pets")
+    .doc(pet_uid)
+    .collection("diet")
     .onSnapshot(docs => {
       this.state.role = docs.data().role;
     });    
@@ -581,6 +584,7 @@ const { height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    overflow: 'scroll'
   },
   gradient: {
     position: "absolute",
