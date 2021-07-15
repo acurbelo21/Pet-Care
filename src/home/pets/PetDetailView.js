@@ -17,13 +17,13 @@ import {
   View,
 } from 'react-native'
 import {Text, Theme} from "../../components";
- 
+
 import Email from './Email'
 import Separator from './Separator'
 import Tel from './Tel'
 import { reduce } from "lodash";
 import darkColors from "react-native-elements/dist/config/colorsDark";
- 
+
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
@@ -31,7 +31,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   constructor(props)
   {
     super(props);
- 
+
     this.avatar = "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg";
     this.avatarBackground = "https://i.pinimg.com/originals/bc/78/4f/bc784f866bb59587b2c7364d47735a25.jpg";
     this.name = "Gina Mahdi"
@@ -56,9 +56,9 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
       petBiology: {"species": "Miami", "breed": "Florida"},
       setOverlay: false,
     };
- 
+
     const { uid } = Firebase.auth.currentUser;
- 
+
     Firebase.firestore
       .collection("users")
       .doc(uid)
@@ -67,17 +67,17 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
         this.retrieveFireStorePetDetails();
       });
   }
- 
+
   async componentDidMount(): Promise<void> {
     this.retrieveFireStorePetDetails();
   }
- 
+
   @autobind
   retrieveFireStorePetDetails() {
     const { uid } = Firebase.auth.currentUser;
     const { navigation } = this.props;
     const params  = navigation.state.params;
- 
+
     Firebase.firestore
     .collection("users")
     .doc(uid)
@@ -91,12 +91,17 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
           age: doc.data().age,
           yearsOwned: doc.data().yearsOwned,
           weight: doc.data().weight,
-          classification: doc.data().classification, 
+          activity: doc.data().activity,
+          size: doc.data().size,
+          pregnancy: doc.data().pregnancy,
+          lactating: doc.data().lactating,
+          classification: doc.data().classification,
+          spayNeuter_Status: doc.data().spayNeuter_Status, 
           petBiology: {"species" : doc.data().species, "breed" : doc.data().breed},
           avatar: doc.data().pic,
           avatarBackground: doc.data().pic,
         });
- 
+
         if(doc.data().pic == "null")
         {
           switch (this.state.petDetails.species) {
@@ -147,18 +152,18 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
           this.setState({loading: false,})
     })
   }
- 
+
   @autobind
   toggleOverlay() {
     this.setState({"setOverlay":!this.state.setOverlay});
   }
- 
+
   @autobind
   goBackToPets() {
     const { navigation } = this.props;
     navigation.goBack();
   }
- 
+
   @autobind
   goToEditScreen() {
     const { navigation } = this.props;
@@ -166,14 +171,14 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     const pet_uid = params.pet_uid;
     navigation.navigate("EditScreen", { pet_uid });
   }
- 
+
   @autobind
   goToTrainingScreen() {
     const { navigation } = this.props;
     const { breed, species } = this.state.petBiology;
     navigation.navigate("TrainingScreen", {breed, species});
   }
- 
+
   @autobind
   goToLabResults() {
     const { navigation } = this.props;
@@ -201,21 +206,21 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
   onPressPlace = () => {
     console.log('place')
   }
- 
+
   onPressTel = number => {
     Linking.openURL(`tel://${number}`).catch(err => console.log('Error:', err))
   }
- 
+
   onPressSms = () => {
     console.log('sms')
   }
- 
+
   onPressEmail = email => {
     Linking.openURL(`mailto://${email}?subject=subject&body=body`).catch(err =>
       console.log('Error:', err)
     )
   }
- 
+
   renderHeader = () => {
     const {
       avatar,
@@ -223,7 +228,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
       name,
       petBiology: { species, breed },
     } = this.state
- 
+
     return (
       <View style={styles.headerContainer}>
         <ImageBackground
@@ -281,14 +286,14 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
       </View>
     )
   }
- 
+
   renderTel = () => (
     <FlatList
       contentContainerStyle={styles.telContainer}
       data={this.tels}
       renderItem={(list) => {
         const { id, name, number } = list.item
- 
+
         return (
           <Tel
             key={`tel-${id}`}
@@ -302,14 +307,14 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
       }}
     />
   )
- 
+
   renderEmail = () => (
     <FlatList
       contentContainerStyle={styles.emailContainer}
       data={this.emails}
       renderItem={(list) => {
         const { email, id, name } = list.item
- 
+
         return (
           <Email
             key={`email-${id}`}
@@ -322,7 +327,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
       }}
     />
   )
- 
+
   render():React.Node {
     if(this.state.loading)
     {
@@ -347,10 +352,15 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
               paddingBottom: 10,
             }}>
               <Text type="header3" style={styles.cardText}> Pet Information </Text>
-              <Text> Age: {this.state.age}</Text>
-              <Text> Weight: {this.state.weight}</Text>
+              <Text> Age Group: {this.state.age}</Text>
+              <Text> Size: {this.state.size}</Text>
+              <Text> Weight (kg): {this.state.weight}</Text>
+              <Text> Level of Activty: {this.state.activity}</Text>
               <Text> Years Owned: {this.state.yearsOwned}</Text>
               <Text> Living Space: {this.state.classification}</Text>
+              <Text> Spayed/Neutered Status: {this.state.spayNeuter_Status}</Text>
+              <Text> Duration of Pregnancy: {this.state.pregnancy}</Text>
+              <Text> Duration of Lactation: {this.state.lactating}</Text>
             </View>
             {Separator()}
             <Text type="header3" style={styles.cardText}> Veterinary Contact Information </Text>
@@ -359,7 +369,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
             {this.renderEmail()}
           </Card>
           <View style={styles.labContainer}>
- 
+            
             <TouchableOpacity
               style={styles.labButton}
               onPress={this.goToTrainingScreen}
@@ -368,7 +378,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                   View Training Videos on {this.state.petDetails.breed}s
                 </Text>
             </TouchableOpacity>
- 
+            
             <TouchableOpacity
               style={styles.labButton}
               onPress={this.goToLabResults}
@@ -377,7 +387,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                   View Lab Results for {this.state.petDetails.name}
                 </Text>
             </TouchableOpacity>
- 
+
             <TouchableOpacity
               style={styles.labButton}
               onPress={this.goToPrescription}
@@ -386,7 +396,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                   View Prescriptions for {this.state.petDetails.name}
                 </Text>
             </TouchableOpacity>
- 
+
             <TouchableOpacity
               style={styles.labButton}
               onPress={this.goToDiet}
@@ -396,8 +406,8 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
                 </Text>
             </TouchableOpacity>
           </View>
- 
- 
+
+          
           <View style={{height:60}}/>
         </View>
       </ScrollView>
@@ -405,7 +415,7 @@ export default class PetDetailView extends React.Component<ScreenParams<{ pet_ui
     }
   }
 }
- 
+
 const styles = StyleSheet.create({
   side: {
       width: 80,
