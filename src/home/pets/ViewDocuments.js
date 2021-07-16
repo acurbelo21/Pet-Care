@@ -7,15 +7,15 @@ import * as DocumentPicker from 'expo-document-picker';
 import PDFReader from 'rn-pdf-reader-js';
 import type { ScreenParams } from "../../components/Types";
 import _, { constant } from 'lodash';
-
+ 
 export default class ViewDocuments extends React.Component<ScreenParams<{ pet_uid: String }>> {
     //On load and reload, populate screen with files
     async componentDidMount(): Promise<void> {
         const { navigation } = this.props;
         const { uid } = Firebase.auth.currentUser;
         let params = navigation.state.params;
-        
-
+ 
+ 
         this.fillArrayWithFiles();
         Firebase.firestore
             .collection("users")
@@ -24,20 +24,20 @@ export default class ViewDocuments extends React.Component<ScreenParams<{ pet_ui
             .doc(params.pet_uid)
             .onSnapshot(docs => { this.fillArrayWithFiles() });
     }
-
+ 
     constructor(props) {
         super(props);
-
+ 
         this.state = {
             imagePath: require("../../../assets/PetCare.png"),
             pdfs: []
         }
     }
-
+ 
     //Opens DocumentPicker and waits for user to select one
     chooseFile = async () => {
         const result = await DocumentPicker.getDocumentAsync({ type: "application/pdf" });
-
+ 
         if (result.type == "cancel") {
             console.log("canceled");
         }
@@ -48,30 +48,30 @@ export default class ViewDocuments extends React.Component<ScreenParams<{ pet_ui
             this.uploadDocument(path, documentName);
         }
     }
-
+ 
     //For Firebase Storage purposes
     getFileName(name, path) {
         if (name != null) { return name; }
-
+ 
         if (Platform.OS === "ios") {
             path = "~" + path.substring(path.indexOf("/Documents"));
         }
         return path.split("/").pop();
     }
-
+ 
     uploadDocument = async (path, documentName) => {
         const response = await fetch(path);
         const blob = await response.blob();
-
+ 
         const { navigation } = this.props;
         const { uid } = Firebase.auth.currentUser;
         const params = navigation.state.params;
         var ref = Firebase.storage.ref().child("labResults/" + uid + "/" + documentName);
         let task = ref.put(blob);
         let docRef = Firebase.firestore.collection("users").doc(uid).collection("pets").doc(params.pet_uid);
-
+ 
         let labResultFiles = [];
-
+ 
         //Populate array with current labResults field of user
         docRef.get().then(doc => {
             if (doc.data().labResults) {
@@ -85,7 +85,7 @@ export default class ViewDocuments extends React.Component<ScreenParams<{ pet_ui
                 //Add new file to the local array, the user field, and Firebase Storage
                 ref.getDownloadURL().then(function (pdf) {
                     labResultFiles.push(pdf);
-
+ 
                     Firebase.firestore
                         .collection("users")
                         .doc(uid)
@@ -102,7 +102,7 @@ export default class ViewDocuments extends React.Component<ScreenParams<{ pet_ui
             });
         });
     }
-
+ 
     //Retrieves user labResults files and sets state
     fillArrayWithFiles() {
         const { navigation } = this.props;
@@ -110,7 +110,7 @@ export default class ViewDocuments extends React.Component<ScreenParams<{ pet_ui
         const params = navigation.state.params;
         let docRef = Firebase.firestore.collection("users").doc(uid).collection("pets").doc(params.pet_uid);
         let array = [];
-
+ 
         docRef.get().then(doc => {
             if (doc.data().labResults) {
                 (doc.data().labResults).forEach((field) => {
@@ -122,13 +122,13 @@ export default class ViewDocuments extends React.Component<ScreenParams<{ pet_ui
                 this.setState({
                     pdfs: array
                 })
-            })
+            });
     }
-
+ 
     //Populates the views array with view tags that have PDFReaders to display in render
     renderPdfViewer = () => {
         var views = [];
-
+ 
         for (let i = 0; i < (this.state.pdfs).length; i++) {
             views.push(
                 <View style={{ zIndex: 100 }} key={(i + 1).toString()}>
@@ -142,17 +142,17 @@ export default class ViewDocuments extends React.Component<ScreenParams<{ pet_ui
                 </View>
             )
         }
-
+ 
         return (
             <>
                 {views}
             </>
         )
     }
-
+ 
     render() {
         const { navigation } = this.props;
-
+ 
         return (
             <View style={styles.container}>
                 <NavHeaderWithButton title="Lab Results" back {...{ navigation }} buttonFn={this.chooseFile} buttonIcon="plus" />
@@ -164,7 +164,7 @@ export default class ViewDocuments extends React.Component<ScreenParams<{ pet_ui
         )
     }
 }
-
+ 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
