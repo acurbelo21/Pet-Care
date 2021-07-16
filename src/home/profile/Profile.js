@@ -9,28 +9,28 @@ import {
 import { inject, observer } from "mobx-react";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
-
+ 
 import ProfileStore from "../ProfileStore";
-
+ 
 import { Text, Avatar, Theme, NavHeaderWithButton, Button } from "../../components";
 import type { ScreenProps } from "../../components/Types";
-
+ 
 type InjectedProps = {
   profileStore: ProfileStore
 };
-
+ 
 @inject("profileStore")
 @observer
 export default class ProfileComp extends React.Component<
 ScreenProps<> & InjectedProps
 > {
-
+ 
   @autobind
   settings() {
     const { profile } = this.props.profileStore;
     this.props.navigation.navigate("Settings", { profile });
   }
-
+ 
   render(): React.Node {
     const { profileStore, navigation } = this.props;
     const { profile } = profileStore;
@@ -52,20 +52,12 @@ ScreenProps<> & InjectedProps
               {...profile.picture}
             />
           </View>
-          <View style={styles.button}>
-            <Button
-              label="View Lab Results"
-              onPress={() => this.props.navigation.navigate("ViewDocuments")}
-              primary
-              style={{alignSelf: "center"}}
-            />
-          </View>
         </View>
       </>
     );
   }
 }
-
+ 
 const avatarSize = 150;
 const { width, height } = Dimensions.get("window");
 const { statusBarHeight } = Constants;
@@ -100,3 +92,4 @@ const styles = StyleSheet.create({
     paddingTop: 250,
   }
 });
+ 
