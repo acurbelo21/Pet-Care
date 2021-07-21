@@ -14,6 +14,7 @@ export default class PetDiet extends Component<ScreenParams<{ pet_uid: String }>
       selectedItem: "",
       selectedDiet: [],
       existentDiet: [],
+      existentDietU: [],
       dietToString: "",
       diagnoseButtonIsVisible: true,      
       dietDetails: "",
@@ -44,6 +45,16 @@ export default class PetDiet extends Component<ScreenParams<{ pet_uid: String }>
     .onSnapshot(docs => {
       this.retrieveFireStoreDiet();
     });
+
+    Firebase.firestore
+    .collection("users")
+    .doc(uid)
+    .collection("pets")
+    .doc(pet_uid)
+    .collection("dietU")
+    .onSnapshot(docs => {
+      this.retrieveFireStoreDietU();
+    });
  
   }
  
@@ -59,6 +70,7 @@ export default class PetDiet extends Component<ScreenParams<{ pet_uid: String }>
   arrayToString = () => {
     this.state.dietToString = JSON.stringify(this.state.selectedDiet);
     this.state.dietToString = this.state.dietToString.replace(/["]+/g, '');
+    this.state.selectedDiet = [];
   }
  
   saveDietToFireStore = () => {
@@ -111,6 +123,57 @@ export default class PetDiet extends Component<ScreenParams<{ pet_uid: String }>
       console.log("Error getting document:", error);
     });
   }
+
+  saveDietToFireStoreU = () => {
+ 
+    const { navigation } = this.props;
+    let params = navigation.state.params;
+    var pet_uid = params.pet_uid;
+    var checkForInputs = [
+      this.state.selectedItem,
+      this.state.dietDetails,
+    ];
+    const { uid } = Firebase.auth.currentUser;
+ 
+    this.arrayToString();
+ 
+    //Checks to see if any inputs are not filled out
+    for (let i = 0; i < checkForInputs.length; i++) {
+      if (checkForInputs[i] == null) {
+        alert("Fill all fields");
+        return;
+      }
+    }
+ 
+    var docRef = Firebase.firestore.collection("users").doc(uid).collection("pets").doc(pet_uid);
+ 
+    //Add pet to firestore
+    docRef
+    .get()
+    .then((doc) => {
+      this.setState({ loading: true});
+      if (doc.exists) {
+        docRef
+        .collection("dietU")
+        .add({
+          date: new Date(),
+          diet: this.state.dietToString,
+          dietDetails: this.state.dietDetails
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
+    }})
+    .then((res) => {
+      this.state.selectedItem = "";
+      this.state.dietDetails = "";
+      this.state.dietToString = "";
+      this.setState({ loading: false});
+    })
+    .catch((error) => {
+      console.log("Error getting document:", error);
+    });
+  }
  
   retrieveFireStoreDiet() {
     const { uid } = Firebase.auth.currentUser;
@@ -140,7 +203,41 @@ export default class PetDiet extends Component<ScreenParams<{ pet_uid: String }>
       })
       .then((res) => {
         this.setState({ loading: false})
-        console.log("************** 150 existentDiet", this.state.existentPrescriptions);
+        console.log("************** 150 existentDiet", this.state.existentDiet);
+      });      
+ 
+    //console.log("************** this.existentPrescriptions", this.state.existentPrescriptions);
+  }
+
+  retrieveFireStoreDietU() {
+    const { uid } = Firebase.auth.currentUser;
+    const { navigation } = this.props;
+    let params = navigation.state.params;
+    var pet_uid = params.pet_uid;
+    this.state.existentDietU = [];
+ 
+    Firebase.firestore
+      .collection("users")
+      .doc(uid)
+      .collection("pets")
+      .doc(pet_uid)
+      .collection("dietU")
+      .get()
+      .then((snapshot) => {
+        //console.log("********************** snapshot => ",snapshot._delegate._snapshot.docChanges);
+        snapshot.forEach((doc) => {
+          console.log('*********** item => ', doc.data());
+          this.state.existentDietU.push({
+            diet: doc.data().diet,
+            dietDetails: doc.data().dietDetails,
+            date: new Date(doc.data().date.seconds*1000).toString()
+          });
+          //console.log("************** existentPrescriptions", this.state.existentPrescriptions);
+        });
+      })
+      .then((res) => {
+        this.setState({ loading: false})
+        console.log("************** 150 existentDiet", this.state.existentDietU);
       });      
  
     //console.log("************** this.existentPrescriptions", this.state.existentPrescriptions);
@@ -281,259 +378,259 @@ export default class PetDiet extends Component<ScreenParams<{ pet_uid: String }>
         <NavHeaderWithButton title="Diet" back {...{ navigation }} />
         <LinearGradient colors={["#81f1f7", "#9dffb0"]} style={styles.gradient} />
  
-        { this.state.role == 'v' && <View style= {styles.dietHeading}>
+        <View style= {styles.dietHeading}>
             <Text style={{fontSize: 20 }}> {"Proteins:"} </Text>
-          </View>} 
+          </View> 
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressMilk}>
               <Text style={{fontSize: 15 }}> {"Milk"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressFish}>
               <Text style={{fontSize: 15 }}> {"Fish"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressEggs}>
               <Text style={{fontSize: 15 }}> {"Eggs"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressChicken}>
               <Text style={{fontSize: 15 }}> {"Chicken"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressLamb}>
               <Text style={{fontSize: 15 }}> {"Lamb"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
-          { this.state.role == 'v' && <View style= {styles.dietHeading}>
+          <View style= {styles.dietHeading}>
             <Text style={{fontSize: 20 }}> {"Carbohydrates:"} </Text>
-          </View>}
+          </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressRice}>
               <Text style={{fontSize: 15 }}> {"Rice"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressOatmeal}>
               <Text style={{fontSize: 15 }}> {"Oatmeal"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressCorn}>
               <Text style={{fontSize: 15 }}> {"Corn"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressBarley}>
               <Text style={{fontSize: 15 }}> {"Barley"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressBeetPulp}>
               <Text style={{fontSize: 15 }}> {"Beet Pulp"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressCellulose}>
               <Text style={{fontSize: 15 }}> {"Cellulose"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressChicoryRoot}>
               <Text style={{fontSize: 15 }}> {"Chicory Root"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressYeastExtract}>
               <Text style={{fontSize: 15 }}> {"Yeast Extract"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
-          { this.state.role == 'v' && <View style= {styles.dietHeading}>
+          <View style= {styles.dietHeading}>
             <Text style={{fontSize: 20 }}> {"Fats:"} </Text>
-          </View>}
+          </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressSoyOil}>
               <Text style={{fontSize: 15 }}> {"Soy Oil"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressCanolaOil}>
               <Text style={{fontSize: 15 }}> {"Canola Oil"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressFishOil}>
               <Text style={{fontSize: 15 }}> {"Fish Oil"} </Text>
                 </TouchableOpacity>
-            </View>}  
+            </View>  
           </View>
  
-          { this.state.role == 'v' && <View style= {styles.dietHeading}>
+          <View style= {styles.dietHeading}>
             <Text style={{fontSize: 20 }}> {"Vitamins:"} </Text>
-          </View>}
+          </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressVegetables}>
               <Text style={{fontSize: 15 }}> {"Vegetables"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressSupplements}>
               <Text style={{fontSize: 15 }}> {"Supplements"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressCitrus}>
               <Text style={{fontSize: 15 }}> {"Citrus"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressCereal}>
               <Text style={{fontSize: 15 }}> {"Cereal"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressBrewersYeast}>
               <Text style={{fontSize: 15 }}> {"Brewers Yeast"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressLiver}>
               <Text style={{fontSize: 15 }}> {"Liver"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressMineralSalt}>
               <Text style={{fontSize: 15 }}> {"Mineral Salt"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressBone}>
               <Text style={{fontSize: 15 }}> {"Bone"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressWheat}>
               <Text style={{fontSize: 15 }}> {"Wheat"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressPurifiedSupplement}>
               <Text style={{fontSize: 15 }}> {"Purified Supplement"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
-          { this.state.role == 'v' && <View style= {styles.dietHeading}>
+          <View style= {styles.dietHeading}>
             <Text style={{fontSize: 20 }}> {"Other:"} </Text>
-          </View>}
+          </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressCorn}>
               <Text style={{fontSize: 15 }}> {"Corn"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressCarrots}>
               <Text style={{fontSize: 15 }}> {"Carrots"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressMarigoldExtract}>
               <Text style={{fontSize: 15 }}> {"Marigold Extract"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressCartilage}>
               <Text style={{fontSize: 15 }}> {"Cartilage"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
           </View>
  
           <View style= { {flexDirection: "row"} }>
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressCrustaceans}>
               <Text style={{fontSize: 15 }}> {"Crustaceans"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View> 
  
-            { this.state.role == 'v' && <View style= {styles.button_one}>
+            <View style= {styles.button_one}>
             <TouchableOpacity onPress={this.onPressGreenTeaExtract}>
               <Text style={{fontSize: 15 }}> {"Green Tea Extract"} </Text>
                 </TouchableOpacity>
-            </View>} 
+            </View>
           </View>
  
-         {this.state.role == 'v' && <TextInput
+         <TextInput
           style={styles.bigInput}
           placeholder="Diet Details"
           onChangeText={text => this.setDietDetails(text)}
           multiline={true}
           value={this.state.dietDetails}
-        />}  
+        />  
  
         {this.state.role == 'v' &&
           <TouchableOpacity
@@ -544,8 +641,18 @@ export default class PetDiet extends Component<ScreenParams<{ pet_uid: String }>
             </Text>
           </TouchableOpacity>
         }
- 
-        <Text type="header3"> Diet History </Text>
+
+        {this.state.role == 'p' &&
+          <TouchableOpacity
+            style={styles.prescBottom}
+            onPress={this.saveDietToFireStoreU}>
+            <Text>
+              Save Diet
+            </Text>
+          </TouchableOpacity>
+        }
+
+        <Text type="header3"> Suggested Diet </Text>
         <ScrollView  persistentScrollbar={false} >
           <View style={{paddingBottom: 10}}>
             {
@@ -563,18 +670,37 @@ export default class PetDiet extends Component<ScreenParams<{ pet_uid: String }>
           </View>
         </ScrollView>
 
+         
+        <Text type="header3"> User Diet </Text>
+        <ScrollView  persistentScrollbar={false} >
+          <View style={{paddingBottom: 10}}>
+            {
+              //console.log("**** element ===> ", this.state.existentPrescriptions);
+              this.state.existentDietU.map((element, k) => {
+                console.log("**** element ===> ", element, k);
+                return <View>
+                  <Text> Diet: {element.diet}</Text>
+                  <Text> Diet Details: {element.dietDetails}</Text>
+                  <Text> Date: {element.date}</Text>
+                  <Text> --</Text>
+                </View>
+              })
+            }
+          </View>
+        </ScrollView>
 
-      {this.state.role == 'v' && 
+
+
         <View style= {styles.dietHeading}>
           <Text style={{fontSize: 1 }}> {""} </Text>
         </View>
-      }
+      
 
-      {this.state.role == 'v' && 
+
         <View style= {styles.dietHeading}>
           <Text style={{fontSize: 1 }}> {""} </Text>
         </View>
-      }
+      
 
       </ScrollView>
     )
